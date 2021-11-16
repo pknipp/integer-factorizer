@@ -6,8 +6,8 @@
         <h4><p align=center>Result</p></h4>
         <p align=center>
             <table border='1'>
-                <tr><td>number</td><td>{{ .number }}</td></tr>
-                <tr><td>integer<br/>type</td><td>
+                <tr><td>natural number</td><td>{{ .number }}</td></tr>
+                <tr><td>number type</td><td>
                     {{if .isPrime }}
                         prime
                     {{else}}
@@ -15,7 +15,7 @@
                     {{end}}
                 </td></tr>
                 {{if not .isPrime}}
-                    <tr><td>factors</td><td>
+                    <tr><td>factors & powers</td><td>
                         {{range $i, $pair := .factors}}
                             {{if ne $i 0}}
                                 &middot;
@@ -28,14 +28,10 @@
                     </td></tr>
                 {{end}}
             </table>
-        </p>
-        <p align="center"></p>
-            <div>
-                creator:&nbsp;
-                <a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>
-                  Peter Knipp
-                </a>
-            </div>
+            creator:&nbsp;
+            <a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>
+              Peter Knipp
+            </a>
         </p>
     </body>
 </html>

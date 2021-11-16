@@ -14,11 +14,11 @@ import (
 	_ "github.com/heroku/x/hmetrics/onload"
 )
 
-func factorize(number int) (bool, [][2]int) {
+func factorize(number uint) (bool, [][2]uint) {
 	j := 1
-	factors := [][2]int{}
+	factors := [][2]uint{}
 	isPrime := true
-	var factor [2]int
+	var factor [2]uint
 	var facFound bool
 	// One only needs to search up until the square root of number.
 	for j * j < number {
@@ -52,7 +52,7 @@ func factorize(number int) (bool, [][2]int) {
 	}
 	// The last factor is needed if the largest factor occurs by itself.
 	if !facFound && number != 1 {
-		factors = append(factors, [2]int{number, 1})
+		factors = append(factors, [2]uint{number, 1})
 	}
 	return isPrime, factors
 }
