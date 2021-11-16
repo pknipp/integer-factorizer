@@ -9,11 +9,11 @@
                 <tr><td>number</td><td>{{ .number }}</td></tr>
                 <tr><td>prime?</td><td>{{.isPrime }}</td></tr>
                 <tr><td>factors</td><td>
-                    {{range $i, _ := .factors}}
+                    {{range $i, $pair := .factors}}
                         {{if ne $i 0}}
                             &middot;
                         {{end}}
-                        {{index . 0}}<sup>{{index . 1}}</sup>
+                        {{index $pair 0}}<sup>{{index $pair 1}}</sup>
                     {{end}}
                 </td></tr>
             </table>
