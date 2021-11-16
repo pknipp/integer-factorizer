@@ -62,9 +62,9 @@ func main() {
 		result := factorize(number)
 		resultString := ""
 		for prime, power := range result {
-			resultString += "&nbsp;" + prime
+			resultString += `&nbsp;` + prime
 			if power > 1 {
-				resultString += "<SUP>" + strconv.Itoa(power) + "</SUP>"
+				resultString += `<SUP>` + strconv.Itoa(power) + `</SUP>`
 			}
 		}
 		fmt.Println(resultString)
