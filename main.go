@@ -23,7 +23,7 @@ func factorize(numberStr string) (bool, [][2]int, string) {
 		numberStr = numberStr[1:]
 	}
 	number, err := strconv.Atoi(numberStr)
-	if len(err) > 0 {
+	if err {
 		return isPrime, factors, "There is something wrong with the number that you input."
 	}
 	var factor [2]int
