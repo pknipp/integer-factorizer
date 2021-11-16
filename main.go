@@ -60,37 +60,37 @@ func main() {
 	// expressionText := "your expression"
 	// resultText := "numerical value"
 	router.GET("/:number", func(c *gin.Context) {
-		numberString := c.Param("number")
+		numberStr := c.Param("number")
 		// Eventually, I'll need to error-handle the following.
-		number, _ := strconv.Atoi(numberString)
+		number, _ := strconv.Atoi(numberStr)
 		isPrime, result := factorize(number)
-		resultString := ""
+		resultStr := ""
 		for prime, power := range result {
-			resultString += `&nbsp;` + prime
+			resultStr += `&nbsp;` + prime
 			if power > 1 {
-				resultString += `<SUP>` + strconv.Itoa(power) + `</SUP>`
+				resultStr += `<SUP>` + strconv.Itoa(power) + `</SUP>`
 			}
 		}
-		fmt.Println(resultString)
+		fmt.Println(resultStr)
 		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				// "expressionText": expressionText,
 				// "expressionValue": expression,
 				// "resultText": resultText,
-				"numberString": numberString,
-				"resultString": resultString,
+				"numberString": numberStr,
+				"resultString": resultStr,
 				"isPrime": isPrime,
 		})
 	})
 	router.GET("/json/:number", func(c *gin.Context) {
-		numberString := c.Param("number")
-		number, _ := strconv.Atoi(numberString)
+		numberSt := c.Param("number")
+		number, _ := strconv.Atoi(numberStr)
 		isPrime, result := factorize(number)
 		factorStr, _ := json.Marshal(result)
 		isPrimeStr := strconv.FormatBool(isPrime)
-		fmt.Println(reflect.TypeOf(numberString), reflect.TypeOf(isPrimeStr), reflect.TypeOf(string(factorStr)))
-		resultString := "string" //"{\"number\": " + numberString + ", \"isPrime\": " + strconv.FormatBool(isPrime) + ", \"factors\": ", string(factorStr) + "}"
+		fmt.Println(reflect.TypeOf(numberStr), reflect.TypeOf(isPrimeStr), reflect.TypeOf(string(factorStr)))
+		resultStr := "string" //"{\"number\": " + numberString + ", \"isPrime\": " + strconv.FormatBool(isPrime) + ", \"factors\": ", string(factorStr) + "}"
 		// resultString := "{\"" + expressionText + "\": " + expression + ", \"" + resultText + "\": " + handler(expression) + "}"
-		c.String(http.StatusOK, numberString)
+		c.String(http.StatusOK, resultStr)
 	})
 	router.Run(":" + port)
 	// Use the following when testing the app in a non-server configuration.
