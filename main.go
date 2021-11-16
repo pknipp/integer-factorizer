@@ -3,15 +3,15 @@ package main
 import (
 	"fmt"
 	// "io"
-	// "encoding/json"
-	// "log"
-	// "net/http"
-	// "os"
-	// "strconv"
+	"encoding/json"
+	"log"
+	"net/http"
+	"os"
+	"strconv"
 	// "reflect"
 	// "strings"
-	// "github.com/gin-gonic/gin"
-	// _ "github.com/heroku/x/hmetrics/onload"
+	"github.com/gin-gonic/gin"
+	_ "github.com/heroku/x/hmetrics/onload"
 )
 
 // type Factor struct {
@@ -63,19 +63,19 @@ func factorize(number int) (bool, [][2]int) {
 }
 
 func main() {
-	// port := os.Getenv("PORT")
-	// if port == "" {
-		// log.Fatal("$PORT must be set")
-	// }
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
 	// I opted not to use this version of router, for technical reasons.
 	// router := gin.New()
-	// router := gin.Default()
-	// router.Use(gin.Logger())
-	// router.LoadHTMLGlob("templates/*.tmpl.html")
-	// router.Static("/static", "static")
-	// router.GET("/", func(c *gin.Context) {
-		// c.HTML(http.StatusOK, "index.tmpl.html", nil)
-	// })
+	router := gin.Default()
+	router.Use(gin.Logger())
+	router.LoadHTMLGlob("templates/*.tmpl.html")
+	router.Static("/static", "static")
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.tmpl.html", nil)
+	})
 	// router.GET("/:number", func(c *gin.Context) {
 		// numberStr := c.Param("number")
 		// Eventually, I'll need to error-handle the following.
@@ -95,18 +95,18 @@ func main() {
 				// "isPrime": isPrime,
 		// })
 	// })
-	// router.GET("/json/:number", func(c *gin.Context) {
-		// numberStr := c.Param("number")
-		// number, _ := strconv.Atoi(numberStr)
-		// isPrime, result := factorize(number)
-		// resultStr := "{\"number\": " + numberStr + ", \"isPrime\": " + strconv.FormatBool(isPrime)
-		// if !isPrime {
-			// factorStr, _ := json.Marshal(result)
-			// resultStr += ", \"factors\": " + string(factorStr)
-		// }
-		// c.String(http.StatusOK, resultStr + "}")
-	// })
-	// router.Run(":" + port)
+	router.GET("/json/:number", func(c *gin.Context) {
+		numberStr := c.Param("number")
+		number, _ := strconv.Atoi(numberStr)
+		isPrime, result := factorize(number)
+		resultStr := "{\"number\": " + numberStr + ", \"isPrime\": " + strconv.FormatBool(isPrime)
+		if !isPrime {
+			factorStr, _ := json.Marshal(result)
+			resultStr += ", \"factors\": " + string(factorStr)
+		}
+		c.String(http.StatusOK, resultStr + "}")
+	})
+	router.Run(":" + port)
 	// Use the following when testing the app in a non-server configuration.
 	number := 1234567890123456789
 	bool, factoredString := factorize(number)
