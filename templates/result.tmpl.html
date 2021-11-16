@@ -10,9 +10,7 @@
                 <tr><td>prime?</td><td>{{.isPrime }}</td></tr>
                 <tr><td>factors</td><td>
                     {{range $i := .factors }}
-                        {{if not eq $i 0}}
-                            &middot;
-                        {{end}}
+                        <!-- {{if not eq $i 0}}&middot;{{end}} -->
                         {{index . 0}}<sup>{{index . 1}}</sup>&middot;
                     {{end}}
                 </td></tr>
