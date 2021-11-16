@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	// "io"
+	"encode/json"
 		"log"
 	"net/http"
 	"os"
@@ -81,6 +82,10 @@ func main() {
 	})
 	router.GET("/json/:number", func(c *gin.Context) {
 		numberString := c.Param("number")
+		number, _ := strconv.Atoi(numberString)
+		isPrime, result := factorize(number)
+		factorStr, err := json.Marshal(result)
+		resultString := "{\"number\": " + numberString + ", \"isPrime\": " + strconv.FormatBool(isPrime) + ", \"factors\": ", factorStr + "}"
 		// resultString := "{\"" + expressionText + "\": " + expression + ", \"" + resultText + "\": " + handler(expression) + "}"
 		c.String(http.StatusOK, numberString)
 	})
