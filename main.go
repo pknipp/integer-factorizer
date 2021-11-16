@@ -86,8 +86,11 @@ func main() {
 		number, _ := strconv.Atoi(numberStr)
 		isPrime, result := factorize(number)
 		factorStr, _ := json.Marshal(result)
-		resultStr := "{\"number\": " + numberStr + ", \"isPrime\": " + strconv.FormatBool(isPrime) + ", \"factors\": " + string(factorStr) + "}"
-		c.String(http.StatusOK, resultStr)
+		resultStr := "{\"number\": " + numberStr + ", \"isPrime\": " + strconv.FormatBool(isPrime)
+		if isPrime {
+			resultStr += ", \"factors\": " + string(factorStr)
+		}
+		c.String(http.StatusOK, resultStr + "}")
 	})
 	router.Run(":" + port)
 	// Use the following when testing the app in a non-server configuration.
