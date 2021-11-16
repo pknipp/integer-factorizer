@@ -7,7 +7,7 @@ import (
 	// "log"
 	// "net/http"
 	// "os"
-	"strconv"
+	// "strconv"
 	// "reflect"
 	// "strings"
 	// "github.com/gin-gonic/gin"
@@ -22,28 +22,51 @@ func addFactor(j string, factors map[string]int) {
 	}
 }
 
-func factorize(number int) (bool, map[string]int) {
-	j := 2
-	// type factor struct {
-		// Prime   int
-		// Power   int
-	// }
-	var factors = make(map[string]int)
+type Factor struct {
+	Prime   int
+	Power   int
+}
+
+func factorize(number int) (bool, []Factor) {
+	j := 1
+	factors := []Factor{}
 	isPrime := true
-	for j * j <= number {
-		if number % j == 0 {
-			addFactor(strconv.Itoa(j), factors)
-			number /= j
-			isPrime = false
+	var factor Factor
+	var facFound bool
+	// One only needs to search up until the square root of number.
+	for j * j < number {
+		// After 3, primes skip by at least two.
+		if j < 3 {
+			j++
 		} else {
-			if j == 2 {
-				j++
+			j += 2
+		}
+		facFound = false
+		for {
+			if number % j == 0 {
+				if !facFound {
+					factor = Factor{Prime: j, Power: 1,}
+					facFound = true
+					if number > 2 {
+						isPrime = false
+					}
+				} else {
+					factor.Power++
+				}
+				number /= j
 			} else {
-				j += 2
+				if facFound {
+					factors = append(factors, factor)
+					facFound = false
+				}
+				break
 			}
 		}
 	}
-	addFactor(strconv.Itoa(number), factors)
+	// The last factor is needed if the largest factor occurs by itself.
+	if !facFound && number != 1 {
+		factors = append(factors, Factor{Prime: number, Power: 1})
+	}
 	return isPrime, factors
 }
 
@@ -93,7 +116,7 @@ func main() {
 	// })
 	// router.Run(":" + port)
 	// Use the following when testing the app in a non-server configuration.
-	number := 1234567890123456789
+	number := 1234567890123456781
 	bool, factoredString := factorize(number)
 	fmt.Println(number, bool, factoredString)
 }
