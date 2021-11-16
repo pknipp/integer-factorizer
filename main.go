@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	// "io"
 	"encoding/json"
 	"log"
@@ -76,11 +76,11 @@ func main() {
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl.html", nil)
 	})
-	// router.GET("/:number", func(c *gin.Context) {
-		// numberStr := c.Param("number")
+	router.GET("/:number", func(c *gin.Context) {
+		numberStr := c.Param("number")
 		// Eventually, I'll need to error-handle the following.
-		// number, _ := strconv.Atoi(numberStr)
-		// isPrime, result := factorize(number)
+		number, _ := strconv.Atoi(numberStr)
+		isPrime, factors := factorize(number)
 		// resultStr := ""
 		// for prime, power := range result {
 			// resultStr += `&nbsp;` + prime
@@ -88,13 +88,13 @@ func main() {
 				// resultStr += `<SUP>` + strconv.Itoa(power) + `</SUP>`
 			// }
 		// }
-		// fmt.Println(resultStr)
-		// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-				// "numberString": numberStr,
-				// "resultString": resultStr,
-				// "isPrime": isPrime,
-		// })
-	// })
+		// fmt.Println(factors)
+		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+				"number": numberStr,
+				"isPrime": strconv.FormatBool(isPrime),
+				"factors": factors,
+		})
+	})
 	router.GET("/json/:number", func(c *gin.Context) {
 		numberStr := c.Param("number")
 		number, _ := strconv.Atoi(numberStr)
@@ -108,7 +108,7 @@ func main() {
 	})
 	router.Run(":" + port)
 	// Use the following when testing the app in a non-server configuration.
-	number := 1234567890123456789
-	bool, factoredString := factorize(number)
-	fmt.Println(number, bool, factoredString)
+	// number := 1234567890123456789
+	// bool, factors := factorize(number)
+	// fmt.Println(number, bool, factors)
 }

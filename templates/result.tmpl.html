@@ -5,11 +5,16 @@
     <body>
         <h4><p align=center>Result</p></h4>
         <p align=center>
-            <table>
-                <tr><td>integer</td><td>{{ .numberString}}</td></tr>
-                <tr><td>prime?</td><td><td> {{ .isPrime}}</td></tr>
-                <tr><td>factored form</td><td>{{ .resultString}} </td></tr>
-            </table>
+            <h4>{{ .number }}</h4>
+            <h4>{{.isPrime }}</h4>
+            {{range .factors }}
+
+            {{end}}
+            <!-- <table> -->
+                <!-- <tr><td>integer</td><td>{{ .numberString}}</td></tr> -->
+                <!-- <tr><td>prime?</td><td><td> {{ .isPrime}}</td></tr> -->
+                <!-- <tr><td>factored form</td><td>{{ .resultString}} </td></tr> -->
+            <!-- </table> -->
             <div>
                 creator:&nbsp;
                 <a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>
