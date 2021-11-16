@@ -94,7 +94,7 @@ func main() {
 	router.GET("/json/:number", func(c *gin.Context) {
 		numberStr := c.Param("number")
 		// number, _ := strconv.Atoi(numberStr)
-		isPrime, result := factorize(numberStr)
+		isPrime, result, message := factorize(numberStr)
 		resultStr := "{\"number\": " + numberStr + ", \"isPrime\": " + strconv.FormatBool(isPrime)
 		if len(message) > 0 {
 			resultStr += ", \"message\": " + message
