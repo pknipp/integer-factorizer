@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "fmt"
+	"fmt"
 	// "io"
 		"log"
 	"net/http"
@@ -64,9 +64,10 @@ func main() {
 		for prime, power := range result {
 			resultString += prime
 			if power > 1 {
-				resultString += '<sup>' + strconv.Itoa(power) + '</sup>'
+				resultString += "<sup>" + strconv.Itoa(power) + "</sup>"
 			}
 		}
+		fmt.Println(resultString)
 		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				// "expressionText": expressionText,
 				// "expressionValue": expression,
