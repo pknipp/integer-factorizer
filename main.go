@@ -85,9 +85,9 @@ func main() {
 		numberStr := c.Param("number")
 		number, _ := strconv.Atoi(numberStr)
 		isPrime, result := factorize(number)
-		factorStr, _ := json.Marshal(result)
 		resultStr := "{\"number\": " + numberStr + ", \"isPrime\": " + strconv.FormatBool(isPrime)
 		if !isPrime {
+			factorStr, _ := json.Marshal(result)
 			resultStr += ", \"factors\": " + string(factorStr)
 		}
 		c.String(http.StatusOK, resultStr + "}")
