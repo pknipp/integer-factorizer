@@ -21,7 +21,7 @@ func factorize(numberStr string) (bool, [][2]int, string) {
 		numberStr = numberStr[1:]
 	}
 	badNumber := "There is something wrong with your number."
-	if len(numberStr) > 19 {
+	if len(numberStr) > 18 {
 		tooLarge := "Your number is too large."
 		if len(numberStr) > 20 {
 			return isPrime, factors, tooLarge
