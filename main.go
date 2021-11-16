@@ -20,9 +20,14 @@ func factorize(numberStr string) (bool, [][2]int, string) {
 	if numberStr[0:1] == "-" {
 		numberStr = numberStr[1:]
 	}
-	number, err := strconv.Atoi(numberStr)
+	_, err := strconv.ParseFloat(numberStr, 64)
 	if err != nil {
 		return isPrime, factors, "There is something wrong with the number that you input."
+	}
+	var number int
+	number, err = strconv.Atoi(numberStr)
+	if err != nil {
+		return isPrime, factors, "Note that the number may not be a decimal."
 	}
 	var factor [2]int
 	var facFound bool
