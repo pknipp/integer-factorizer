@@ -88,7 +88,7 @@ func main() {
 		factorStr, _ := json.Marshal(result)
 		isPrimeStr := strconv.FormatBool(isPrime)
 		fmt.Println(reflect.TypeOf(numberStr), reflect.TypeOf(isPrimeStr), reflect.TypeOf(string(factorStr)))
-		resultStr := "string" //"{\"number\": " + numberString + ", \"isPrime\": " + strconv.FormatBool(isPrime) + ", \"factors\": ", string(factorStr) + "}"
+		resultStr := "{\"number\": " + numberString + ", \"isPrime\": " + strconv.FormatBool(isPrime) + ", \"factors\": " + string(factorStr) + "}"
 		// resultString := "{\"" + expressionText + "\": " + expression + ", \"" + resultText + "\": " + handler(expression) + "}"
 		c.String(http.StatusOK, resultStr)
 	})
