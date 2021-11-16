@@ -64,7 +64,7 @@ func main() {
 		for prime, power := range result {
 			resultString += prime
 			if power > 1 {
-				resultString += "<sup>" + strconv.Itoa(power) + "</sup>"
+				resultString += "<SUP>" + strconv.Itoa(power) + "</SUP>"
 			}
 		}
 		fmt.Println(resultString)
