@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+	"reflect"
 	// "strings"
 	"github.com/gin-gonic/gin"
 	_ "github.com/heroku/x/hmetrics/onload"
@@ -85,7 +86,9 @@ func main() {
 		number, _ := strconv.Atoi(numberString)
 		isPrime, result := factorize(number)
 		factorStr, _ := json.Marshal(result)
-		resultString := "{\"number\": " + numberString + ", \"isPrime\": " + strconv.FormatBool(isPrime) + ", \"factors\": ", string(factorStr) + "}"
+		isPrimeStr := strconv.FormatBool(isPrime)
+		fmt.Println(reflect.TypeOf(numberString), reflect.TypeOf(isPrimeStr), reflect.TypeOf(string(factorStr)))
+		resultString := "string" //"{\"number\": " + numberString + ", \"isPrime\": " + strconv.FormatBool(isPrime) + ", \"factors\": ", string(factorStr) + "}"
 		// resultString := "{\"" + expressionText + "\": " + expression + ", \"" + resultText + "\": " + handler(expression) + "}"
 		c.String(http.StatusOK, numberString)
 	})
