@@ -83,7 +83,7 @@ func main() {
 		isPrime, factors := factorize(number)
 		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				"number": numberStr,
-				"isPrime": isPrime //strconv.FormatBool(isPrime),
+				"isPrime": isPrime, //strconv.FormatBool(isPrime),
 				"factors": factors,
 		})
 	})
