@@ -10,9 +10,11 @@
                 <tr><td>prime?</td><td>{{.isPrime }}</td></tr>
                 <tr><td>factors</td><td>
                     {{range .factors }}
-                        {{range .}}
-                            {{.}}
-                        {{end}}
+                        {{index . 0}}
+                        {{index . 1}}
+                        <!-- {{range .}} -->
+                            <!-- {{.}} -->
+                        <!-- {{end}} -->
                     {{end}}
                 </td></tr>
             </table>
