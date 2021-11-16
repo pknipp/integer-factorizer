@@ -18,11 +18,11 @@ func factorize(numberStr string) (bool, [][2]int, string) {
 	j := 1
 	factors := [][2]int{}
 	isPrime := true
-	message := ""
+	var message string
 	if numberStr[0:1] == "-" {
 		numberStr = numberStr[1:]
 	}
-	number, err := strconv(numberStr)
+	number, err := strconv.Atoi(numberStr)
 	if len(err) > 0 {
 		return isPrime, factors, "There is something wrong with the number that you input."
 	}
@@ -62,7 +62,7 @@ func factorize(numberStr string) (bool, [][2]int, string) {
 	if !facFound && number != 1 {
 		factors = append(factors, [2]int{number, 1})
 	}
-	return isPrime, factors
+	return isPrime, factors, message
 }
 
 func main() {
