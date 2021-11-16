@@ -71,7 +71,7 @@ func main() {
 				// "expressionText": expressionText,
 				// "expressionValue": expression,
 				// "resultText": resultText,
-				"number": number,
+				"numberString": numberString,
 				"resultString": resultString,
 		})
 	})
