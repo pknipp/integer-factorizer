@@ -23,10 +23,12 @@ func addFactor(j string, factors map[string]int) {
 func factorize(number int) map[string]int {
 	j := 2
 	var factors = make(map[string]int)
+	isPrime := true
 	for j * j <= number {
 		if number % j == 0 {
 			addFactor(strconv.Itoa(j), factors)
 			number /= j
+			isPrime = false
 		} else {
 			if j == 2 {
 				j++
@@ -36,7 +38,7 @@ func factorize(number int) map[string]int {
 		}
 	}
 	addFactor(strconv.Itoa(number), factors)
-	return factors
+	return isPrime, factors
 }
 
 func main() {
@@ -59,7 +61,7 @@ func main() {
 		numberString := c.Param("number")
 		// Eventually, I'll need to error-handle the following.
 		number, _ := strconv.Atoi(numberString)
-		result := factorize(number)
+		isPrime, result := factorize(number)
 		resultString := ""
 		for prime, power := range result {
 			resultString += `&nbsp;` + prime
@@ -74,13 +76,14 @@ func main() {
 				// "resultText": resultText,
 				"numberString": numberString,
 				"resultString": resultString,
+				"isPrime": isPrime,
 		})
 	})
-	// router.GET("/json/:expression", func(c *gin.Context) {
-		// expression := doRegExp(c.Param("expression"))
+	router.GET("/json/:number", func(c *gin.Context) {
+		numberString := c.Param("expression")
 		// resultString := "{\"" + expressionText + "\": " + expression + ", \"" + resultText + "\": " + handler(expression) + "}"
-		// c.String(http.StatusOK, resultString)
-	// })
+		c.String(http.StatusOK, numberString)
+	})
 	router.Run(":" + port)
 	// Use the following when testing the app in a non-server configuration.
 	// number := 1234567890123456789
