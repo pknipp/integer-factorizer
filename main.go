@@ -80,7 +80,7 @@ func main() {
 		})
 	})
 	router.GET("/json/:number", func(c *gin.Context) {
-		numberString := c.Param("expression")
+		numberString := c.Param("number")
 		// resultString := "{\"" + expressionText + "\": " + expression + ", \"" + resultText + "\": " + handler(expression) + "}"
 		c.String(http.StatusOK, numberString)
 	})
