@@ -14,7 +14,7 @@
                         composite
                     {{end}}
                 </td></tr>
-                {{if .isPrime}}
+                {{if not .isPrime}}
                     <tr><td>factors</td><td>
                         {{range $i, $pair := .factors}}
                             {{if ne $i 0}}
@@ -28,6 +28,8 @@
                     </td></tr>
                 {{end}}
             </table>
+        </p>
+        <p align="center"></p>
             <div>
                 creator:&nbsp;
                 <a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>

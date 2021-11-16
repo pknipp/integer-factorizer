@@ -1,1 +1,1 @@
-web: bin/complexCalculator
+web: bin/integerFactorizer
