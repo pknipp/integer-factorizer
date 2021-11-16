@@ -20,6 +20,21 @@ func factorize(numberStr string) (bool, [][2]int, string) {
 	if numberStr[0:1] == "-" {
 		numberStr = numberStr[1:]
 	}
+	if len(numberStr) > 19 {
+		tooLarge := "Your number is too large."
+		if len(numberStr) > 20 {
+			return isPrime, factors, tooLarge
+		}
+		if len(numberStr) == 19 {
+			numTrunc, err := strconv(numberStr[0:6])
+			if err != nil {
+				return isPrime, factors, "There is something wrong with your number."
+			}
+			if numTrunc > 922336 {
+				return isPrime, factors, tooLarge
+			}
+		}
+	}
 	_, err := strconv.ParseFloat(numberStr, 64)
 	if err != nil {
 		return isPrime, factors, "There is something wrong with the number that you input."

@@ -10,88 +10,16 @@
     to the Math APIs page.
     <ul>
       <li>
-        After <tt>...herokuapp.com</tt> above you should type <tt>/json/</tt> followed by your <a href="https://en.wikipedia.org/wiki/Complex_number">complex</a> expression using the syntax below.  If you want the response to be html rather than json, simply omit <tt>/json</tt> from the address.
+        After <tt>...herokuapp.com</tt> above you should type <tt>/json/</tt> followed by your natural number.  If you want the response to be html rather than json, simply omit <tt>/json</tt> from the address.  <a href="https://en.wikipedia.org/wiki/Scientific_notation#E_notation">E-notation</a> is not allowed.  Your number must be less than 2<sup>63</sup> (which approximately equals "9" followed by 18 zeros).
       </li>
       <li>
-        SYNTAX:
+        EXAMPLES:
         <ul>
           <li>
-            spaces: These are legal - but discouraged - because <tt>%20</tt> will replace each space after you hit <tt>return</tt>, thereby making the address uglier.
+            359 is a prime.
           </li>
           <li>
-            numbers:
-            <ul>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Real_number"><b>real</b></a>: This should be an integer or decimal but not a fraction, because "<tt>/</tt>" has special meaning in a URL. Do not include any commas in the number, even if it exceeds 1000. You may represent large or small numbers with <a href="https://en.wikipedia.org/wiki/Scientific_notation#E_notation">E notation</a>, using either <tt>E</tt> or <tt>e</tt>, but neither <tt>D</tt> not <tt>d</tt>, owing to the fact that the latter characters are used to represent division, as described below.
-              </li>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Imaginary_number"><b>imaginary</b></a>: This should be a real number (See above.) which multiplies (See below.) either <tt>i</tt> or <tt>j</tt>.
-              </li>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Complex_number"><b>complex</b></a>: This is a simple sum/difference (See below.) of a real number and an imaginary number. (See above.)
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="https://en.wikipedia.org/wiki/Binary_operation">binary operation</a>s:
-            <ul>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Bracket"><b>P</b>arentheses</a>: Their use is encouraged as with any calculation, especially if you are uncertain as to the <a href="https://en.wikipedia.org/wiki/Order_of_operations">order of operations</a> (ie, "PEMDAS" or "BEDMAS").  Use <tt>()</tt> but neither <tt>[]</tt> nor <tt>{}</tt>.
-              </li>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Exponentiation#Complex_exponentiation"><b>E</b>xponentiation</a>: <tt>**</tt> (recommended) or <tt>^</tt>.  The latter is discouraged because <tt>%5E</tt> will replace each instance of <tt>^</tt> after you hit <tt>return</tt>, thereby making the address uglier.  This app evaluates <a href="https://en.wikipedia.org/wiki/Order_of_operations#Serial_exponentiation">serial exponentiation</a> (for which there is no standard) from left-to-right, ie as is the standard for the other binary operations.  For instance, this app evaluates <tt>1 ** 2 ** 3</tt> as 8, not 1. Use parentheses if you would like to evaluate serial exponentiation in a different manner.
-              </li>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Complex_number#Multiplication_and_square"><b>M</b>ultiplication</a>: Do this either by <tt>*</tt> or in an implied manner, ie with nothing separating the two numbers.
-              </li>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Complex_number#Reciprocal_and_division"><b>D</b>ivision</a>: Because "<tt>/</tt>" has special meaning in a URL, represent this operation either by <tt>div</tt> or <tt>DIV</tt>, or even <tt>d</tt> or <tt>D</tt>.
-              </li>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Complex_number#Addition_and_subtraction"><b>A</b>ddition</a>: <tt>+</tt>
-              </li>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Complex_number#Addition_and_subtraction"><b>S</b>ubtraction</a>: <tt>-</tt>
-              </li>
-            </ul>
-          </li>
-          <li>
-            <a href="https://en.wikipedia.org/wiki/Unary_operation">unary operations</a>: Below are listed the available functions, most of which are explained <a href="https://pkg.go.dev/math/cmplx">here</a>.
-            <ul>
-              <li>
-                basic: <a href="https://en.wikipedia.org/wiki/Complex_number#Cartesian_complex_plane">Real, Imag</a>, <a href="https://en.wikipedia.org/wiki/Complex_number#Polar_complex_plane">Abs, Phase</a>, <a href="https://en.wikipedia.org/wiki/Complex_number#Conjugate">Conj</a>, <a href="https://en.wikipedia.org/wiki/Complex_number#Square_root">Sqrt</a>
-              </li>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Exponential_function">exponential</a> and its <a href="https://en.wikipedia.org/wiki/Logarithm">inverses</a>: Exp, Log, Log2, Log10
-              </li>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Trigonometric_functions">circular trigonometric</a>  : Cos, Sin, Tan, Sec, Csc, Cot
-              </li>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Inverse_trigonometric_functions"
-                >inverses</a> of circular trig: Acos, Asin, Atan, Asec, Acsc, Acot
-              </li>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Hyperbolic_functions">hyperbolic trigonometric</a>: Cosh, Sinh, Tanh, Sech, Csch, Coth
-              </li>
-              <li>
-                <a href="https://en.wikipedia.org/wiki/Inverse_hyperbolic_functions">inverses</a> of hyperbolic trig: Acosh, Asinh, Atanh, Asech, Acsch, Acoth
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-      <li>
-        EXAMPLE:
-        <ul>
-          <li>
-            expression: {cos<sup>-1</sup>[1.2i(3 + i)] + 4/(5 - 6i)}<sup>7 + 8i</sup>
-          </li>
-          <li>
-            how to type: <tt>(Acos(1.2i(3+i))+4d(5-6i))**(7+8i)</tt>
-          </li>
-          <li>
-            result: <tt>-179350.52181665212 - 95128.46772892449 i</tt>
+            360 = 2<sup>3</sup>&middot;3<sup>2</sup>&middot;5
           </li>
         </ul>
       </li>
