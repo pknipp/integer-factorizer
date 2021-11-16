@@ -5,12 +5,12 @@
     <body>
         <h4><p align=center>Result</p></h4>
         <p align=center>
-            <table>
+            <table border='1'>
                 <tr><td>number</td><td>{{ .number }}</td></tr>
                 <tr><td>prime?</td><td>{{.isPrime }}</td></tr>
                 <tr><td>factors</td><td>
                     {{range .factors }}
-                        {{index . 0}}<sup>{{index . 1}}</sup>
+                        {{index . 0}}<sup>{{index . 1}}</sup>&middot;
                     {{end}}
                 </td></tr>
             </table>
