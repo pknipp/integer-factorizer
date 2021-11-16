@@ -14,11 +14,19 @@ import (
 	_ "github.com/heroku/x/hmetrics/onload"
 )
 
-func factorize(number uint) (bool, [][2]uint) {
+func factorize(numberStr string) (bool, [][2]int, string) {
 	j := 1
-	factors := [][2]uint{}
+	factors := [][2]int{}
 	isPrime := true
-	var factor [2]uint
+	message := ""
+	if numberStr[0:1] == "-" {
+		numberStr = numberStr[1:]
+	}
+	number, err := strconv(numberStr)
+	if len(err) > 0 {
+		return isPrime, factors, "There is something wrong with the number that you input."
+	}
+	var factor [2]int
 	var facFound bool
 	// One only needs to search up until the square root of number.
 	for j * j < number {
@@ -52,7 +60,7 @@ func factorize(number uint) (bool, [][2]uint) {
 	}
 	// The last factor is needed if the largest factor occurs by itself.
 	if !facFound && number != 1 {
-		factors = append(factors, [2]uint{number, 1})
+		factors = append(factors, [2]int{number, 1})
 	}
 	return isPrime, factors
 }
@@ -74,19 +82,23 @@ func main() {
 	router.GET("/:number", func(c *gin.Context) {
 		numberStr := c.Param("number")
 		// Eventually, I'll need to error-handle the following.
-		number, _ := strconv.Atoi(numberStr)
-		isPrime, factors := factorize(number)
+		// number, _ := strconv.Atoi(numberStr)
+		isPrime, factors, message := factorize(numberStr)
 		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				"number": numberStr,
 				"isPrime": isPrime, //strconv.FormatBool(isPrime),
 				"factors": factors,
+				"message": message,
 		})
 	})
 	router.GET("/json/:number", func(c *gin.Context) {
 		numberStr := c.Param("number")
-		number, _ := strconv.Atoi(numberStr)
-		isPrime, result := factorize(number)
+		// number, _ := strconv.Atoi(numberStr)
+		isPrime, result := factorize(numberStr)
 		resultStr := "{\"number\": " + numberStr + ", \"isPrime\": " + strconv.FormatBool(isPrime)
+		if len(message) > 0 {
+			resultStr += ", \"message\": " + message
+		}
 		if !isPrime {
 			factorStr, _ := json.Marshal(result)
 			resultStr += ", \"factors\": " + string(factorStr)
