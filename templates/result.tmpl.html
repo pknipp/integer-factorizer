@@ -9,16 +9,14 @@
                 <tr><td>number</td><td>{{ .number }}</td></tr>
                 <tr><td>prime?</td><td>{{.isPrime }}</td></tr>
                 <tr><td>factors</td><td>
-                    {{range .factors }}
+                    {{range i, _ := .factors }}
+                        {{if not eq i 0}}
+                            &middot;
+                        {{end}}
                         {{index . 0}}<sup>{{index . 1}}</sup>&middot;
                     {{end}}
                 </td></tr>
             </table>
-            <!-- <table> -->
-                <!-- <tr><td>integer</td><td>{{ .numberString}}</td></tr> -->
-                <!-- <tr><td>prime?</td><td><td> {{ .isPrime}}</td></tr> -->
-                <!-- <tr><td>factored form</td><td>{{ .resultString}} </td></tr> -->
-            <!-- </table> -->
             <div>
                 creator:&nbsp;
                 <a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>
