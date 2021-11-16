@@ -7,27 +7,32 @@
         <p align=center>
             <table border='1'>
                 <tr><td>natural number</td><td>{{ .number }}</td></tr>
-                <tr><td>number type</td><td>
-                    {{if .isPrime }}
-                        prime
-                    {{else}}
-                        composite
-                    {{end}}
-                </td></tr>
-                {{if not .isPrime}}
-                    <tr><td>factors & powers</td><td>
-                        {{range $i, $pair := .factors}}
-                            {{if ne $i 0}}
-                                &middot;
-                            {{end}}
-                            {{index $pair 0}}
-                            {{if ne 1 (index $pair 1)}}
-                                <sup>{{index $pair 1}}</sup>
-                            {{end}}
+                {{if eq .message ""}}
+                    <tr><td>number type</td><td>
+                        {{if .isPrime }}
+                            prime
+                        {{else}}
+                            composite
                         {{end}}
                     </td></tr>
+                    {{if not .isPrime}}
+                        <tr><td>factors & powers</td><td>
+                            {{range $i, $pair := .factors}}
+                                {{if ne $i 0}}
+                                    &middot;
+                                {{end}}
+                                {{index $pair 0}}
+                                {{if ne 1 (index $pair 1)}}
+                                    <sup>{{index $pair 1}}</sup>
+                                {{end}}
+                            {{end}}
+                        </td></tr>
+                    {{end}}
+                {{else}}
+                        <tr><td>Status</td><td>{{.message}}</td></tr>
                 {{end}}
             </table>
+            <br/>
             creator:&nbsp;
             <a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>
               Peter Knipp
