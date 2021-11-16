@@ -5,13 +5,17 @@
     <body>
         <h4><p align=center>Result</p></h4>
         <p align=center>
-            <h4>{{ .number }}</h4>
-            <h4>{{.isPrime }}</h4>
-            {{range .factors }}
-                {{range .}}
-                    {{.}}
-                {{end}}
-            {{end}}
+            <table>
+                <tr><td>number</td><td>{{ .number }}</td></tr>
+                <tr><td>prime?</td><td>{{.isPrime }}</td></tr>
+                <tr><td>factors</td><td>
+                    {{range .factors }}
+                        {{range .}}
+                            {{.}}
+                        {{end}}
+                    {{end}}
+                </td></tr>
+            </table>
             <!-- <table> -->
                 <!-- <tr><td>integer</td><td>{{ .numberString}}</td></tr> -->
                 <!-- <tr><td>prime?</td><td><td> {{ .isPrime}}</td></tr> -->
