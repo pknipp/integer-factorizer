@@ -20,7 +20,7 @@ func addFactor(j string, factors map[string]int) {
 	}
 }
 
-func factorize(number int) map[string]int {
+func factorize(number int) (bool, map[string]int) {
 	j := 2
 	var factors = make(map[string]int)
 	isPrime := true
