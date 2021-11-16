@@ -86,10 +86,7 @@ func main() {
 		number, _ := strconv.Atoi(numberStr)
 		isPrime, result := factorize(number)
 		factorStr, _ := json.Marshal(result)
-		isPrimeStr := strconv.FormatBool(isPrime)
-		fmt.Println(reflect.TypeOf(numberStr), reflect.TypeOf(isPrimeStr), reflect.TypeOf(string(factorStr)))
-		resultStr := "{\"number\": " + numberString + ", \"isPrime\": " + strconv.FormatBool(isPrime) + ", \"factors\": " + string(factorStr) + "}"
-		// resultString := "{\"" + expressionText + "\": " + expression + ", \"" + resultText + "\": " + handler(expression) + "}"
+		resultStr := "{\"number\": " + numberStr + ", \"isPrime\": " + strconv.FormatBool(isPrime) + ", \"factors\": " + string(factorStr) + "}"
 		c.String(http.StatusOK, resultStr)
 	})
 	router.Run(":" + port)
