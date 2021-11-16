@@ -81,17 +81,9 @@ func main() {
 		// Eventually, I'll need to error-handle the following.
 		number, _ := strconv.Atoi(numberStr)
 		isPrime, factors := factorize(number)
-		// resultStr := ""
-		// for prime, power := range result {
-			// resultStr += `&nbsp;` + prime
-			// if power > 1 {
-				// resultStr += `<SUP>` + strconv.Itoa(power) + `</SUP>`
-			// }
-		// }
-		// fmt.Println(factors)
 		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				"number": numberStr,
-				"isPrime": strconv.FormatBool(isPrime),
+				"isPrime": isPrime //strconv.FormatBool(isPrime),
 				"factors": factors,
 		})
 	})
