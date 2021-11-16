@@ -14,11 +14,6 @@ import (
 	_ "github.com/heroku/x/hmetrics/onload"
 )
 
-// type Factor struct {
-	// Prime   int
-	// Power   int
-// }
-
 func factorize(number int) (bool, [][2]int) {
 	j := 1
 	factors := [][2]int{}

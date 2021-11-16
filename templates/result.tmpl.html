@@ -7,18 +7,26 @@
         <p align=center>
             <table border='1'>
                 <tr><td>number</td><td>{{ .number }}</td></tr>
-                <tr><td>prime?</td><td>{{.isPrime }}</td></tr>
-                <tr><td>factors</td><td>
-                    {{range $i, $pair := .factors}}
-                        {{if ne $i 0}}
-                            &middot;
-                        {{end}}
-                        {{index $pair 0}}
-                        {{if ne 1 (index $pair 1)}}
-                            <sup>{{index $pair 1}}</sup>
-                        {{end}}
+                <tr><td>integer<br/>type</td><td>
+                    {{if .isPrime }}
+                        prime
+                    {{else}}
+                        composite
                     {{end}}
                 </td></tr>
+                {{if .isPrime}}
+                    <tr><td>factors</td><td>
+                        {{range $i, $pair := .factors}}
+                            {{if ne $i 0}}
+                                &middot;
+                            {{end}}
+                            {{index $pair 0}}
+                            {{if ne 1 (index $pair 1)}}
+                                <sup>{{index $pair 1}}</sup>
+                            {{end}}
+                        {{end}}
+                    </td></tr>
+                {{end}}
             </table>
             <div>
                 creator:&nbsp;
