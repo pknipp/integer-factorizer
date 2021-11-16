@@ -82,7 +82,7 @@ func main() {
 		})
 	})
 	router.GET("/json/:number", func(c *gin.Context) {
-		numberSt := c.Param("number")
+		numberStr := c.Param("number")
 		number, _ := strconv.Atoi(numberStr)
 		isPrime, result := factorize(number)
 		factorStr, _ := json.Marshal(result)
