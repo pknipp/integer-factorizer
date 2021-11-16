@@ -26,7 +26,7 @@ func factorize(numberStr string) (bool, [][2]int, string) {
 			return isPrime, factors, tooLarge
 		}
 		if len(numberStr) == 19 {
-			numTrunc, err := strconv(numberStr[0:6])
+			numTrunc, err := strconv.Atoi(numberStr[0:6])
 			if err != nil {
 				return isPrime, factors, "There is something wrong with your number."
 			}
