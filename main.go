@@ -2,16 +2,16 @@ package main
 
 import (
 	"fmt"
-	"encoding/json"
-	"log"
-	"net/http"
-	"os"
+	// "encoding/json"
+	// "log"
+	// "net/http"
+	// "os"
 	"strconv"
 	"regexp"
 	"strings"
 	// "reflect"
-	"github.com/gin-gonic/gin"
-	_ "github.com/heroku/x/hmetrics/onload"
+	// "github.com/gin-gonic/gin"
+	// _ "github.com/heroku/x/hmetrics/onload"
 )
 
 func gcd2(n1, n2 int) int {
@@ -149,71 +149,123 @@ func factorize(numberStr string) (bool, [][2]int, string) {
 	return isPrime, factors, message
 }
 
-func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		log.Fatal("$PORT must be set")
+func modulo(z0, z1 [2]int) (bool, [2]int) {
+	var returnIsFactor bool
+	returnQuotient := [2]int{0, 0}
+	den := z1[0] * z1[0] + z1[1] * z1[1]
+	numR:= z0[0] * z1[0] + z0[1] * z1[1]
+	numI:= z0[1] * z1[0] - z0[0] * z1[1]
+	if numR % den == 0 && numI % den == 0 {
+		returnQuotient = [2]int{numR / den, numI / den}
+		returnIsFactor = true
 	}
+	return returnIsFactor, returnQuotient
+}
+
+// func gaussFactorize(n1, n2 int) [][2]int {
+	// j := 1
+	// factors := [][2]int{}
+	// isPrime := true
+	// var factor [2]int
+	// var facFound bool
+	// One only needs to search up until the square root of number.
+	// for j * j < number {
+		// j++
+		// facFound = false
+		// for {
+			// if number % j == 0 {
+				// if !facFound {
+					// factor[0], factor[1] = j, 1
+					// facFound = true
+					// if number > 2 {
+						// isPrime = false
+					// }
+				// } else {
+					// factor[1]++
+				// }
+				// number /= j
+			// } else {
+				// if facFound {
+					// factors = append(factors, factor)
+					// facFound = false
+				// }
+				// break
+			// }
+		// }
+	// }
+	// The last factor is needed if the largest factor occurs by itself.
+	// if !facFound && number != 1 {
+		// factors = append(factors, [2]int{number, 1})
+	// }
+	// return factors
+// }
+
+func main() {
+	// port := os.Getenv("PORT")
+	// if port == "" {
+		// log.Fatal("$PORT must be set")
+	// }
 	// I opted not to use this version of router, for technical reasons.
 	// router := gin.New()
-	router := gin.Default()
-	router.Use(gin.Logger())
-	router.LoadHTMLGlob("templates/*.tmpl.html")
-	router.Static("/static", "static")
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl.html", nil)
-	})
-	router.GET("/:input", func(c *gin.Context) {
-		inputStr := c.Param("input")
-		if inputStr[0:1] == "[" {
-			result, message := gcdParse(inputStr[1:])
-			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-				"numbers": inputStr,
-				"result": result,
-				"message": message,
-				"isGCD": true,
-				"title": "GCD",
-			})
-		} else {
-			isPrime, factors, message := factorize(inputStr)
-			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					"number": inputStr,
-					"isPrime": isPrime,
-					"factors": factors,
-					"message": message,
-					"isGCD": false,
-					"title": "prime factorization",
-			})
-		}
-	})
-	router.GET("/json/:input", func(c *gin.Context) {
-		inputStr := c.Param("input")
-		var resultStr string
-		if inputStr[0:1] == "[" {
-			result, message := gcdParse(inputStr[1:])
-			resultStr = "{\"numbers\": " + inputStr
-			if len(message) > 0 {
-				resultStr += ", \"message\": " + message
-			} else {
-				resultStr += ", \"gcd\": " + strconv.Itoa(result)
-			}
-		} else {
-			isPrime, result, message := factorize(inputStr)
-			resultStr = "{\"number\": " + inputStr
-			if len(message) > 0 {
-				resultStr += ", \"message\": " + message
-			} else {
-				resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
-				if !isPrime {
-					factorStr, _ := json.Marshal(result)
-					resultStr += ", \"factors\": " + string(factorStr)
-				}
-			}
-		}
-		c.String(http.StatusOK, resultStr + "}")
-	})
-	router.Run(":" + port)
+	// router := gin.Default()
+	// router.Use(gin.Logger())
+	// router.LoadHTMLGlob("templates/*.tmpl.html")
+	// router.Static("/static", "static")
+	// router.GET("/", func(c *gin.Context) {
+		// c.HTML(http.StatusOK, "index.tmpl.html", nil)
+	// })
+	// router.GET("/:input", func(c *gin.Context) {
+		// inputStr := c.Param("input")
+		// if inputStr[0:1] == "[" {
+			// result, message := gcdParse(inputStr[1:])
+			// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+				// "numbers": inputStr,
+				// "result": result,
+				// "message": message,
+				// "isGCD": true,
+				// "title": "GCD",
+			// })
+		// } else {
+			// isPrime, factors, message := factorize(inputStr)
+			// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+					// "number": inputStr,
+					// "isPrime": isPrime,
+					// "factors": factors,
+					// "message": message,
+					// "isGCD": false,
+					// "title": "prime factorization",
+			// })
+		// }
+	// })
+	// router.GET("/json/:input", func(c *gin.Context) {
+		// inputStr := c.Param("input")
+		// var resultStr string
+		// if inputStr[0:1] == "[" {
+			// result, message := gcdParse(inputStr[1:])
+			// resultStr = "{\"numbers\": " + inputStr
+			// if len(message) > 0 {
+				// resultStr += ", \"message\": " + message
+			// } else {
+				// resultStr += ", \"gcd\": " + strconv.Itoa(result)
+			// }
+		// } else {
+			// isPrime, result, message := factorize(inputStr)
+			// resultStr = "{\"number\": " + inputStr
+			// if len(message) > 0 {
+				// resultStr += ", \"message\": " + message
+			// } else {
+				// resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
+				// if !isPrime {
+					// factorStr, _ := json.Marshal(result)
+					// resultStr += ", \"factors\": " + string(factorStr)
+				// }
+			// }
+		// }
+		// c.String(http.StatusOK, resultStr + "}")
+	// })
+	// router.Run(":" + port)
 	// Use the following when testing the app as a CLI.
+	fmt.Println(modulo([2]int{5, 5}, [2]int{2, 1}))
 	// input := "[16, 18]"
 	// var isPrime bool
 	// var result [][2]int
