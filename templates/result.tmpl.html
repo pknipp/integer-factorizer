@@ -3,33 +3,42 @@
         <title>result</title>
     </head>
     <body>
-        <h4><p align=center>Result</p></h4>
+        <h4><p align=center>Result for {{ .title }}</p></h4>
         <p align=center>
             <table border='1'>
-                <tr><td>natural number</td><td>{{ .number }}</td></tr>
-                {{if eq .message ""}}
-                    <tr><td>number type</td><td>
-                        {{if .isPrime }}
-                            prime
-                        {{else}}
-                            composite
-                        {{end}}
-                    </td></tr>
-                    {{if not .isPrime}}
-                        <tr><td>factors & powers</td><td>
-                            {{range $i, $pair := .factors}}
-                                {{if ne $i 0}}
-                                    &middot;
-                                {{end}}
-                                {{index $pair 0}}
-                                {{if ne 1 (index $pair 1)}}
-                                    <sup>{{index $pair 1}}</sup>
-                                {{end}}
-                            {{end}}
-                        </td></tr>
+                {{if .isGCD}}
+                    <tr><td>numbers</td><td>{{ .numbers}}</td></tr>
+                    {{ if eq .message ""}}
+                        <tr><td>GCD</td><td>{{ .result }}</td></tr>
+                    {{ else }}
+                        <tr><td>error</td><td>{{ .message}}</td></tr>
                     {{end}}
                 {{else}}
-                        <tr><td>status</td><td>{{.message}}</td></tr>
+                    <tr><td>natural number</td><td>{{ .number }}</td></tr>
+                    {{if eq .message ""}}
+                        <tr><td>number type</td><td>
+                            {{if .isPrime }}
+                                prime
+                            {{else}}
+                                composite
+                            {{end}}
+                        </td></tr>
+                        {{if not .isPrime}}
+                            <tr><td>factors & powers</td><td>
+                                {{range $i, $pair := .factors}}
+                                    {{if ne $i 0}}
+                                        &middot;
+                                    {{end}}
+                                    {{index $pair 0}}
+                                    {{if ne 1 (index $pair 1)}}
+                                        <sup>{{index $pair 1}}</sup>
+                                    {{end}}
+                                {{end}}
+                            </td></tr>
+                        {{end}}
+                    {{else}}
+                            <tr><td>error</td><td>{{.message}}</td></tr>
+                    {{end}}
                 {{end}}
             </table>
             <br/>

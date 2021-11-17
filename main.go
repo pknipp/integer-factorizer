@@ -163,16 +163,29 @@ func main() {
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl.html", nil)
 	})
-	// router.GET("/:number", func(c *gin.Context) {
-		// numberStr := c.Param("number")
-		// isPrime, factors, message := factorize(numberStr)
-		// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-				// "number": numberStr,
-				// "isPrime": isPrime,
-				// "factors": factors,
-				// "message": message,
-		// })
-	// })
+	router.GET("/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		if inputStr[0:1] == "[" {
+			result, message := gcdParse(inputStr[1:])
+			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+				"numbers": inputStr,
+				"result": result,
+				"message": message,
+				"isGCD": true,
+				"title": "GCD",
+			})
+		} else {
+			isPrime, factors, message := factorize(inputStr)
+			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+					"number": inputStr,
+					"isPrime": isPrime,
+					"factors": factors,
+					"message": message,
+					"isGCD": false,
+					"title": "prime factorization",
+			})
+		}
+	})
 	router.GET("/json/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
 		var resultStr string
