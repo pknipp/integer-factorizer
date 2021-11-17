@@ -2,34 +2,73 @@ package main
 
 import (
 	"fmt"
-	"encoding/json"
-	"log"
-	"net/http"
-	"os"
+	// "encoding/json"
+	// "log"
+	// "net/http"
+	// "os"
 	"strconv"
+	"regexp"
+	"strings"
 	// "reflect"
-	"github.com/gin-gonic/gin"
-	_ "github.com/heroku/x/hmetrics/onload"
+	// "github.com/gin-gonic/gin"
+	// _ "github.com/heroku/x/hmetrics/onload"
 )
 
-func gcd2(x, y int) int {
+func gcd2(n1, n2 int) int {
 	// Here should go some error handling.
 	for {
-	  t := y;
-	  y = x % y;
-	  x = t;
-	  if y == 0 {
+	  t := n2;
+	  n2 = n1 % n2;
+	  n1 = t;
+	  if n2 == 0 {
 		  break
 	  }
 	}
-	return x;
+	return n1;
 }
 
-func gcd(xs []int) int {
-	if len(xs) == 1 {
-		return xs[0]
+func gcdParse(nStr string) (int, string) {
+	var result int
+	var ns []int
+	if len(nStr) == 0 {
+		return result, "Array is missing."
+	}
+	if nStr[len(nStr) - 1 :] != "]" {
+		return result, "Array should end with a close bracket."
 	} else {
-		return gcd(append(xs[2:], gcd2(xs[0], xs[1])))
+		nStr = nStr[0: len(nStr) - 1]
+		nStr = regexp.MustCompile(" ").ReplaceAllString(nStr, "")
+		if len(nStr) == 0 {
+			return result, "Your brackets don't contain any numbers."
+		} else {
+			nsStr := strings.Split(nStr, ",")
+			for _, nStr := range nsStr {
+				_, err := strconv.ParseFloat(nStr, 64)
+				if err != nil {
+					return result, "There is a problem with this number: " + nStr
+				}
+				var n int
+				n, err = strconv.Atoi(nStr)
+				if err != nil {
+					return result, "The following number should be an integer, not a decimal: " + nStr
+				} else {
+					if n > 0 {
+						ns = append(ns, n)
+					} else {
+						return result, "The following number is not positive: " + nStr
+					}
+				}
+			}
+		}
+	}
+	return gcd(ns), ""
+}
+
+func gcd(ns []int) int {
+	if len(ns) == 1 {
+		return ns[0]
+	} else {
+		return gcd(append(ns[2:], gcd2(ns[0], ns[1])))
 	}
 }
 
@@ -110,19 +149,19 @@ func factorize(numberStr string) (bool, [][2]int, string) {
 }
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		log.Fatal("$PORT must be set")
-	}
+	// port := os.Getenv("PORT")
+	// if port == "" {
+		// log.Fatal("$PORT must be set")
+	// }
 	// I opted not to use this version of router, for technical reasons.
 	// router := gin.New()
-	router := gin.Default()
-	router.Use(gin.Logger())
-	router.LoadHTMLGlob("templates/*.tmpl.html")
-	router.Static("/static", "static")
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl.html", nil)
-	})
+	// router := gin.Default()
+	// router.Use(gin.Logger())
+	// router.LoadHTMLGlob("templates/*.tmpl.html")
+	// router.Static("/static", "static")
+	// router.GET("/", func(c *gin.Context) {
+		// c.HTML(http.StatusOK, "index.tmpl.html", nil)
+	// })
 	// router.GET("/:number", func(c *gin.Context) {
 		// numberStr := c.Param("number")
 		// isPrime, factors, message := factorize(numberStr)
@@ -133,27 +172,35 @@ func main() {
 				// "message": message,
 		// })
 	// })
-	router.GET("/json/:number", func(c *gin.Context) {
-		numberStr := c.Param("number")
+	// router.GET("/json/:number", func(c *gin.Context) {
+		// numberStr := c.Param("number")
 		// number, _ := strconv.Atoi(numberStr)
-		isPrime, result, message := factorize(numberStr)
-		resultStr := "{\"number\": " + numberStr
-		if len(message) > 0 {
-			resultStr += ", \"message\": " + message
-		} else {
-			resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
-			if !isPrime {
-				factorStr, _ := json.Marshal(result)
-				resultStr += ", \"factors\": " + string(factorStr)
-			}
-		}
-		c.String(http.StatusOK, resultStr + "}")
-	})
-	router.Run(":" + port)
+		// isPrime, result, message := factorize(numberStr)
+		// resultStr := "{\"number\": " + numberStr
+		// if len(message) > 0 {
+			// resultStr += ", \"message\": " + message
+		// } else {
+			// resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
+			// if !isPrime {
+				// factorStr, _ := json.Marshal(result)
+				// resultStr += ", \"factors\": " + string(factorStr)
+			// }
+		// }
+		// c.String(http.StatusOK, resultStr + "}")
+	// })
+	// router.Run(":" + port)
 	// Use the following when testing the app in a non-server configuration.
-	// number := 1234567890123456789
-	// bool, factors, message := factorize(number)
-	// fmt.Println(number, bool, factors, message)
+	input := "[16, 18]"
+	var isPrime bool
+	// var result [][2]int
+	var result int
+	var message string
+	if input[0:1] == "[" {
+		result, message = gcdParse(input[1:])
+	} else {
+		// isPrime, result, message = factorize(input)
+	}
+	fmt.Println(input, isPrime, result, message)
 	// xs := []int{48, 52, 54}
 	// fmt.Println(gcd(xs))
 }
