@@ -2,15 +2,36 @@ package main
 
 import (
 	"fmt"
-	"encoding/json"
-	"log"
-	"net/http"
-	"os"
+	// "encoding/json"
+	// "log"
+	// "net/http"
+	// "os"
 	"strconv"
 	// "reflect"
-	"github.com/gin-gonic/gin"
-	_ "github.com/heroku/x/hmetrics/onload"
+	// "github.com/gin-gonic/gin"
+	// _ "github.com/heroku/x/hmetrics/onload"
 )
+
+func gcd2(x, y int) int {
+	// Here should go some error handling.
+	for {
+	  t := y;
+	  y = x % y;
+	  x = t;
+	  if y == 0 {
+		  break
+	  }
+	}
+	return x;
+}
+
+func gcd(xs []int) int {
+	if len(xs) == 1 {
+		return xs[0]
+	} else {
+		return gcd(append(xs[2:], gcd2(xs[0], xs[1])))
+	}
+}
 
 func factorize(numberStr string) (bool, [][2]int, string) {
 	j := 1
@@ -89,48 +110,50 @@ func factorize(numberStr string) (bool, [][2]int, string) {
 }
 
 func main() {
-	port := os.Getenv("PORT")
-	if port == "" {
-		log.Fatal("$PORT must be set")
-	}
+	// port := os.Getenv("PORT")
+	// if port == "" {
+		// log.Fatal("$PORT must be set")
+	// }
 	// I opted not to use this version of router, for technical reasons.
 	// router := gin.New()
-	router := gin.Default()
-	router.Use(gin.Logger())
-	router.LoadHTMLGlob("templates/*.tmpl.html")
-	router.Static("/static", "static")
-	router.GET("/", func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.tmpl.html", nil)
-	})
-	router.GET("/:number", func(c *gin.Context) {
-		numberStr := c.Param("number")
-		isPrime, factors, message := factorize(numberStr)
-		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-				"number": numberStr,
-				"isPrime": isPrime,
-				"factors": factors,
-				"message": message,
-		})
-	})
-	router.GET("/json/:number", func(c *gin.Context) {
-		numberStr := c.Param("number")
+	// router := gin.Default()
+	// router.Use(gin.Logger())
+	// router.LoadHTMLGlob("templates/*.tmpl.html")
+	// router.Static("/static", "static")
+	// router.GET("/", func(c *gin.Context) {
+		// c.HTML(http.StatusOK, "index.tmpl.html", nil)
+	// })
+	// router.GET("/:number", func(c *gin.Context) {
+		// numberStr := c.Param("number")
+		// isPrime, factors, message := factorize(numberStr)
+		// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+				// "number": numberStr,
+				// "isPrime": isPrime,
+				// "factors": factors,
+				// "message": message,
+		// })
+	// })
+	// router.GET("/json/:number", func(c *gin.Context) {
+		// numberStr := c.Param("number")
 		// number, _ := strconv.Atoi(numberStr)
-		isPrime, result, message := factorize(numberStr)
-		resultStr := "{\"number\": " + numberStr
-		if len(message) > 0 {
-			resultStr += ", \"message\": " + message
-		} else {
-			resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
-			if !isPrime {
-				factorStr, _ := json.Marshal(result)
-				resultStr += ", \"factors\": " + string(factorStr)
-			}
-		}
-		c.String(http.StatusOK, resultStr + "}")
-	})
-	router.Run(":" + port)
+		// isPrime, result, message := factorize(numberStr)
+		// resultStr := "{\"number\": " + numberStr
+		// if len(message) > 0 {
+			// resultStr += ", \"message\": " + message
+		// } else {
+			// resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
+			// if !isPrime {
+				// factorStr, _ := json.Marshal(result)
+				// resultStr += ", \"factors\": " + string(factorStr)
+			// }
+		// }
+		// c.String(http.StatusOK, resultStr + "}")
+	// })
+	// router.Run(":" + port)
 	// Use the following when testing the app in a non-server configuration.
 	// number := 1234567890123456789
 	// bool, factors, message := factorize(number)
 	// fmt.Println(number, bool, factors, message)
+	xs := []int{48, 52, 54}
+	fmt.Println(gcd(xs))
 }
