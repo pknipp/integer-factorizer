@@ -9,6 +9,7 @@ import (
 	"strconv"
 	"regexp"
 	"strings"
+	// "math"
 	// "reflect"
 	// "github.com/gin-gonic/gin"
 	// _ "github.com/heroku/x/hmetrics/onload"
@@ -73,44 +74,49 @@ func gcd(ns []int) int {
 	}
 }
 
-func factorize(numberStr string) (bool, [][2]int, string) {
-	j := 1
-	factors := [][2]int{}
-	isPrime := true
-	var message string
+func factorizeParse(numberStr string) (int, string) {
+	// j := 1
+	// factors := [][2]int{}
+	// isPrime := true
+	var number int
 	if numberStr[0:1] == "-" {
 		numberStr = numberStr[1:]
 	}
 	if numberStr == "1" {
-		return isPrime, factors, "This number is neither prime nor composite."
+		return number, "This number is neither prime nor composite."
 	}
 	badNumber := "There is something wrong with your number."
 	if len(numberStr) > 18 {
 		tooLarge := "Your number is too large."
 		if len(numberStr) > 20 {
-			return isPrime, factors, tooLarge
+			return number, tooLarge
 		}
 		if len(numberStr) == 19 {
 			numTrunc, err := strconv.Atoi(numberStr[0:6])
-			fmt.Println(numTrunc)
 			if err != nil {
-				return isPrime, factors, badNumber
+				return number, badNumber
 			}
 			if numTrunc > 922336 {
-				return isPrime, factors, tooLarge
+				return number, tooLarge
 			}
 		}
 	}
 	_, err := strconv.ParseFloat(numberStr, 64)
 	if err != nil {
-		return isPrime, factors, badNumber
+		return number, badNumber
 	}
-	var number int
 	number, err = strconv.Atoi(numberStr)
 	if err != nil {
-		return isPrime, factors, "Note that the number may not be a decimal."
+		return number, "Note that the number may not be a decimal."
 	}
+	return number, ""
+}
+
+func factorize(number int) (bool,[][2]int) {
+	j := 1
+	var isPrime bool
 	var factor [2]int
+	var factors [][2]int
 	var facFound bool
 	// One only needs to search up until the square root of number.
 	for j * j < number {
@@ -146,7 +152,7 @@ func factorize(numberStr string) (bool, [][2]int, string) {
 	if !facFound && number != 1 {
 		factors = append(factors, [2]int{number, 1})
 	}
-	return isPrime, factors, message
+	return isPrime, factors
 }
 
 func modulo(z0, z1 [2]int) (bool, [2]int) {
@@ -162,40 +168,57 @@ func modulo(z0, z1 [2]int) (bool, [2]int) {
 	return returnIsFactor, returnQuotient
 }
 
-// func gaussFactorize(n1, n2 int) [][2]int {
-	// j := 1
-	// factors := [][2]int{}
+func modulus(z [2]int) int {
+	return z[0] * z[0] + z[1] * z[1]
+}
+
+// func gaussFactorize(z [2]int) [][3]int {
+	// iMin := 1
+	// k := [2]int{iMin, 0}
+	// sizeK := modulus(k)
+	// sizeZ := modulus(z)
+	// factors := [][3]int{}
 	// isPrime := true
-	// var factor [2]int
+	// var factor [3]int
 	// var facFound bool
+	// var i, j int
 	// One only needs to search up until the square root of number.
-	// for j * j < number {
-		// j++
-		// facFound = false
+		// for sizeK * sizeK <= sizeZ {
+		// i = int(math.Sqrt(float64(sizeK)))
+		// j = 0
 		// for {
-			// if number % j == 0 {
-				// if !facFound {
-					// factor[0], factor[1] = j, 1
-					// facFound = true
-					// if number > 2 {
-						// isPrime = false
-					// }
+			// for {
+				// if i * i + j * j <= sizeK {
+					// j++
 				// } else {
-					// factor[1]++
+					// break
 				// }
-				// number /= j
-			// } else {
-				// if facFound {
-					// factors = append(factors, factor)
-					// facFound = false
+			// }
+			// sizeK = i * i + j * j
+			// facFound = false
+			// for {
+				// isFactor, quotient := modulo(z, [2]int{i, j})
+				// if isFactor {
+					// if !facFound {
+						// factor[0], factor[1], factor[2] = i, j, 1
+						// facFound = true
+					// } else {
+						// factor[2]++
+					// }
+					// z = quotient
+				// } else {
+					// if facFound {
+						// factors = append(factors, factor)
+						// facFound = false
+					// }
+					// break
 				// }
-				// break
 			// }
 		// }
 	// }
 	// The last factor is needed if the largest factor occurs by itself.
-	// if !facFound && number != 1 {
-		// factors = append(factors, [2]int{number, 1})
+	// if !facFound {
+		// factors = append(factors, [3]int{i, j, 1})
 	// }
 	// return factors
 // }
@@ -265,18 +288,13 @@ func main() {
 	// })
 	// router.Run(":" + port)
 	// Use the following when testing the app as a CLI.
-	fmt.Println(modulo([2]int{5, 5}, [2]int{2, 1}))
+	// fmt.Println(modulo([2]int{5, 5}, [2]int{2, 1}))
+	// fmt.Println(gaussFactorize([2]int{1, 3}))
 	// input := "[16, 18]"
 	// var isPrime bool
 	// var result [][2]int
-	// var result int
-	// var message string
-	// if input[0:1] == "[" {
-		// result, message = gcdParse(input[1:])
-	// } else {
-		// isPrime, result, message = factorize(input)
-	// }
-	// fmt.Println(input, isPrime, result, message)
-	// xs := []int{48, 52, 54}
-	// fmt.Println(gcd(xs))
+	input := "1234567890123456789"
+	number, message := factorizeParse(input)
+	fmt.Println(number, message)
+	fmt.Println(factorize(number))
 }
