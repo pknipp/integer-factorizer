@@ -2,7 +2,7 @@
   <title>integer factorization</title>
 </head>
 <body>
-  <h3><p align=center>Instructions for use of this integer factorizer:</p></h3>
+  <h3><p align=center>Instructions for use of this factorizer:</p></h3>
   <p align=center>
     <a href="https://pknipp.github.io/math">
       Return
@@ -10,19 +10,54 @@
     to the Math APIs page.
     <ul>
       <li>
-        After <tt>...herokuapp.com</tt> above you should type <tt>/json/</tt> followed by your <a href="https://en.wikipedia.org/wiki/Natural_number">natural number</a>.  The <tt>factors</tt> property of the json output will be an array of 2-element arrays. The zeroth element is a prime factor, and the other element is the power to which it is raised, when forming the <a href="https://en.wikipedia.org/wiki/Integer_factorization">prime factorization</a>. If you want the response to be html rather than json, simply omit <tt>/json</tt> from the address.  <a href="https://en.wikipedia.org/wiki/Scientific_notation#E_notation">E-notation</a> is not allowed.  Your number must be less than 2<sup>63</sup> (which approximately equals "9" followed by 18 zeros).
-      </li>
-      <li>
-        examples:
+        General:
         <ul>
           <li>
-            359 is prime.
+            After <tt>...herokuapp.com</tt> above you should type <tt>/json/</tt> followed by your particular input.  Spaces are allowed - but discouraged - because %20 will replace each space after you hit return, thereby making the address uglier. <a href="https://en.wikipedia.org/wiki/Scientific_notation#E_notation">E-notation</a> is not allowed.  All numbers must be <a href="https://en.wikipedia.org/wiki/Natural_number">natural numbers</a> less than 2<sup>63</sup> (which approximately equals "9" followed by 18 zeros).
           </li>
           <li>
-            360 = 2<sup>3</sup>&middot;3<sup>2</sup>&middot;5
+            If you want the response to be html rather than json, simply omit <tt>/json</tt> from the address.
+          </li>
+      </li>
+      <li>
+        <a href="https://en.wikipedia.org/wiki/Greatest_common_divisor">greatest common divisor</a> (GCD):
+        <ul>
+          <li>
+            Your input should be a bracket-enclosed list of one or more comma-separated numbers.
+          </li>
+          <li>
+            examples:
+              <table border='1'>
+                <tr><th>input</th><th>result</th><tr>
+                <tr><td>[9,12]</td><td>3</td></tr>
+                <tr><td>[9,10]</td><td>1</td></tr>
+                <tr><td>[13]</td><td>13</td></tr>
+                <tr><td>[8,10,12]</td><td>2</td></tr>
+              </table>
           </li>
         </ul>
       </li>
+      <li>factorization of a real integer:
+        <ul>
+          <li>
+            <li>
+              Your input should simply be a number.
+            </li>
+            <li>
+              The <tt>factors</tt> property of the json output will be an array of 2-element arrays. The zeroth element is a prime factor, and the other element is the power to which it is raised, when forming the <a href="https://en.wikipedia.org/wiki/Integer_factorization">prime factorization</a>.
+            </li>
+          </li>
+          <li>
+            examples:
+            <table border='1'>
+              <tr><th>input</th><th>result</th></tr>
+              <tr><td>359</td><td>prime</td></tr>
+              <tr><td>360</td><td>2<sup>3</sup>&middot;3<sup>2</sup>&middot;5</td></tr>
+            </table>
+          </li>
+        </ul>
+      </li>
+      <li>factorization of Gaussian (complex) integer: UNDER CONSTRUCTION</li>
     </ul>
     <p align=center>
       creator:&nbsp;

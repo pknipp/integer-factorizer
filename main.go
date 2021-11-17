@@ -213,7 +213,7 @@ func main() {
 		c.String(http.StatusOK, resultStr + "}")
 	})
 	router.Run(":" + port)
-	// Use the following when testing the app in a non-server configuration.
+	// Use the following when testing the app as a CLI.
 	// input := "[16, 18]"
 	// var isPrime bool
 	// var result [][2]int
