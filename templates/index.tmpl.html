@@ -10,13 +10,13 @@
     to the Math APIs page.
     <ul>
       <li>
-        After <tt>...herokuapp.com</tt> above you should type <tt>/json/</tt> followed by your natural number.  If you want the response to be html rather than json, simply omit <tt>/json</tt> from the address.  <a href="https://en.wikipedia.org/wiki/Scientific_notation#E_notation">E-notation</a> is not allowed.  Your number must be less than 2<sup>63</sup> (which approximately equals "9" followed by 18 zeros).
+        After <tt>...herokuapp.com</tt> above you should type <tt>/json/</tt> followed by your <a href="https://en.wikipedia.org/wiki/Natural_number">natural number</a>.  The <tt>factors</tt> property of the json output will be an array of 2-element arrays. The zeroth element is a prime factor, and the other element is the power to which it is raised, when forming the <a href="https://en.wikipedia.org/wiki/Integer_factorization">prime factorization</a>. If you want the response to be html rather than json, simply omit <tt>/json</tt> from the address.  <a href="https://en.wikipedia.org/wiki/Scientific_notation#E_notation">E-notation</a> is not allowed.  Your number must be less than 2<sup>63</sup> (which approximately equals "9" followed by 18 zeros).
       </li>
       <li>
-        EXAMPLES:
+        examples:
         <ul>
           <li>
-            359 is a prime.
+            359 is prime.
           </li>
           <li>
             360 = 2<sup>3</sup>&middot;3<sup>2</sup>&middot;5

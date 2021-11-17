@@ -20,6 +20,9 @@ func factorize(numberStr string) (bool, [][2]int, string) {
 	if numberStr[0:1] == "-" {
 		numberStr = numberStr[1:]
 	}
+	if numberStr == "1" {
+		return isPrime, factors, "1 is neither prime nor composite."
+	}
 	badNumber := "There is something wrong with your number."
 	if len(numberStr) > 18 {
 		tooLarge := "Your number is too large."
