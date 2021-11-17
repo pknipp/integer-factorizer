@@ -21,7 +21,7 @@ func factorize(numberStr string) (bool, [][2]int, string) {
 		numberStr = numberStr[1:]
 	}
 	if numberStr == "1" {
-		return isPrime, factors, "1 is neither prime nor composite."
+		return isPrime, factors, "This number is neither prime nor composite."
 	}
 	badNumber := "There is something wrong with your number."
 	if len(numberStr) > 18 {
