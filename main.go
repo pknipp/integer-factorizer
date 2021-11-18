@@ -9,7 +9,7 @@ import (
 	"strconv"
 	"regexp"
 	"strings"
-	// "math"
+	"math"
 	// "reflect"
 	// "github.com/gin-gonic/gin"
 	// _ "github.com/heroku/x/hmetrics/onload"
@@ -172,56 +172,85 @@ func modulus(z [2]int) int {
 	return z[0] * z[0] + z[1] * z[1]
 }
 
-// func gaussFactorize(z [2]int) [][3]int {
-	// iMin := 1
-	// k := [2]int{iMin, 0}
-	// sizeK := modulus(k)
-	// sizeZ := modulus(z)
-	// factors := [][3]int{}
-	// isPrime := true
-	// var factor [3]int
-	// var facFound bool
-	// var i, j int
-	// One only needs to search up until the square root of number.
-		// for sizeK * sizeK <= sizeZ {
-		// i = int(math.Sqrt(float64(sizeK)))
-		// j = 0
-		// for {
-			// for {
-				// if i * i + j * j <= sizeK {
-					// j++
-				// } else {
-					// break
-				// }
-			// }
-			// sizeK = i * i + j * j
-			// facFound = false
-			// for {
-				// isFactor, quotient := modulo(z, [2]int{i, j})
-				// if isFactor {
-					// if !facFound {
-						// factor[0], factor[1], factor[2] = i, j, 1
-						// facFound = true
-					// } else {
-						// factor[2]++
-					// }
-					// z = quotient
-				// } else {
-					// if facFound {
-						// factors = append(factors, factor)
-						// facFound = false
-					// }
-					// break
-				// }
-			// }
-		// }
-	// }
-	// The last factor is needed if the largest factor occurs by itself.
-	// if !facFound {
-		// factors = append(factors, [3]int{i, j, 1})
-	// }
-	// return factors
-// }
+func gaussianFactorize(z [2]int) (int, [][3]int) {
+	gaussianFactors := [][3]int{}
+	isPrime, factors := factorize(modulus(z))
+	// If the squared modulus is prime (over the reals), then the Gaussian integer is prime (over the gaussian integers), by some theorem.
+	if isPrime {
+		return 0, [][3]int{[3]int{z[0], z[1], 1}}
+	}
+	// Now let's consider composite Gaussian integers.
+	for _, factor := range factors {
+		// Here are the factors of 1 + i
+		if factor[0] == 2 {
+			gaussianFactors = append(gaussianFactors, [3]int{1, 1, factor[1]})
+			for count := 0; count < factor[1]; count++ {
+				_, z = modulo(z, [2]int{1, 1})
+			}
+		} else {
+			mod4 := factor[0]
+			// Here are the (irreducible) real prime factors, which occur in pairs.
+			if mod4 % 4 == 3 {
+				gaussianFactors = append(gaussianFactors, [3]int{factor[0], 0, factor[1] / 2})
+				for count := 0; count < factor[1] / 2; count++ {
+					for i, _ := range z {
+						z[i] /= factor[0]
+					}
+				}
+			} else {
+				// Here are Gaussian integers for which one component is odd and the other is even.
+				// Find ints m, n such that (2m+1)^2 + (2n)^2 = mod4
+				mod4 = (mod4 - 1) / 4
+				// Now this becomes m*(m+1) + n^2 = mod4
+				m := 0
+				var n int
+				for {
+					n64 := math.Sqrt(float64(mod4 - m * (m + 1)))
+					nm := int(math.Floor(n64))
+					np := int(math.Ceil(n64))
+					if m * (m + 1) + nm * nm == mod4 {
+						n = nm
+						break
+					} else if m * (m + 1) + np * np == mod4 {
+						n = np
+						break
+					}
+					m++
+				}
+				count := 0
+				// First, let's consider possibility that the real component is the odd one.
+				for {
+					isFactor, quotient := modulo(z, [2]int{2 * m + 1, 2 * n})
+					if isFactor {
+						z = quotient
+						count++
+					} else {
+						if count > 0 {
+							gaussianFactors = append(gaussianFactors, [3]int{2 * m + 1, 2 * n, count})
+						}
+						break
+					}
+				}
+				// For the remaining factors, the real component must be the even one.
+				count2 := factor[1] - count
+				if count2 > 0 {
+					gaussianFactors = append(gaussianFactors, [3]int{2 * n, 2 * m + 1, count2})
+				}
+				for count = 0; count < count2; count++ {
+					_, z = modulo(z, [2]int{2 * n, 2 * m + 1})
+				}
+			}
+		}
+	}
+	// Determine exponent of i.
+	var n int
+	if math.Abs(float64(z[0])) == 1 {
+		n = 1 - z[0]
+	} else {
+		n = 2 - z[1]
+	}
+	return n, gaussianFactors
+}
 
 func main() {
 	// port := os.Getenv("PORT")
@@ -293,8 +322,10 @@ func main() {
 	// input := "[16, 18]"
 	// var isPrime bool
 	// var result [][2]int
-	input := "1234567890123456789"
-	number, message := factorizeParse(input)
-	fmt.Println(number, message)
-	fmt.Println(factorize(number))
+	// input := "1234567890123456789"
+	// number, message := factorizeParse(input)
+	// fmt.Println(number, message)
+	// fmt.Println(factorize(number))
+	z := [2]int{8, -1}
+	fmt.Println(gaussianFactorize(z))
 }
