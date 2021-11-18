@@ -368,6 +368,10 @@ func main() {
 		} else {
 			number, message := factorizeParse(inputStr)
 			isPrime, results := factorize(number)
+			factors := [][2]string{}
+			for _, result := range results {
+				factors = append(factors, [2]string{strconv.Itoa(result[0]), strconv.Itoa(result[1])})
+			}
 			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 					"number": inputStr,
 					"isPrime": isPrime,
@@ -408,24 +412,25 @@ func main() {
 
 	router.GET("/complex/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
-		number, results, message := gaussignParse(inputStr)
-		factors := [][2](string, int){}
+		number, results, message := gaussianFactorize(inputStr)
+		PREFACTOR := [4]string{"", "i", "-", "-i"}
+		factors := [][2]string{[2]string{PREFACTOR[number], "1"}}
 		for _, result := range results {
-			factor := [2](string int)
+			exponent := strconv.Itoa(result[2])
 			if result[1] == 0 {
-				factors = append(factors, [2](string int){strconv.Itoa(result[0]), result[2]})
+				factors = append(factors, [2]string{strconv.Itoa(result[0]), exponent})
 			} else {
-				fac := "(" + strconv.Itoa(result[0])
+				factor := "(" + strconv.Itoa(result[0])
 				if result[1] > 0 {
-					fac += " + "
+					factor += " + "
 				} else {
-					fac += " - "
+					factor += " - "
 				}
 				imCoef := math.Abs(float64(result[1]))
 				if imCoef != 1. {
-					fac += int(imCoef)
+					factor += strconv.Itoa(int(imCoef))
 				}
-				factors = append(factors, [2](string int){fac + "i)", results[2]})
+				factors = append(factors, [2]string{factor + "i)", exponent})
 			}
 		}
 		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
