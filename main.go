@@ -420,7 +420,7 @@ func main() {
 			factor := ""
 			if i == 0 {
 				coef := PREFACTOR[number]
-				if result[1] % 2 == 0 || result[1] != 0 {
+				if number % 2 == 0 || result[1] != 0 {
 					factor += coef
 				} else {
 					factors = append(factors, [2]string{coef, "1"})
