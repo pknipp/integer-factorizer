@@ -423,7 +423,7 @@ func main() {
 				if result[1] % 2 == 0 || result[1] != 0 {
 					factor += coef
 				} else {
-					factors = append(factors, [2]string{coef, 1})
+					factors = append(factors, [2]string{coef, "1"})
 				}
 			}
 			if result[1] == 0 {
