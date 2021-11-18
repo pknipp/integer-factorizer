@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "fmt"
+	"fmt"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -414,10 +414,11 @@ func main() {
 		if len(message) > 0 {
 			resultStr += ", \"message\": " + message
 		} else {
-			resultStr += ", \"n\": " + string(n)
+			resultStr += ", \"n\": " + strconv.Itoa(n)
 			factorStr, _ := json.Marshal(result)
 			resultStr += ", \"factors\": " + string(factorStr)
 		}
+		fmt.Println(resultStr)
 		c.String(http.StatusOK, resultStr + "}")
 	})
 
