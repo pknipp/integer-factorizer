@@ -405,6 +405,22 @@ func main() {
 		}
 		c.String(http.StatusOK, resultStr + "}")
 	})
+
+	router.GET("/complex/json/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		var resultStr string
+		n, result, message := gaussianFactorize(inputStr)
+		resultStr = "{\"number\": " + inputStr
+		if len(message) > 0 {
+			resultStr += ", \"message\": " + message
+		} else {
+			resultStr += ", \"n\": " + string(n)
+			factorStr, _ := json.Marshal(result)
+			resultStr += ", \"factors\": " + string(factorStr)
+		}
+		c.String(http.StatusOK, resultStr + "}")
+	})
+
 	router.Run(":" + port)
 	// Use the space below when testing the app as a CLI.
 	// zStr := "-3"
