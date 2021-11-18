@@ -424,9 +424,6 @@ func main() {
 			if result[1] == 0 {
 				factor += strconv.Itoa(result[0])
 			} else {
-				if i == 0 {
-					factor += PREFACTOR[number]
-				}
 				factor += "(" + strconv.Itoa(result[0])
 				if result[1] > 0 {
 					factor += " + "
