@@ -1,32 +1,28 @@
 package main
 
 import (
-	"fmt"
-	// "encoding/json"
-	// "log"
-	// "net/http"
-	// "os"
+	// "fmt"
+	"encoding/json"
+	"log"
+	"net/http"
+	"os"
 	"strconv"
 	"regexp"
 	"strings"
 	"math"
 	// "reflect"
-	// "github.com/gin-gonic/gin"
-	// _ "github.com/heroku/x/hmetrics/onload"
+	"github.com/gin-gonic/gin"
+	_ "github.com/heroku/x/hmetrics/onload"
 )
 
 func gcd2(n1, n2 int) int {
 	for {
 	  t := n2;
-	//   n2 = n1 % n2;
-	//   n1 = t;
 	  n1, n2 = t, n1 % n2
 	  if n2 == 0 {
-		//   break
 		return n1
 	  }
 	}
-	// return n1;
 }
 
 func gcdParse(nStr string) (int, string) {
@@ -345,79 +341,72 @@ func gaussianFactorize(zStr string) (int, [][3]int, string) {
 }
 
 func main() {
-	// port := os.Getenv("PORT")
-	// if port == "" {
-		// log.Fatal("$PORT must be set")
-	// }
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
 	// I opted not to use this version of router, for technical reasons.
 	// router := gin.New()
-	// router := gin.Default()
-	// router.Use(gin.Logger())
-	// router.LoadHTMLGlob("templates/*.tmpl.html")
-	// router.Static("/static", "static")
-	// router.GET("/", func(c *gin.Context) {
-		// c.HTML(http.StatusOK, "index.tmpl.html", nil)
-	// })
-	// router.GET("/:input", func(c *gin.Context) {
-		// inputStr := c.Param("input")
-		// if inputStr[0:1] == "[" {
-			// result, message := gcdParse(inputStr[1:])
-			// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-				// "numbers": inputStr,
-				// "result": result,
-				// "message": message,
-				// "isGCD": true,
-				// "title": "GCD",
-			// })
-		// } else {
-			// isPrime, factors, message := factorize(inputStr)
-			// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					// "number": inputStr,
-					// "isPrime": isPrime,
-					// "factors": factors,
-					// "message": message,
-					// "isGCD": false,
-					// "title": "prime factorization",
-			// })
-		// }
-	// })
-	// router.GET("/json/:input", func(c *gin.Context) {
-		// inputStr := c.Param("input")
-		// var resultStr string
-		// if inputStr[0:1] == "[" {
-			// result, message := gcdParse(inputStr[1:])
-			// resultStr = "{\"numbers\": " + inputStr
-			// if len(message) > 0 {
-				// resultStr += ", \"message\": " + message
-			// } else {
-				// resultStr += ", \"gcd\": " + strconv.Itoa(result)
-			// }
-		// } else {
-			// isPrime, result, message := factorize(inputStr)
-			// resultStr = "{\"number\": " + inputStr
-			// if len(message) > 0 {
-				// resultStr += ", \"message\": " + message
-			// } else {
-				// resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
-				// if !isPrime {
-					// factorStr, _ := json.Marshal(result)
-					// resultStr += ", \"factors\": " + string(factorStr)
-				// }
-			// }
-		// }
-		// c.String(http.StatusOK, resultStr + "}")
-	// })
-	// router.Run(":" + port)
-	// Use the following when testing the app as a CLI.
-	// fmt.Println(modulo([2]int{5, 5}, [2]int{2, 1}))
-	// fmt.Println(gaussFactorize([2]int{1, 3}))
-	// input := "[16, 18]"
-	// var isPrime bool
-	// var result [][2]int
-	// input := "1234567890123456789"
-	// number, message := factorizeParse(input)
-	// fmt.Println(number, message)
-	// fmt.Println(factorize(number))
-	zStr := "-3"
-	fmt.Println(gaussianFactorize(zStr))
+	router := gin.Default()
+	router.Use(gin.Logger())
+	router.LoadHTMLGlob("templates/*.tmpl.html")
+	router.Static("/static", "static")
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.tmpl.html", nil)
+	})
+	router.GET("/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		if inputStr[0:1] == "[" {
+			result, message := gcdParse(inputStr[1:])
+			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+				"numbers": inputStr,
+				"result": result,
+				"message": message,
+				"isGCD": true,
+				"title": "GCD",
+			})
+		} else {
+			number, message := factorizeParse(inputStr)
+			isPrime, factors := factorize(number)
+			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+					"number": inputStr,
+					"isPrime": isPrime,
+					"factors": factors,
+					"message": message,
+					"isGCD": false,
+					"title": "prime factorization",
+			})
+		}
+	})
+	router.GET("/json/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		var resultStr string
+		if inputStr[0:1] == "[" {
+			result, message := gcdParse(inputStr[1:])
+			resultStr = "{\"numbers\": " + inputStr
+			if len(message) > 0 {
+				resultStr += ", \"message\": " + message
+			} else {
+				resultStr += ", \"gcd\": " + strconv.Itoa(result)
+			}
+		} else {
+			number, message := factorizeParse(inputStr)
+			isPrime, result := factorize(number)
+			resultStr = "{\"number\": " + inputStr
+			if len(message) > 0 {
+				resultStr += ", \"message\": " + message
+			} else {
+				resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
+				if !isPrime {
+					factorStr, _ := json.Marshal(result)
+					resultStr += ", \"factors\": " + string(factorStr)
+				}
+			}
+		}
+		c.String(http.StatusOK, resultStr + "}")
+	})
+	router.Run(":" + port)
+	// Use the space below when testing the app as a CLI.
+	// zStr := "-3"
+	// fmt.Println(gaussianFactorize(zStr))
 }
