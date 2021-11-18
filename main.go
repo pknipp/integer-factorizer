@@ -413,13 +413,18 @@ func main() {
 	router.GET("/complex/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
 		number, results, message := gaussianFactorize(inputStr)
-		PREFACTOR := [4]string{"", "i", "-", "-i"}
+		PREFACTOR := [4][2]string{"", "i", "-", "-i"}
 		factors := [][2]string{}
 		for i, result := range results {
 			exponent := strconv.Itoa(result[2])
 			factor := ""
 			if i == 0 {
-				factor += PREFACTOR[number]
+				coef := PREFACTOR[number]
+				if result[1] % 2 == 0 || result[1] != 0 {
+					factor += coef
+				} else {
+					factors = append(factors, [2]string{coef, 1})
+				}
 			}
 			if result[1] == 0 {
 				factor += strconv.Itoa(result[0])
