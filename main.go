@@ -75,9 +75,6 @@ func gcd(ns []int) int {
 }
 
 func factorizeParse(numberStr string) (int, string) {
-	// j := 1
-	// factors := [][2]int{}
-	// isPrime := true
 	var number int
 	if numberStr[0:1] == "-" {
 		numberStr = numberStr[1:]
@@ -172,12 +169,107 @@ func modulus(z [2]int) int {
 	return z[0] * z[0] + z[1] * z[1]
 }
 
-func gaussianFactorize(z [2]int) (int, [][3]int) {
+func parsePart(str, part string) (int, string) {
+	if str == "" && part == "imaginary" {
+		return 1, ""
+	}
+	_, err := strconv.ParseFloat(str, 64)
+	if err == nil {
+		integer, err := strconv.Atoi(str)
+		if err == nil {
+			return integer, ""
+		} else {
+			return 0, "Your " + part + " part (" + str + ") does not seem to be an integer"
+		}
+	} else {
+		return 0, "Your " + part + " part (" + str + ") does not seem to be a number."
+	}
+}
+
+func gaussianFactorize(zStr string) (int, [][3]int, string) {
 	gaussianFactors := [][3]int{}
+	var z [2]int
+	noNumber := "You need to input a Gaussian integer."
+	neither := "This number is neither prime nor composite."
+	zStr = regexp.MustCompile(" ").ReplaceAllString(zStr, "")
+	zStr = regexp.MustCompile("j").ReplaceAllString(zStr, "i")
+	if zStr[0:1] == "+" {
+		zStr = zStr[1:]
+	}
+	if len(zStr) == 0 {
+		return 0, gaussianFactors, noNumber
+	}
+	if zStr[len(zStr) - 1:] == "i" {
+		// Number has an imaginary part
+		zStr = zStr[0: len(zStr) - 1]
+		if len(zStr) == 0 {
+			return 0, gaussianFactors, neither
+		} else if zStr == "-" {
+			return 0, gaussianFactors, neither
+		}
+		zSlice := strings.Split(zStr, "+")
+		if len(zSlice) == 2 {
+			// Number's real part is nonzero and imaginary part is positive.
+			int, message := parsePart(zSlice[0], "real")
+			if len(message) > 0 {
+				return 0, gaussianFactors, message
+			} else {
+				z[0] = int
+			}
+			int, message = parsePart(zSlice[1], "imaginary")
+			if len(message) > 0 {
+				return 0, gaussianFactors, message
+			} else {
+				z[1] = int
+			}
+		} else {
+			zSlice = strings.Split(zStr, "-")
+			if zStr[0:1] != "-" && len(zSlice) == 2 {
+				// Number's real part is nonzero and imaginary part is negative.
+				int, message := parsePart(zSlice[0], "real")
+				if len(message) > 0 {
+					return 0, gaussianFactors, message
+				} else {
+					z[0] = int
+				}
+				int, message = parsePart(zSlice[1], "imaginary")
+				if len(message) > 0 {
+					return 0, gaussianFactors, message
+				} else {
+					z[1] = -int
+				}
+			} else {
+				// Number's real part is zero.
+				z[0] = 0
+				int, message := parsePart(zStr, "imaginary")
+				if len(message) > 0 {
+					return 0, gaussianFactors, message
+				} else {
+					if math.Abs(float64(int)) == 1. {
+						return 0, gaussianFactors, neither
+					}
+					z[1] = int
+				}
+			}
+		}
+	} else {
+		// Number is purely real.
+		z[1] = 0
+		int, message := parsePart(zStr, "real")
+		if len(message) > 0 {
+			return 0, gaussianFactors, message
+		} else {
+			if math.Abs(float64(int)) == 1. {
+				return 0, gaussianFactors, neither
+			}
+			z[0] = int
+		}
+	}
+
 	isPrime, factors := factorize(modulus(z))
 	// If the squared modulus is prime (over the reals), then the Gaussian integer is prime (over the gaussian integers), by some theorem.
 	if isPrime {
-		return 0, [][3]int{[3]int{z[0], z[1], 1}}
+		return 0, [][3]int{[3]int{z[0], z[1], 1}}, ""
 	}
 	// Now let's consider composite Gaussian integers.
 	for _, factor := range factors {
@@ -249,7 +341,7 @@ func gaussianFactorize(z [2]int) (int, [][3]int) {
 	} else {
 		n = 2 - z[1]
 	}
-	return n, gaussianFactors
+	return n, gaussianFactors, ""
 }
 
 func main() {
@@ -326,6 +418,6 @@ func main() {
 	// number, message := factorizeParse(input)
 	// fmt.Println(number, message)
 	// fmt.Println(factorize(number))
-	z := [2]int{8, -1}
-	fmt.Println(gaussianFactorize(z))
+	zStr := "-3"
+	fmt.Println(gaussianFactorize(zStr))
 }
