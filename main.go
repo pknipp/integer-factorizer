@@ -414,13 +414,20 @@ func main() {
 		inputStr := c.Param("input")
 		number, results, message := gaussianFactorize(inputStr)
 		PREFACTOR := [4]string{"", "i", "-", "-i"}
-		factors := [][2]string{[2]string{PREFACTOR[number], "1"}}
-		for _, result := range results {
+		factors := [][2]string{}
+		for i, result := range results {
 			exponent := strconv.Itoa(result[2])
+			factor := ""
+			if i == 0 {
+				factor += PREFACTOR[number]
+			}
 			if result[1] == 0 {
-				factors = append(factors, [2]string{strconv.Itoa(result[0]), exponent})
+				factor += strconv.Itoa(result[0])
 			} else {
-				factor := "(" + strconv.Itoa(result[0])
+				if i == 0 {
+					factor += PREFACTOR[number]
+				}
+				factor += "(" + strconv.Itoa(result[0])
 				if result[1] > 0 {
 					factor += " + "
 				} else {
@@ -430,8 +437,9 @@ func main() {
 				if imCoef != 1. {
 					factor += strconv.Itoa(int(imCoef))
 				}
-				factors = append(factors, [2]string{factor + "i)", exponent})
+				factor += "i)"
 			}
+			factors = append(factors, [2]string{factor, exponent})
 		}
 		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				"number": inputStr,
