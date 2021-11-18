@@ -438,11 +438,15 @@ func main() {
 			}
 			factors = append(factors, [2]string{factor, exponent})
 		}
+		isPrime := true
+		if len(results) > 1 {
+			isPrime = false
+		}
 		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				"number": inputStr,
 				"factors": factors,
 				"message": message,
-				"isPrime": false,
+				"isPrime": isPrime,
 				"type": "Gaussian",
 				"title": "Gaussian-prime factorization",
 		})
