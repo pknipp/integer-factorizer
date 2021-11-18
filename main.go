@@ -362,18 +362,18 @@ func main() {
 				"numbers": inputStr,
 				"result": result,
 				"message": message,
-				"isGCD": true,
+				"type": "GCD",
 				"title": "GCD",
 			})
 		} else {
 			number, message := factorizeParse(inputStr)
-			isPrime, factors := factorize(number)
+			isPrime, results := factorize(number)
 			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 					"number": inputStr,
 					"isPrime": isPrime,
 					"factors": factors,
 					"message": message,
-					"isGCD": false,
+					"type": "integer",
 					"title": "prime factorization",
 			})
 		}
@@ -406,6 +406,38 @@ func main() {
 		c.String(http.StatusOK, resultStr + "}")
 	})
 
+	router.GET("/complex/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		number, results, message := gaussignParse(inputStr)
+		factors := [][2](string, int){}
+		for _, result := range results {
+			factor := [2](string int)
+			if result[1] == 0 {
+				factors = append(factors, [2](string int){strconv.Itoa(result[0]), result[2]})
+			} else {
+				fac := "(" + strconv.Itoa(result[0])
+				if result[1] > 0 {
+					fac += " + "
+				} else {
+					fac += " - "
+				}
+				imCoef := math.Abs(float64(result[1]))
+				if imCoef != 1. {
+					fac += int(imCoef)
+				}
+				factors = append(factors, [2](string int){fac + "i)", results[2]})
+			}
+		}
+		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+				"number": inputStr,
+				"factors": factors,
+				"message": message,
+				"isPrime": false,
+				"type": "Gaussian",
+				"title": "Gaussian-prime factorization",
+		})
+	})
+
 	router.GET("/complex/json/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
 		var resultStr string
@@ -414,7 +446,7 @@ func main() {
 		if len(message) > 0 {
 			resultStr += ", \"message\": " + message
 		} else {
-			resultStr += ", \"n\": " + strconv.Itoa(n)
+			resultStr += ", \"exponent\": " + strconv.Itoa(n)
 			factorStr, _ := json.Marshal(result)
 			resultStr += ", \"factors\": " + string(factorStr)
 		}

@@ -6,7 +6,7 @@
         <h4><p align=center>Result for {{ .title }}</p></h4>
         <p align=center>
             <table border='1'>
-                {{if .isGCD}}
+                {{if eq .type "GCD"}}
                     <tr><td>numbers</td><td>{{ .numbers}}</td></tr>
                     {{ if eq .message ""}}
                         <tr><td>GCD</td><td>{{ .result }}</td></tr>
