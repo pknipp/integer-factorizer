@@ -58,13 +58,27 @@
         </ul>
       </li>
       <li>
-        factorization of (complex) <a href="https://en.wikipedia.org/wiki/Gaussian_integer">Gaussian integer</a>:
+        <a href="https://en.wikipedia.org/wiki/Table_of_Gaussian_integer_factorizations">factorization</a> of (complex) <a href="https://en.wikipedia.org/wiki/Gaussian_integer">Gaussian integer</a>:
+        <br/>
+        A Gaussian integer is one for which both the real- and imaginary parts are integers.  In the same way that any integer (other than +1, 0, or -1) may be expressed in a unique way as a product of either 1 or -1 and one or more prime numbers (each of which is a positive natural number), any Gaussian integer may be expressed uniquely as a product of either 1, i, -1, or -i and one or more prime Gaussian integers which are located in the first quadrant of the complex plane, including the positive real axis but not including the positive imaginary axis.
         <ul>
           <li>
             Between <tt>...herokuapp.com</tt> and <tt>/json/</tt> you should include <tt>/complex</tt>.
           </li>
           <li>
-            Restrict your Gaussian integer to be in the first quadrant of the complex plane, including the positive real axis, but not including the positive imaginary axis.  Accordingly, the complex number should be of the form <i>m</i> + <i>n</i>i, where <i>m</i> is a natural number and <I>n</I> is a whole number (ie, may be 0).
+            Your complex number should be of the form <i>m</i> + <i>n</i>i, where <i>m</i> is a natural number and <I>n</I> is a whole number (ie, may be 0).
+          </li>
+          <li>
+            In the json output, the value of the <tt>exponent</tt> property is the power to which i should be raised, when multiplying the prime factors, and the <tt>factors</tt> property is an array of 3-element subarrays, in which the first element represents the real part of the Gaussian prime, the next element is its imaginary part, and the last element is the power to which that particular Gaussian prime gets raised when forming the factorization.
+          </li>
+          <li>
+            examples:
+            <table border='1'>
+              <tr><th>input</th><th>result</th><th>json</th></tr>
+              <tr><td>2</td><td>-i(1 + i)<sup>2</sup></td><td><tt></tt>{"exponent": 3, "factors": [[1,1,2]]}</td></td></tr>
+              <tr><td>3</td><td colspan=2>prime</td></tr>
+              <tr><td>1 + 3i</td>(1 + i)(2 + i)</td><td><tt>{"exponent": 0, "factors": [[1,1,1], [2,1,1]]</tt></td></tr>
+            </table>
           </li>
         </ul>
       </li>
