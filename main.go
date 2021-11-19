@@ -469,7 +469,6 @@ func main() {
 			factorStr, _ := json.Marshal(result)
 			resultStr += ", \"factors\": " + string(factorStr)
 		}
-		fmt.Println(resultStr)
 		c.String(http.StatusOK, resultStr + "}")
 	})
 
