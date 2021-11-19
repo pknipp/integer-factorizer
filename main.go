@@ -416,7 +416,9 @@ func main() {
 			}
 		} else {
 			number, message := factorizeParse(inputStr)
+			fmt.Println("l419", number, message)
 			isPrime, result := factorize(number)
+			fmt.Println("l421", isPrime, result)
 			resultStr = "{\"number\": " + inputStr
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
@@ -434,7 +436,9 @@ func main() {
 	router.GET("/complex/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
 		z, message := gaussianParse(inputStr)
+		fmt.Println("l497", z, message)
 		isPrime, number, results := gaussian(z)
+		fmt.Println("l441", isPrime, number, results)
 		PREFACTOR := [4]string{"", "i", "-", "-i"}
 		// Transform from results (map) to factors (array of 2-ples) to enable me to treat 0-th element differently in results.html.
 		factors := [][2]string{}
