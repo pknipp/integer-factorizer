@@ -8,12 +8,16 @@
       Return
     </a>
     to the Math APIs page.
-    <ul>
+
+    <br/>
+    This page allows for three different types of calculations, each described below.
+    <ol>
       <li>
         general:
         <ul>
+
           <li>
-            After <tt>...herokuapp.com</tt> above you should type <tt>/json/</tt> followed by your particular input.  Spaces are allowed - but discouraged - because %20 will replace each space after you hit return, thereby making the address uglier. <a href="https://en.wikipedia.org/wiki/Scientific_notation#E_notation">E-notation</a> is not allowed.  All numbers must be <a href="https://en.wikipedia.org/wiki/Natural_number">natural numbers</a> less than 2<sup>63</sup> (which approximately equals "9" followed by 18 zeros).
+            After <tt>...herokuapp.com</tt> above you should type <tt>/json/</tt> followed by your particular input.  Spaces are allowed - but discouraged - because %20 will replace each space after you hit return, thereby making the address uglier. <a href="https://en.wikipedia.org/wiki/Scientific_notation#E_notation">E-notation</a> is not allowed.  All numbers must be <a href="https://en.wikipedia.org/wiki/Natural_number">natural numbers</a> less than 2<sup>63</sup> (which approximately equals "9" followed by 18 zeros).  Exception: the limit on the number of digits in your Gaussian integer is half of this.
           </li>
           <li>
             If you want the response to be html rather than json, simply omit <tt>/json</tt> from the address.
@@ -60,7 +64,7 @@
       <li>
         <a href="https://en.wikipedia.org/wiki/Table_of_Gaussian_integer_factorizations">factorization</a> of (complex) <a href="https://en.wikipedia.org/wiki/Gaussian_integer">Gaussian integer</a>:
         <br/>
-        A Gaussian integer is one for which both the real- and imaginary parts are integers.  In the same way that any integer (other than +1, 0, or -1) may be expressed in a unique way as a product of either 1 or -1 and one or more prime numbers (each of which is a positive natural number), any Gaussian integer may be expressed uniquely as a product of either 1, i, -1, or -i and one or more prime Gaussian integers which are located in the first quadrant of the complex plane, including the positive real axis but not including the positive imaginary axis.
+        A Gaussian integer is a complex number for which both the real- and imaginary parts are integers.  In the same way that any integer (other than +1, 0, or -1) may be expressed in a unique way as a product of either 1 or -1 and one or more prime numbers (each of which is a positive natural number), any Gaussian integer may be expressed uniquely as a product of either 1, i, -1, or -i and one or more prime Gaussian integers which are located in the first quadrant of the complex plane (including the positive real axis but not including the positive imaginary axis).
         <ul>
           <li>
             Between <tt>...herokuapp.com</tt> and <tt>/json/</tt> you should include <tt>/complex</tt>.
@@ -77,12 +81,12 @@
               <tr><th>input</th><th>result</th><th>json</th></tr>
               <tr><td>2</td><td>-i(1 + i)<sup>2</sup></td><td><tt></tt>{"exponent": 3, "factors": [[1,1,2]]}</td></td></tr>
               <tr><td>3</td><td colspan=2>prime</td></tr>
-              <tr><td>1 + 3i</td>(1 + i)(2 + i)</td><td><tt>{"exponent": 0, "factors": [[1,1,1], [2,1,1]]</tt></td></tr>
+              <tr><td>1 + 3i</td><td>(1 + i)(2 + i)</td><td><tt>{"exponent": 0, "factors": [[1,1,1], [2,1,1]]}</tt></td></tr>
             </table>
           </li>
         </ul>
       </li>
-    </ul>
+    </ol>
     <p align=center>
       creator:&nbsp;
       <a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>
