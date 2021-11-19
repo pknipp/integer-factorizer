@@ -105,12 +105,9 @@ func factorizeParse(numberStr string) (int, string) {
 	return number, ""
 }
 
-func factorize(number int) (bool,[][2]int) {
+func factorize(number int) (bool, map[int]int) {
 	j := 1
-	var isPrime bool
-	var factor [2]int
-	var factors [][2]int
-	var facFound bool
+	factors := map[int]int{}
 	// One only needs to search up until the square root of number.
 	for j * j < number {
 		// After 3, only odd numbers can be prime.
@@ -119,31 +116,36 @@ func factorize(number int) (bool,[][2]int) {
 		} else {
 			j += 2
 		}
-		facFound = false
 		for {
+			// Continue dividing out (and counting) j until it's no longer a factor of number.
 			if number % j == 0 {
-				if !facFound {
-					factor[0], factor[1] = j, 1
-					facFound = true
-					if number > 2 {
-						isPrime = false
-					}
+				_, facFound := factors[j]
+				if facFound {
+					factors[j]++
 				} else {
-					factor[1]++
+					factors[j] = 1
 				}
 				number /= j
 			} else {
-				if facFound {
-					factors = append(factors, factor)
-					facFound = false
-				}
+				// Go to next possible factor.
 				break
 			}
 		}
 	}
 	// The last factor is needed if the largest factor occurs by itself.
-	if !facFound && number != 1 {
-		factors = append(factors, [2]int{number, 1})
+	if number != 1 {
+		factors[number] = 1
+	}
+	// Below is a necessary - but not sufficient - condition.
+	isPrime := len(factors) == 1
+	// The condition below is required to make it "sufficient".
+	if isPrime {
+		for _, exponent := range factors {
+			if exponent == 1 {
+				isPrime = false
+				break
+			}
+		}
 	}
 	return isPrime, factors
 }
@@ -182,7 +184,7 @@ func parsePart(str, part string) (int, string) {
 	}
 }
 
-func gaussianFactorize(zStr string) (int, [][3]int, string) {
+func gaussianFactorize(zStr string) (bool, int, [][3]int, string) {
 	gaussianFactors := [][3]int{}
 	var z [2]int
 	noNumber := "You need to input a Gaussian integer."
@@ -193,28 +195,28 @@ func gaussianFactorize(zStr string) (int, [][3]int, string) {
 		zStr = zStr[1:]
 	}
 	if len(zStr) == 0 {
-		return 0, gaussianFactors, noNumber
+		return false, 0, gaussianFactors, noNumber
 	}
 	if zStr[len(zStr) - 1:] == "i" {
 		// Number has an imaginary part
 		zStr = zStr[0: len(zStr) - 1]
 		if len(zStr) == 0 {
-			return 0, gaussianFactors, neither
+			return false, 0, gaussianFactors, neither
 		} else if zStr == "-" {
-			return 0, gaussianFactors, neither
+			return false, 0, gaussianFactors, neither
 		}
 		zSlice := strings.Split(zStr, "+")
 		if len(zSlice) == 2 {
 			// Number's real part is nonzero and imaginary part is positive.
 			int, message := parsePart(zSlice[0], "real")
 			if len(message) > 0 {
-				return 0, gaussianFactors, message
+				return false, 0, gaussianFactors, message
 			} else {
 				z[0] = int
 			}
 			int, message = parsePart(zSlice[1], "imaginary")
 			if len(message) > 0 {
-				return 0, gaussianFactors, message
+				return false, 0, gaussianFactors, message
 			} else {
 				z[1] = int
 			}
@@ -224,13 +226,13 @@ func gaussianFactorize(zStr string) (int, [][3]int, string) {
 				// Number's real part is nonzero and imaginary part is negative.
 				int, message := parsePart(zSlice[0], "real")
 				if len(message) > 0 {
-					return 0, gaussianFactors, message
+					return false, 0, gaussianFactors, message
 				} else {
 					z[0] = int
 				}
 				int, message = parsePart(zSlice[1], "imaginary")
 				if len(message) > 0 {
-					return 0, gaussianFactors, message
+					return false, 0, gaussianFactors, message
 				} else {
 					z[1] = -int
 				}
@@ -239,10 +241,10 @@ func gaussianFactorize(zStr string) (int, [][3]int, string) {
 				z[0] = 0
 				int, message := parsePart(zStr, "imaginary")
 				if len(message) > 0 {
-					return 0, gaussianFactors, message
+					return false, 0, gaussianFactors, message
 				} else {
 					if math.Abs(float64(int)) == 1. {
-						return 0, gaussianFactors, neither
+						return false, 0, gaussianFactors, neither
 					}
 					z[1] = int
 				}
@@ -253,36 +255,30 @@ func gaussianFactorize(zStr string) (int, [][3]int, string) {
 		z[1] = 0
 		int, message := parsePart(zStr, "real")
 		if len(message) > 0 {
-			return 0, gaussianFactors, message
+			return false, 0, gaussianFactors, message
 		} else {
 			if math.Abs(float64(int)) == 1. {
-				return 0, gaussianFactors, neither
+				return false, 0, gaussianFactors, neither
 			}
 			z[0] = int
 		}
 	}
-
-	isPrime, factors := factorize(modulus(z))
-	// If the squared modulus is prime (over the reals), then the Gaussian integer is prime (over the gaussian integers), by some theorem.
-	if isPrime {
-		return 0, [][3]int{[3]int{z[0], z[1], 1}}, ""
-	}
-	// Now let's consider composite Gaussian integers.
-	for _, factor := range factors {
+	_, factors := factorize(modulus(z))
+	for prime, exponent := range factors {
 		// Here are the factors of 1 + i
-		if factor[0] == 2 {
-			gaussianFactors = append(gaussianFactors, [3]int{1, 1, factor[1]})
-			for count := 0; count < factor[1]; count++ {
+		if prime == 2 {
+			gaussianFactors = append(gaussianFactors, [3]int{1, 1, exponent})
+			for count := 0; count < exponent; count++ {
 				_, z = modulo(z, [2]int{1, 1})
 			}
 		} else {
-			mod4 := factor[0]
+			mod4 := prime
 			// Here are the (irreducible) real prime factors, which occur in pairs.
 			if mod4 % 4 == 3 {
-				gaussianFactors = append(gaussianFactors, [3]int{factor[0], 0, factor[1] / 2})
-				for count := 0; count < factor[1] / 2; count++ {
+				gaussianFactors = append(gaussianFactors, [3]int{prime, 0, exponent / 2})
+				for count := 0; count < exponent / 2; count++ {
 					for i, _ := range z {
-						z[i] /= factor[0]
+						z[i] /= prime
 					}
 				}
 			} else {
@@ -320,7 +316,7 @@ func gaussianFactorize(zStr string) (int, [][3]int, string) {
 					}
 				}
 				// For the remaining factors, the real component must be the even one.
-				count2 := factor[1] - count
+				count2 := exponent - count
 				if count2 > 0 {
 					gaussianFactors = append(gaussianFactors, [3]int{2 * n, 2 * m + 1, count2})
 				}
@@ -337,7 +333,16 @@ func gaussianFactorize(zStr string) (int, [][3]int, string) {
 	} else {
 		n = 2 - z[1]
 	}
-	return n, gaussianFactors, ""
+	isPrime := len(gaussianFactors) == 1 && gaussianFactors[0][2] == 1
+	// if isPrime {
+		// for _, exponent := range factors {
+			// if exponent == 1 {
+				// isPrime = false
+				// break
+			// }
+		// }
+	// }
+	return isPrime, n, gaussianFactors, ""
 }
 
 func main() {
@@ -367,14 +372,14 @@ func main() {
 			// })
 		// } else {
 			// number, message := factorizeParse(inputStr)
-			// isPrime, results := factorize(number)
+			// results := factorize(number)
 			// factors := [][2]string{}
 			// for _, result := range results {
 				// factors = append(factors, [2]string{strconv.Itoa(result[0]), strconv.Itoa(result[1])})
 			// }
 			// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 					// "number": inputStr,
-					// "isPrime": isPrime,
+					// "isPrime": len(factors) == 1,
 					// "factors": factors,
 					// "message": message,
 					// "type": "integer",
@@ -395,13 +400,13 @@ func main() {
 			// }
 		// } else {
 			// number, message := factorizeParse(inputStr)
-			// isPrime, result := factorize(number)
+			// result := factorize(number)
 			// resultStr = "{\"number\": " + inputStr
 			// if len(message) > 0 {
 				// resultStr += ", \"message\": " + message
 			// } else {
-				// resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
-				// if !isPrime {
+				// resultStr += ", \"isPrime\": " + strconv.FormatBool(len(factors) == 1)
+				// if len(factors) != 1 {
 					// factorStr, _ := json.Marshal(result)
 					// resultStr += ", \"factors\": " + string(factorStr)
 				// }
@@ -443,10 +448,7 @@ func main() {
 			// }
 			// factors = append(factors, [2]string{factor, exponent})
 		// }
-		// isPrime := true
-		// if len(results) > 1 {
-			// isPrime = false
-		// }
+		// isPrime := len(results) == 1
 		// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				// "number": inputStr,
 				// "factors": factors,
@@ -473,8 +475,12 @@ func main() {
 	// })
 //
 	// router.Run(":" + port)
-	input := 154
-	fmt.Println(factorize(input))
+	number := 18
+	fmt.Println(number)
+	fmt.Println(factorize(number))
+	input := "3+4i"
+	fmt.Println(input)
+	fmt.Println(gaussianFactorize(input))
 	// Use the space below when testing the app as a CLI.
 	// zStr := "-3"
 	// fmt.Println(gaussianFactorize(zStr))
