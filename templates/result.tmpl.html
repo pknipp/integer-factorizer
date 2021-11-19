@@ -24,10 +24,13 @@
                             {{end}}
                         </td></tr>
                         <tr><td>factors & powers</td><td>
-                            {{range $prime, $exponent := .factors}}
-                                &middot;
-                                {{if ne "1" $exponent}}
-                                    <sup>{{$exponent}}</sup>
+                            {{range $i, $pair := .factors}}
+                                {{if ne $i 0}}
+                                    &middot;
+                                {{end}}
+                                {{index $pair 0}}
+                                {{if ne "1" (index $pair 1}}
+                                    <sup>{{index $pair 1}}</sup>
                                 {{end}}
                             {{end}}
                         </td></tr>

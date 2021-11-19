@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "fmt"
+	"fmt"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -384,11 +384,12 @@ func main() {
 		} else {
 			number, message := factorizeParse(inputStr)
 			isPrime, results := factorize(number)
-			factors := map[string]string{}
+			factors := [][2]string{}
 			for prime, exponent := range results {
-				factors[strconv.Itoa(prime)] = strconv.Itoa(exponent)
-				// factors = append(factors, [2]string{strconv.Itoa(result[0]), strconv.Itoa(result[1])})
+				// factors[strconv.Itoa(prime)] = strconv.Itoa(exponent)
+				factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
 			}
+			fmt.Println("factors = ", factors)
 			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 					"number": inputStr,
 					"isPrime": isPrime,
