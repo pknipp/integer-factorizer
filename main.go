@@ -141,7 +141,7 @@ func factorize(number int) (bool, map[int]int) {
 	// The condition below is required to make it "sufficient".
 	if isPrime {
 		for _, exponent := range factors {
-			if exponent == 1 {
+			if exponent > 1 {
 				isPrime = false
 				break
 			}
@@ -347,7 +347,7 @@ func gaussianFactorize(zStr string) (bool, int, map[string]int, string) {
 	// The next condition is required to make it "sufficient".
 	if isPrime {
 		for _, exponent := range gaussianFactors {
-			if exponent == 1 {
+			if exponent > 1 {
 				isPrime = false
 				break
 			}
