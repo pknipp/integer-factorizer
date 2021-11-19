@@ -384,9 +384,9 @@ func main() {
 		} else {
 			number, message := factorizeParse(inputStr)
 			isPrime, results := factorize(number)
+			// Convert from map to array of 2-pls so that 0-th element can be handled separately in results.html.
 			factors := [][2]string{}
 			for prime, exponent := range results {
-				// factors[strconv.Itoa(prime)] = strconv.Itoa(exponent)
 				factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
 			}
 			fmt.Println("factors = ", factors)
@@ -432,10 +432,9 @@ func main() {
 		inputStr := c.Param("input")
 		isPrime, number, results, message := gaussianFactorize(inputStr)
 		PREFACTOR := [4]string{"", "i", "-", "-i"}
-		factors := map[string]string{}
+		factors := [][2]string{}
 		firstFactor := true
 		for prime, exponent := range results {
-			// exponent := strconv.Itoa(result[2])
 			factor := ""
 			if firstFactor {
 				coef := PREFACTOR[number]
@@ -444,8 +443,8 @@ func main() {
 					factor += coef
 				} else {
 					// Multiplication symbol is required, so I prepend one factor.
-					factors[coef] = "1"
-					// factors = append(factors, [2]string{coef, "1"})
+					// factors[coef] = "1"
+					factors = append(factors, [2]string{coef, "1"})
 				}
 			}
 			firstFactor = false
@@ -464,8 +463,8 @@ func main() {
 				// }
 				// factor += "i)"
 			}
-			factors[factor] = strconv.Itoa(exponent)
-			// factors = append(factors, [2]string{factor, exponent})
+			// factors[factor] = strconv.Itoa(exponent)
+			factors = append(factors, [2]string{factor, strconv.Itoa(exponent)})
 		}
 		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				"number": inputStr,
