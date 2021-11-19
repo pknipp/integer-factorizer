@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -416,9 +416,7 @@ func main() {
 			}
 		} else {
 			number, message := factorizeParse(inputStr)
-			fmt.Println("l419", number, message)
 			isPrime, result := factorize(number)
-			fmt.Println("l421", isPrime, result)
 			resultStr = "{\"number\": " + inputStr
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
@@ -479,12 +477,12 @@ func main() {
 	router.GET("/complex/json/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
 		z, message := gaussianParse(inputStr)
-		isPrime, n, result := gaussian(z)
-		// isPrime, n, result, message := gaussianFactorize(inputStr)
 		resultStr := "{\"number\": " + inputStr
 		if len(message) > 0 {
 			resultStr += ", \"message\": " + message
-		} else {
+		}
+		if len(message) == 0 {
+			isPrime, n, result := gaussian(z)
 			resultStr += ", \"exponent\": " + strconv.Itoa(n)
 			resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
 			factorStr, _ := json.Marshal(result)
