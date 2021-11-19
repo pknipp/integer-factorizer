@@ -492,29 +492,40 @@ func main() {
 		var number int
 		results := map[string]int{}
 		if len(message) == 0 {
-			isPrime, number, results = gaussian(z)
-			PREFACTOR := [4]string{"", "i", "-", "-i"}
-			// Transform from results (map) to factors (array of 2-ples) to enable me to treat 0-th element differently in results.html.
-			firstFactor := true
-			for prime, exponent := range results {
-				factor := ""
-				if firstFactor {
-					coef := PREFACTOR[number]
-					if number % 2 == 0 || strings.Contains(prime, "i") {
-						// No multiplication symbol is required, so I just modify the first factor.
-						factor += coef
-					} else {
-						// Multiplication symbol is required, so I prepend one factor.
-						factors = append(factors, [2]string{coef, "1"})
-					}
-				}
-				firstFactor = false
-				if !strings.Contains(prime, "i") {
-					factor += prime
+			if inputStr[0:1] == "[" {
+				result, message := gcdComplexParse(inputStr[1:])
+				resultStr = "{\"numbers\": " + inputStr
+				if len(message) > 0 {
+					resultStr += ", \"message\": " + message
 				} else {
-					factor += "(" + prime + ")"
+					gcdResult, _ := json.Marshall(result)
+					resultStr += ", \"gcd\": " + gcdResult
 				}
-				factors = append(factors, [2]string{factor, strconv.Itoa(exponent)})
+			} else {
+				isPrime, number, results = gaussian(z)
+				PREFACTOR := [4]string{"", "i", "-", "-i"}
+				// Transform from results (map) to factors (array of 2-ples) to enable me to treat 0-th element differently in results.html.
+				firstFactor := true
+				for prime, exponent := range results {
+					factor := ""
+					if firstFactor {
+						coef := PREFACTOR[number]
+						if number % 2 == 0 || strings.Contains(prime, "i") {
+							// No multiplication symbol is required, so I just modify the first factor.
+							factor += coef
+						} else {
+							// Multiplication symbol is required, so I prepend one factor.
+							factors = append(factors, [2]string{coef, "1"})
+						}
+					}
+					firstFactor = false
+					if !strings.Contains(prime, "i") {
+						factor += prime
+					} else {
+						factor += "(" + prime + ")"
+					}
+					factors = append(factors, [2]string{factor, strconv.Itoa(exponent)})
+				}
 			}
 		}
 		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
