@@ -184,8 +184,8 @@ func parsePart(str, part string) (int, string) {
 	}
 }
 
-func gaussianFactorize(zStr string) (bool, int, [][3]int, string) {
-	gaussianFactors := [][3]int{}
+func gaussianFactorize(zStr string) (bool, int, map[string]int, string) {
+	gaussianFactors := map[string]int{}
 	var z [2]int
 	noNumber := "You need to input a Gaussian integer."
 	neither := "This number is neither prime nor composite."
@@ -267,15 +267,14 @@ func gaussianFactorize(zStr string) (bool, int, [][3]int, string) {
 	for prime, exponent := range factors {
 		// Here are the factors of 1 + i
 		if prime == 2 {
-			gaussianFactors = append(gaussianFactors, [3]int{1, 1, exponent})
+			gaussianFactors["1+i"] = exponent
 			for count := 0; count < exponent; count++ {
 				_, z = modulo(z, [2]int{1, 1})
 			}
 		} else {
-			mod4 := prime
 			// Here are the (irreducible) real prime factors, which occur in pairs.
-			if mod4 % 4 == 3 {
-				gaussianFactors = append(gaussianFactors, [3]int{prime, 0, exponent / 2})
+			if prime % 4 == 3 {
+				gaussianFactors[strconv.Itoa(prime)] = exponent / 2
 				for count := 0; count < exponent / 2; count++ {
 					for i, _ := range z {
 						z[i] /= prime
@@ -284,7 +283,7 @@ func gaussianFactorize(zStr string) (bool, int, [][3]int, string) {
 			} else {
 				// Here are Gaussian integers for which one component is odd and the other is even.
 				// Find ints m, n such that (2m+1)^2 + (2n)^2 = mod4
-				mod4 = (mod4 - 1) / 4
+				mod4 := (prime - 1) / 4
 				// Now this becomes m*(m+1) + n^2 = mod4
 				m := 0
 				var n int
@@ -301,16 +300,22 @@ func gaussianFactorize(zStr string) (bool, int, [][3]int, string) {
 					}
 					m++
 				}
-				count := 0
+				odd := 2 * m + 1
+				even := 2 * n
 				// First, let's consider possibility that the real component is the odd one.
+				count := 0
 				for {
-					isFactor, quotient := modulo(z, [2]int{2 * m + 1, 2 * n})
+					isFactor, quotient := modulo(z, [2]int{odd, even})
 					if isFactor {
 						z = quotient
 						count++
 					} else {
 						if count > 0 {
-							gaussianFactors = append(gaussianFactors, [3]int{2 * m + 1, 2 * n, count})
+							im := strconv.Itoa(even)
+							if even == 1 {
+								im = ""
+							}
+							gaussianFactors[strconv.Itoa(odd) + "+" + im + "i"] = count
 						}
 						break
 					}
@@ -318,7 +323,11 @@ func gaussianFactorize(zStr string) (bool, int, [][3]int, string) {
 				// For the remaining factors, the real component must be the even one.
 				count2 := exponent - count
 				if count2 > 0 {
-					gaussianFactors = append(gaussianFactors, [3]int{2 * n, 2 * m + 1, count2})
+					im := strconv.Itoa(odd)
+					if odd == 1 {
+						im = ""
+					}
+					gaussianFactors[strconv.Itoa(even) + "+" + im + "i"] = count2
 				}
 				for count = 0; count < count2; count++ {
 					_, z = modulo(z, [2]int{2 * n, 2 * m + 1})
@@ -333,15 +342,17 @@ func gaussianFactorize(zStr string) (bool, int, [][3]int, string) {
 	} else {
 		n = 2 - z[1]
 	}
-	isPrime := len(gaussianFactors) == 1 && gaussianFactors[0][2] == 1
-	// if isPrime {
-		// for _, exponent := range factors {
-			// if exponent == 1 {
-				// isPrime = false
-				// break
-			// }
-		// }
-	// }
+	// Below is a necessary - but not sufficient - condition.
+	isPrime := len(gaussianFactors) == 1
+	// The next condition is required to make it "sufficient".
+	if isPrime {
+		for _, exponent := range gaussianFactors {
+			if exponent == 1 {
+				isPrime = false
+				break
+			}
+		}
+	}
 	return isPrime, n, gaussianFactors, ""
 }
 
@@ -475,13 +486,11 @@ func main() {
 	// })
 //
 	// router.Run(":" + port)
+	// Use the space below when testing app as CLI./
 	number := 18
 	fmt.Println(number)
 	fmt.Println(factorize(number))
-	input := "3+4i"
+	input := "15i"
 	fmt.Println(input)
 	fmt.Println(gaussianFactorize(input))
-	// Use the space below when testing the app as a CLI.
-	// zStr := "-3"
-	// fmt.Println(gaussianFactorize(zStr))
 }
