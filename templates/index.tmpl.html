@@ -59,7 +59,7 @@
             <table border='1'>
               <tr><th>input</th><th>result</th><th>json</th></tr>
               <tr><td>359</td><td colspan="2">prime</td></tr>
-              <tr><td>360</td><td>2<sup>3</sup>&middot;3<sup>2</sup>&middot;5</td><td>["2":3},{"3",2],[5,1]]</td></tr>
+              <tr><td>360</td><td>2<sup>3</sup>&middot;3<sup>2</sup>&middot;5</td><td>{"2": 3, "3": 2,"5": 1}</td></tr>
             </table>
           </li>
         </ul>
@@ -82,9 +82,9 @@
             examples:
             <table border='1'>
               <tr><th>input</th><th>result</th><th>json</th></tr>
-              <tr><td>2</td><td>-i(1 + i)<sup>2</sup></td><td><tt></tt>{"exponent": 3, "factors": [[1,1,2]]}</td></td></tr>
+              <tr><td>2</td><td>-i(1 + i)<sup>2</sup></td><td><tt></tt>{"exponent": 3, "factors": {"1+i": 2}}</td></td></tr>
               <tr><td>3</td><td colspan=2>prime</td></tr>
-              <tr><td>1 + 3i</td><td>(1 + i)(2 + i)</td><td><tt>{"exponent": 0, "factors": [[1,1,1], [2,1,1]]}</tt></td></tr>
+              <tr><td>1 + 3i</td><td>(1 + i)(2 + i)</td><td><tt>{"exponent": 0, "factors": {"1+i": 1, "2+i": 1}}</tt></td></tr>
             </table>
           </li>
         </ul>
