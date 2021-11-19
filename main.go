@@ -185,7 +185,7 @@ func parsePart(str, part string) (int, string) {
 }
 
 func gaussianParse(zStr string) ([2]int, string) {
-	var z [2]int
+	z := [2]int{0., 0.}
 	noNumber := "You need to input a Gaussian integer."
 	neither := "This number is neither prime nor composite."
 	zStr = regexp.MustCompile(" ").ReplaceAllString(zStr, "")
