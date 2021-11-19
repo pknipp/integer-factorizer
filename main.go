@@ -480,8 +480,7 @@ func main() {
 		resultStr := "{\"number\": " + inputStr
 		if len(message) > 0 {
 			resultStr += ", \"message\": " + message
-		}
-		if len(message) == 0 {
+		} else {
 			isPrime, n, result := gaussian(z)
 			resultStr += ", \"exponent\": " + strconv.Itoa(n)
 			resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
