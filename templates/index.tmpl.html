@@ -52,14 +52,14 @@
             Your input should simply be a number.
           </li>
           <li>
-            The <tt>factors</tt> property of the json output will be an array of 2-element subarrays. The zeroth element is a prime factor, and the other is the power to which it is raised when forming the factorization.
+            The <tt>factors</tt> property of the json output will be a POJO, each key for which is a different prime number, and each value for which is the power to which the particular prime is raised when forming the factorization.
           </li>
           <li>
             examples:
             <table border='1'>
               <tr><th>input</th><th>result</th><th>json</th></tr>
               <tr><td>359</td><td colspan="2">prime</td></tr>
-              <tr><td>360</td><td>2<sup>3</sup>&middot;3<sup>2</sup>&middot;5</td><td>[[2,3],[3,2],[5,1]]</td></tr>
+              <tr><td>360</td><td>2<sup>3</sup>&middot;3<sup>2</sup>&middot;5</td><td>["2":3},{"3",2],[5,1]]</td></tr>
             </table>
           </li>
         </ul>
@@ -76,7 +76,7 @@
             Your complex number should be of the form <i>m</i> + <i>n</i>i, where <i>m</i> is a natural number and <I>n</I> is a whole number (ie, may be 0).
           </li>
           <li>
-            In the json output, the value of the <tt>exponent</tt> property is the power to which i should be raised, when multiplying the prime factors, and the <tt>factors</tt> property is an array of 3-element subarrays, in which the first element represents the real part of the Gaussian prime, the next element is its imaginary part, and the last element is the power to which that particular Gaussian prime gets raised when forming the factorization.
+            In the json output, the value of the <tt>exponent</tt> property is the power to which i should be raised, when multiplying the prime factors, and the <tt>factors</tt> property has the same meaning as for integer factorization described above.
           </li>
           <li>
             examples:
