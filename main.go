@@ -490,7 +490,7 @@ func main() {
 	number := 18
 	fmt.Println(number)
 	fmt.Println(factorize(number))
-	input := "15i"
+	input := "15ia"
 	fmt.Println(input)
 	fmt.Println(gaussianFactorize(input))
 }
