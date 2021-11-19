@@ -492,16 +492,16 @@ func main() {
 		var number int
 		results := map[string]int{}
 		if len(message) == 0 {
-			if inputStr[0:1] == "[" {
-				result, message := gcdComplexParse(inputStr[1:])
-				resultStr = "{\"numbers\": " + inputStr
-				if len(message) > 0 {
-					resultStr += ", \"message\": " + message
-				} else {
-					gcdResult, _ := json.Marshall(result)
-					resultStr += ", \"gcd\": " + gcdResult
-				}
-			} else {
+			// if inputStr[0:1] == "[" {
+				// result, message := gcdComplexParse(inputStr[1:])
+				// resultStr = "{\"numbers\": " + inputStr
+				// if len(message) > 0 {
+					// resultStr += ", \"message\": " + message
+				// } else {
+					// gcdResult, _ := json.Marshall(result)
+					// resultStr += ", \"gcd\": " + gcdResult
+				// }
+			// } else {
 				isPrime, number, results = gaussian(z)
 				PREFACTOR := [4]string{"", "i", "-", "-i"}
 				// Transform from results (map) to factors (array of 2-ples) to enable me to treat 0-th element differently in results.html.
@@ -526,7 +526,7 @@ func main() {
 					}
 					factors = append(factors, [2]string{factor, strconv.Itoa(exponent)})
 				}
-			}
+			// }
 		}
 		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				"number": inputStr,
@@ -540,16 +540,28 @@ func main() {
 
 	router.GET("/complex/json/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
-		z, message := gaussianParse(inputStr)
-		resultStr := "{\"number\": " + inputStr
-		if len(message) > 0 {
-			resultStr += ", \"message\": " + message
+		var resultStr string
+		if inputStr[0:1] == "[" {
+			result, message := gcdComplexParse(inputStr[1:])
+			resultStr = "{\"numbers\": " + inputStr
+			if len(message) > 0 {
+				resultStr += ", \"message\": " + message
+			} else {
+				gcdResult, _ := json.Marshal(result)
+				resultStr += ", \"gcd\": " + string(gcdResult)
+			}
 		} else {
-			isPrime, n, result := gaussian(z)
-			resultStr += ", \"exponent\": " + strconv.Itoa(n)
-			resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
-			factorStr, _ := json.Marshal(result)
-			resultStr += ", \"factors\": " + string(factorStr)
+			z, message := gaussianParse(inputStr)
+			resultStr = "{\"number\": " + inputStr
+			if len(message) > 0 {
+				resultStr += ", \"message\": " + message
+			} else {
+				isPrime, n, result := gaussian(z)
+				resultStr += ", \"exponent\": " + strconv.Itoa(n)
+				resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
+				factorStr, _ := json.Marshal(result)
+				resultStr += ", \"factors\": " + string(factorStr)
+			}
 		}
 		c.String(http.StatusOK, resultStr + "}")
 	})
