@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -117,7 +117,7 @@ func factorize(number int) (bool, map[int]int) {
 			j += 2
 		}
 		for {
-			// Continue dividing out (and counting) j until it's no longer a factor of number.
+			// Continue dividing out (and counting) j until j is no longer a factor of number.
 			if number % j == 0 {
 				_, facFound := factors[j]
 				if facFound {
@@ -389,7 +389,6 @@ func main() {
 			for prime, exponent := range results {
 				factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
 			}
-			fmt.Println("factors = ", factors)
 			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 					"number": inputStr,
 					"isPrime": isPrime,
@@ -432,38 +431,27 @@ func main() {
 		inputStr := c.Param("input")
 		isPrime, number, results, message := gaussianFactorize(inputStr)
 		PREFACTOR := [4]string{"", "i", "-", "-i"}
+		// Transform from results (map) to factors (array of 2-ples) to enable me to treat 0-th element differently in results.html.
 		factors := [][2]string{}
 		firstFactor := true
 		for prime, exponent := range results {
 			factor := ""
 			if firstFactor {
 				coef := PREFACTOR[number]
-				if number % 2 == 0 || strings.Contains(prime, "i") { //result[1] != 0 {
+				if number % 2 == 0 || strings.Contains(prime, "i") {
 					// No multiplication symbol is required, so I just modify the first factor.
 					factor += coef
 				} else {
 					// Multiplication symbol is required, so I prepend one factor.
-					// factors[coef] = "1"
 					factors = append(factors, [2]string{coef, "1"})
 				}
 			}
 			firstFactor = false
-			if !strings.Contains(prime, "i") { //result[1] == 0 {
-				factor += prime //strconv.Itoa(result[0])
+			if !strings.Contains(prime, "i") {
+				factor += prime
 			} else {
-				factor += "(" + prime + ")" //strconv.Itoa(result[0])
-				// if result[1] > 0 {
-					// factor += " + "
-				// } else {
-					// factor += " - "
-				// }
-				// imCoef := math.Abs(float64(result[1]))
-				// if imCoef != 1. {
-					// factor += strconv.Itoa(int(imCoef))
-				// }
-				// factor += "i)"
+				factor += "(" + prime + ")"
 			}
-			// factors[factor] = strconv.Itoa(exponent)
 			factors = append(factors, [2]string{factor, strconv.Itoa(exponent)})
 		}
 		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
@@ -476,20 +464,21 @@ func main() {
 		})
 	})
 
-	// router.GET("/complex/json/:input", func(c *gin.Context) {
-		// inputStr := c.Param("input")
-		// var resultStr string
-		// isPrime, n, result, message := gaussianFactorize(inputStr)
-		// resultStr = "{\"number\": " + inputStr
-		// if len(message) > 0 {
-			// resultStr += ", \"message\": " + message
-		// } else {
-			// resultStr += ", \"exponent\": " + strconv.Itoa(n)
-			// factorStr, _ := json.Marshal(result)
-			// resultStr += ", \"factors\": " + string(factorStr)
-		// }
-		// c.String(http.StatusOK, resultStr + "}")
-	// })
+	router.GET("/complex/json/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		var resultStr string
+		isPrime, n, result, message := gaussianFactorize(inputStr)
+		resultStr = "{\"number\": " + inputStr
+		if len(message) > 0 {
+			resultStr += ", \"message\": " + message
+		} else {
+			resultStr += ", \"exponent\": " + strconv.Itoa(n)
+			resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
+			factorStr, _ := json.Marshal(result)
+			resultStr += ", \"factors\": " + string(factorStr)
+		}
+		c.String(http.StatusOK, resultStr + "}")
+	})
 //
 	router.Run(":" + port)
 	// Use the space below when testing app as CLI./
