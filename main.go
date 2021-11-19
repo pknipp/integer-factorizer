@@ -436,32 +436,35 @@ func main() {
 	router.GET("/complex/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
 		z, message := gaussianParse(inputStr)
-		fmt.Println("l497", z, message)
-		isPrime, number, results := gaussian(z)
-		fmt.Println("l441", isPrime, number, results)
-		PREFACTOR := [4]string{"", "i", "-", "-i"}
-		// Transform from results (map) to factors (array of 2-ples) to enable me to treat 0-th element differently in results.html.
 		factors := [][2]string{}
-		firstFactor := true
-		for prime, exponent := range results {
-			factor := ""
-			if firstFactor {
-				coef := PREFACTOR[number]
-				if number % 2 == 0 || strings.Contains(prime, "i") {
-					// No multiplication symbol is required, so I just modify the first factor.
-					factor += coef
-				} else {
-					// Multiplication symbol is required, so I prepend one factor.
-					factors = append(factors, [2]string{coef, "1"})
+		var isPrime bool
+		var number int
+		results := map[string]int{}
+		if len(message) == 0 {
+			isPrime, number, results = gaussian(z)
+			PREFACTOR := [4]string{"", "i", "-", "-i"}
+			// Transform from results (map) to factors (array of 2-ples) to enable me to treat 0-th element differently in results.html.
+			firstFactor := true
+			for prime, exponent := range results {
+				factor := ""
+				if firstFactor {
+					coef := PREFACTOR[number]
+					if number % 2 == 0 || strings.Contains(prime, "i") {
+						// No multiplication symbol is required, so I just modify the first factor.
+						factor += coef
+					} else {
+						// Multiplication symbol is required, so I prepend one factor.
+						factors = append(factors, [2]string{coef, "1"})
+					}
 				}
+				firstFactor = false
+				if !strings.Contains(prime, "i") {
+					factor += prime
+				} else {
+					factor += "(" + prime + ")"
+				}
+				factors = append(factors, [2]string{factor, strconv.Itoa(exponent)})
 			}
-			firstFactor = false
-			if !strings.Contains(prime, "i") {
-				factor += prime
-			} else {
-				factor += "(" + prime + ")"
-			}
-			factors = append(factors, [2]string{factor, strconv.Itoa(exponent)})
 		}
 		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				"number": inputStr,
