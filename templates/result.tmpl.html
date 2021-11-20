@@ -11,12 +11,9 @@
                     <td>{{.input}}</td>
                 </tr>
                 {{if eq .message ""}}
-                    {{if ne .type "GCD"}}
-                        <tr><td>number type</td>
-                            <td>{{if .isPrime }}prime{{else}}composite{{end}}</td>
-                        </tr>
-                    {{end}}
-                    <tr><td>result</td><td>
+                    <tr><td>{{if eq .type "GCD"}}relationship{{else}}number{{end}} type</td>
+                        <td>{{if eq .type "GCD"}}relatively {{end}}{{if .isPrime }}prime{{else}}composite{{end}}</td>
+                    </tr><tr><td>result</td><td>
                         {{range $i, $pair := .factors}}
                             {{if ne $i 0}}&middot;{{end}}
                             {{index $pair 0}}

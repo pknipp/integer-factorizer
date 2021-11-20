@@ -433,13 +433,20 @@ func main() {
 			result, message := gcdParse(inputStr[1:])
 			_, results := factorize(result)
 			factors := [][2]string{}
-			for prime, exponent := range results {
-				factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
+			var isPrime bool
+			if len(results) > 0 {
+				isPrime = true
+				for prime, exponent := range results {
+					factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
+				}
+			} else {
+				isPrime = false
 			}
 			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				"input": inputStr,
 				"factors": factors,
 				"message": message,
+				"isPrime": isPrime,
 				"type": "GCD",
 				"title": "GCD",
 			})
@@ -452,12 +459,12 @@ func main() {
 				factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
 			}
 			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					"input": inputStr,
-					"isPrime": isPrime,
-					"factors": factors,
-					"message": message,
-					"type": "integer",
-					"title": "prime factorization",
+				"input": inputStr,
+				"isPrime": isPrime,
+				"factors": factors,
+				"message": message,
+				"type": "integer",
+				"title": "prime factorization",
 			})
 		}
 	})
@@ -494,13 +501,21 @@ func main() {
 			results, message := gcdComplexParse(inputStr[1:])
 			if len(message) == 0 {
 				factors := [][2]string{}
-				for prime, exponent := range results {
-					factors = append(factors, [2]string{prime, strconv.Itoa(exponent)})
+				var isPrime bool
+				if len(results) > 0 {
+					isPrime = false
+					for prime, exponent := range results {
+						factors = append(factors, [2]string{prime, strconv.Itoa(exponent)})
+					}
+				} else {
+					isPrime = true
+					factors = append(factors, [2]string{"1", "1"})
 				}
 				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 					"input": inputStr,
 					"factors": factors,
 					"message": message,
+					"isPrime": isPrime,
 					"type": "GCD",
 					"title": "GCD",
 				})
