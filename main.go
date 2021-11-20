@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -431,9 +431,14 @@ func main() {
 		inputStr := c.Param("input")
 		if inputStr[0:1] == "[" {
 			result, message := gcdParse(inputStr[1:])
+			_, results := factorize(result)
+			factors := [][2]string{}
+			for prime, exponent := range results {
+				factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
+			}
 			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-				"numbers": inputStr,
-				"result": result,
+				"input": inputStr,
+				"factors": factors,
 				"message": message,
 				"type": "GCD",
 				"title": "GCD",
@@ -447,7 +452,7 @@ func main() {
 				factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
 			}
 			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					"number": inputStr,
+					"input": inputStr,
 					"isPrime": isPrime,
 					"factors": factors,
 					"message": message,
@@ -485,21 +490,22 @@ func main() {
 	})
 	router.GET("/complex/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
-		fmt.Println("l488", inputStr)
 		if inputStr[0:1] == "[" {
-			result, message := gcdComplexParse(inputStr[1:])
+			results, message := gcdComplexParse(inputStr[1:])
 			if len(message) == 0 {
-				fmt.Println("l492",inputStr, result, message)
+				factors := [][2]string{}
+				for prime, exponent := range results {
+					factors = append(factors, [2]string{prime, strconv.Itoa(exponent)})
+				}
 				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					"numbers": inputStr,
-					"result": result,
+					"input": inputStr,
+					"factors": factors,
 					"message": message,
 					"type": "GCD",
 					"title": "GCD",
 				})
 			}
 		} else {
-			fmt.Println("l502", )
 			z, message := gaussianParse(inputStr)
 			if len(message) == 0 {
 				factors := [][2]string{}
@@ -531,7 +537,7 @@ func main() {
 					factors = append(factors, [2]string{factor, strconv.Itoa(exponent)})
 				}
 				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					"number": inputStr,
+					"input": inputStr,
 					"factors": factors,
 					"message": message,
 					"isPrime": isPrime,
