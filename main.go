@@ -15,6 +15,7 @@ import (
 	_ "github.com/heroku/x/hmetrics/onload"
 )
 
+//Euclid's algorithm, which is extremely efficient.
 func gcd2(n1, n2 int) int {
 	for {
 	  t := n2;
