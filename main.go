@@ -492,16 +492,16 @@ func main() {
 		var number int
 		results := map[string]int{}
 		if len(message) == 0 {
-			// if inputStr[0:1] == "[" {
-				// result, message := gcdComplexParse(inputStr[1:])
-				// resultStr = "{\"numbers\": " + inputStr
-				// if len(message) > 0 {
-					// resultStr += ", \"message\": " + message
-				// } else {
-					// gcdResult, _ := json.Marshall(result)
-					// resultStr += ", \"gcd\": " + gcdResult
-				// }
-			// } else {
+			if inputStr[0:1] == "[" {
+				result, message := gcdComplexParse(inputStr[1:])
+				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+					"numbers": inputStr,
+					"result": result,
+					"message": message,
+					"type": "GCD",
+					"title": "GCD",
+				})
+			} else {
 				isPrime, number, results = gaussian(z)
 				PREFACTOR := [4]string{"", "i", "-", "-i"}
 				// Transform from results (map) to factors (array of 2-ples) to enable me to treat 0-th element differently in results.html.
@@ -526,18 +526,17 @@ func main() {
 					}
 					factors = append(factors, [2]string{factor, strconv.Itoa(exponent)})
 				}
-			// }
+			}
+			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+					"number": inputStr,
+					"factors": factors,
+					"message": message,
+					"isPrime": isPrime,
+					"type": "Gaussian",
+					"title": "Gaussian-prime factorization",
+			})
 		}
-		c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-				"number": inputStr,
-				"factors": factors,
-				"message": message,
-				"isPrime": isPrime,
-				"type": "Gaussian",
-				"title": "Gaussian-prime factorization",
-		})
 	})
-
 	router.GET("/complex/json/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
 		var resultStr string
