@@ -527,15 +527,15 @@ func main() {
 					}
 					factors = append(factors, [2]string{factor, strconv.Itoa(exponent)})
 				}
-			}
-			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 					"number": inputStr,
 					"factors": factors,
 					"message": message,
 					"isPrime": isPrime,
 					"type": "Gaussian",
 					"title": "Gaussian-prime factorization",
-			})
+				})
+			}
 		}
 	})
 	router.GET("/complex/json/:input", func(c *gin.Context) {
