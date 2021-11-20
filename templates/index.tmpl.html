@@ -27,7 +27,7 @@
           After <tt>...herokuapp.com</tt> above you should type either <tt>/complex/</tt> if you want to consider Gaussian integers or nothing if you want to consider real ones.
         </li>
         <li>
-          After this you should type <tt>json/</tt> if you want the output in json or nothing if you want it in html.
+          After this you should type <tt>json/</tt> if you want the output in json or a single slash if you want the output in html.
         </li>
         <li>
           After this you should type your input, as described next.
@@ -92,9 +92,9 @@
       examples:
       <br/>
       <table border='1'>
-        <tr><th>real or complex</th><th>single or list</th><th>input</th><th>result</th><th>json output</th><tr>
-        <tr><td rowspan=2>real</td><td rowspan=5>single</td><td>359</td><td colspan=2>prime</td></tr>
-        <tr><td>360</td><td>2<sup>3</sup>&middot;3<sup>2</sup>&middot;5</td><td><tt>{"2": 3, "3": 2, "5": 1}</tt></td></tr>
+        <tr><th>real or<br/>complex</th><th>single<br/>or list</th><th>input</th><th>result</th><th>json output</th><tr>
+        <tr><td rowspan=2 style='text-align:center; vertical-align:middle'>real</td><td rowspan=5>single</td><td><tt>359</tt></td><td colspan=2>prime</td></tr>
+        <tr><td><tt>360</tt></td><td>2<sup>3</sup>&middot;3<sup>2</sup>&middot;5</td><td><tt>{"2": 3, "3": 2, "5": 1}</tt></td></tr>
         <tr><td rowspan=3>complex</td><td><tt>2</tt></td><td><tt>-i(1 + i)<sup>2</sup></tt></td><td><tt>{"exponent": 3, "factors": {"1+i": 2}}</tt></td></td></tr>
         <tr><td><tt>3</tt></td><td colspan=2>prime</td></tr>
         <tr><td><tt>1 + 3i</tt></td><td><tt>(1 + i)(2 + i)</tt></td><td><tt>{"exponent": 0, "factors": {"1+i": 1, "2+i": 1}}</tt></td></tr>
