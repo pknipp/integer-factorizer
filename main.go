@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "fmt"
+	"fmt"
 	"encoding/json"
 	"log"
 	"net/http"
@@ -494,6 +494,7 @@ func main() {
 		if len(message) == 0 {
 			if inputStr[0:1] == "[" {
 				result, message := gcdComplexParse(inputStr[1:])
+				fmt.Println(inputStr, result, message)
 				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 					"numbers": inputStr,
 					"result": result,
