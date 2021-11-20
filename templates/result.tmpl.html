@@ -1,34 +1,38 @@
 <html>
     <head>
         <title>result</title>
+        <link rel="stylesheet" type="text/css" href="/static/main.css" />
     </head>
     <body>
         <h4><p align=center>Result for {{ .title }}</p></h4>
         <p align=center>
             <table border='1'>
-                <tr>
-                    <td>number{{if eq .type "GCD"}}s{{end}}</td>
-                    <td>{{.input}}</td>
+                <tr><th>input</th>
+                    {{if eq .message ""}}
+                        <th>type</th><th>result</th>
+                    {{end}}
+                </tr><tr><td>{{ .input }}</td>
+                    {{if eq .message ""}}
+                        <td>
+                            {{if eq .type "GCD"}}relatively {{end}}{{if .isPrime }}prime{{else}}composite{{end}}
+                        </td><td>
+                            {{range $i, $pair := .factors}}
+                                {{if ne $i 0}}&middot;{{end}}
+                                {{index $pair 0}}
+                                {{if ne "1" (index $pair 1)}}<sup>{{index $pair 1}}</sup>{{end}}
+                            {{end}}
+                        </td>
+                    {{end}}
                 </tr>
-                {{if eq .message ""}}
-                    <tr><td>{{if eq .type "GCD"}}relationship{{else}}number{{end}} type</td>
-                        <td>{{if eq .type "GCD"}}relatively {{end}}{{if .isPrime }}prime{{else}}composite{{end}}</td>
-                    </tr><tr><td>result</td><td>
-                        {{range $i, $pair := .factors}}
-                            {{if ne $i 0}}&middot;{{end}}
-                            {{index $pair 0}}
-                            {{if ne "1" (index $pair 1)}}<sup>{{index $pair 1}}</sup>{{end}}
-                        {{end}}
-                    </td></tr>
-                {{else}}
-                    <tr><td>error</td><td>{{ .message}}</td></tr>
-                {{end}}
             </table>
+            <div>{{if ne .message ""}}Error: {{ .message}}{{end}}</div>
             <br/>
-            creator:&nbsp;
-            <a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>
-              Peter Knipp
-            </a>
+            <div>
+                creator:&nbsp;
+                <a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>
+                  Peter Knipp
+                </a>
+            </div>
         </p>
     </body>
 </html>

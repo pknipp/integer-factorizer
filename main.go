@@ -431,7 +431,7 @@ func main() {
 				"message": message,
 				"isPrime": isPrime,
 				"type": "GCD",
-				"title": "GCD",
+				"title": "Real GCD",
 			})
 		} else {
 			number, message := factorizeParse(inputStr)
@@ -447,7 +447,7 @@ func main() {
 				"factors": factors,
 				"message": message,
 				"type": "integer",
-				"title": "prime factorization",
+				"title": "Real factorization",
 			})
 		}
 	})
@@ -456,7 +456,7 @@ func main() {
 		var resultStr string
 		if len(strings.Split(inputStr, ",")) > 1 {
 			result, message := gcdParse(inputStr)
-			resultStr = "{\"numbers\": " + inputStr
+			resultStr = "{\"input\": " + inputStr
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
@@ -465,7 +465,7 @@ func main() {
 		} else {
 			number, message := factorizeParse(inputStr)
 			isPrime, result := factorize(number)
-			resultStr = "{\"number\": " + inputStr
+			resultStr = "{\"input\": " + inputStr
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
@@ -500,7 +500,7 @@ func main() {
 					"message": message,
 					"isPrime": isPrime,
 					"type": "GCD",
-					"title": "GCD",
+					"title": "Complex GCD",
 				})
 			}
 		} else {
@@ -540,7 +540,7 @@ func main() {
 					"message": message,
 					"isPrime": isPrime,
 					"type": "Gaussian",
-					"title": "Gaussian-prime factorization",
+					"title": "Complex factorization",
 				})
 			}
 		}
@@ -550,7 +550,7 @@ func main() {
 		var resultStr string
 		if len(strings.Split(inputStr, ",")) > 1 {
 			result, message := gcdComplexParse(inputStr)
-			resultStr = "{\"numbers\": " + inputStr
+			resultStr = "{\"input\": " + inputStr
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
@@ -559,7 +559,7 @@ func main() {
 			}
 		} else {
 			z, message := gaussianParse(inputStr)
-			resultStr = "{\"number\": " + inputStr
+			resultStr = "{\"input\": " + inputStr
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
@@ -575,16 +575,6 @@ func main() {
 
 	router.Run(":" + port)
 	// Use the space below when testing app as CLI./
-	// z1 := [2]int{0, 2}
-	// z2 := [2]int{-1, 3}
-	// z3 := [2]int{1, 3}
-	// _, _, gauss1 := gaussian(z1)
-	// _, _, gauss2 := gaussian(z2)
-	// _, _, gauss3 := gaussian(z3)
-	// result := gcdComplex([]map[string]int{gauss1, gauss2, gauss3})
-	// fmt.Println(z1, z2, z3)
-	// fmt.Println(gauss1, gauss2, gauss3)
-	// fmt.Println(result, len(result))
 	// input := "[2i, -1+3i, 1+3i]"
 	// fmt.Println(input)
 	// fmt.Println(gcdComplexParse(input[1:]))
