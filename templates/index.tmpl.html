@@ -39,16 +39,16 @@
       Input(s):
       <ul>
         <li>
-          Spaces are allowed - but discouraged - because %20 will replace each space after you hit return, thereby making the address uglier.
+          You are discouraged from using spaces, because %20 will replace each space after you hit return, thereby making the address uglier.
         </li>
         <li>
-          <a href="https://en.wikipedia.org/wiki/Scientific_notation#E_notation">E-notation</a> is not allowed.
+          Do not use <a href="https://en.wikipedia.org/wiki/Scientific_notation#E_notation">E-notation</a>.
         </li>
         <li>
-          All <a href="https://en.wikipedia.org/wiki/Real_number">real numbers</a> must be integers less than 2<sup>63</sup> in magnitude (approximately "9" followed by 18 zeros).  Exception: the limit on the number of digits in your Gaussian integer is half of this.
+          All <a href="https://en.wikipedia.org/wiki/Real_number">real numbers</a> must be integers less than 2<sup>63</sup> in magnitude (approximately "9" followed by 18 zeros).  Exception: the limit on the number of digits in your Gaussian integer equals half of this.
         </li>
         <li>
-          <a href="https://en.wikipedia.org/wiki/Complex_number">Complex numbers</a> should be of the form <i>m</i> + <i>n</i>i, where <i>m</i> and <I>n</I> are integers as described in the previous bullet.  Standard shortcuts are allowed, such as shortening <tt>3 + 1i</tt> to <tt>3 + i</tt>, or shortening <tt>0 + 2i</tt> to <tt>2i</tt>.
+          <a href="https://en.wikipedia.org/wiki/Complex_number">Complex numbers</a> should be of the form <i>m</i> + <i>n</i>i, where <i>m</i> and <I>n</I> represent integers as described in the previous bullet.  You may use standard shortcuts such as <tt>3 + i</tt> instead of <tt>3 + 1i</tt>, or <tt>2i</tt> instead of <tt>0 + 2i</tt>.
         </li>
         <li>
           Use commas to separate numbers in a list, ie when determining <a href="https://en.wikipedia.org/wiki/Greatest_common_divisor">GCD</a>.
@@ -66,33 +66,35 @@
         <li>
           <a href="https://en.wikipedia.org/wiki/Table_of_Gaussian_integer_factorizations">complex factorization</a>:
           <br/>
-          Any nonzero Gaussian integer may be expressed as a product of either &plusmn;1 or &plusmn;i, and zero or more <a href="https://en.wikipedia.org/wiki/Gaussian_integer#Gaussian_primes">Gaussian primes</a>, each raised to a power of 1 or more.  This expression is unique if the Gaussian primes are restricted to the first quadrant of the <a href="https://en.wikipedia.org/wiki/Complex_plane">complex plane</a>, including the <a href="https://en.wikipedia.org/wiki/Positive_real_numbers">positive real axis</a> but not including the positive imaginary axis in the complex plane.
+          Any nonzero Gaussian integer may be expressed as a product of either &plusmn;1 or &plusmn;i, and zero or more <a href="https://en.wikipedia.org/wiki/Gaussian_integer#Gaussian_primes">Gaussian primes</a>, each raised to a power of 1 or more.  This expression is unique if the Gaussian primes are restricted to the first quadrant of the <a href="https://en.wikipedia.org/wiki/Complex_plane">complex plane</a>, including the <a href="https://en.wikipedia.org/wiki/Positive_real_numbers">positive real axis</a> but not including the positive imaginary axis.
         </li>
         <li>
           Whether real or complex, any nonzero integer other than &plusmn;1 or &plusmn;i is categorized as one of the following:
           <ul>
             <li>
-              <a href="https://en.wikipedia.org/wiki/Prime_number">Prime</a> number contains exactly one prime factor in its factorization.
+              A <a href="https://en.wikipedia.org/wiki/Prime_number">prime</a> number contains exactly one prime factor in its factorization.
             </li>
             <li>
-              <a href="https://en.wikipedia.org/wiki/Composite_number">Composite</a> number contains two or more prime factors in its factorization.  Although this definition usually is used for positive integers, it extends naturally to Gaussian integers.
+              A <a href="https://en.wikipedia.org/wiki/Composite_number">composite</a> number contains two or more prime factors in its factorization.  Although this definition usually is used for positive integers, it extends naturally to Gaussian integers.
             </li>
           </ul>
         </li>
         <li>
-          Just as individual integers may be classified as either prime or composite, so may lists of integers be classified by their GCD: the list is <a href="https://en.wikipedia.org/wiki/Coprime_integers">relatively prime</a> (or "coprime" or "mutually prime") if their GCD equals 1, or relatively composite (or "mutually composite") if their GCD is larger than 1.
+          Just as an individual integer may be classified as either prime or composite, so may a list of integers be classified by its GCD: the list is <a href="https://en.wikipedia.org/wiki/Coprime_integers">relatively prime</a> (or "coprime" or "mutually prime") if its GCD equals 1, or relatively composite (or "mutually composite") if its GCD exceeds 1.
         </li>
       </ul>
     </li>
     <li>
       Output:
       <br/>
-      <li>
-        The <tt>factors</tt> property of the json output will be a POJO/dictionary, each key for which is a different prime number, and each value for which is the power to which the particular prime is raised when forming the factorization.  For complex integers, the value of the <tt>exponent</tt> property is the power to which i should be raised when multiplying the prime factors,
-      </li>
-      <li>
-        The GCD is given in factored form.
-      </li>
+      <ul>
+        <li>
+          The <tt>factors</tt> property of the json output will be a POJO/dictionary, each key for which signifies a different prime number, and each value for which equals the power to which the particular prime is raised when forming the factorization.  For complex integers, the value of the <tt>exponent</tt> property equals the power to which i should be raised when multiplying the prime factors,
+        </li>
+        <li>
+          The GCD is given in factored form, for the complex case.
+        </li>
+      </ul>
     </li>
     <li>
       examples:
