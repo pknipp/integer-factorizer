@@ -1,5 +1,6 @@
 <head>
   <title>integer factorization</title>
+  <link rel="stylesheet" type="text/css" href="/static/main.css" />
 </head>
 <body>
   <h3><p align=center>Instructions for use of this factorizer:</p></h3>
@@ -24,10 +25,10 @@
       URL:
       <ul>
         <li>
-          After <tt>...herokuapp.com</tt> above you should type either <tt>/complex/</tt> if you want to consider Gaussian integers or nothing if you want to consider real ones.
+          After <tt>...herokuapp.com</tt> above you should type either <tt>/complex/</tt> if you want to consider Gaussian integers or a single slash if you want to consider real ones.
         </li>
         <li>
-          After this you should type <tt>json/</tt> if you want the output in json or a single slash if you want the output in html.
+          After this you should type <tt>json/</tt> if you want the output in json or nothing if you want the output in html.
         </li>
         <li>
           After this you should type your input, as described next.
@@ -55,7 +56,7 @@
       </ul>
     </li>
     <li>
-      Factorization theorems:
+      Factorization theorems and definitions:
       <ul>
         <li>
           <a href="https://en.wikipedia.org/wiki/Integer_factorization">real factorization</a>:
@@ -74,7 +75,7 @@
               <a href="https://en.wikipedia.org/wiki/Prime_number">Prime</a> number contains exactly one prime factor in its factorization.
             </li>
             <li>
-              <a href="https://en.wikipedia.org/wiki/Composite_number">Composite</a> number contains two or more prime factors in its factorization.  Although this definition usually is used for positive integers, it extends naturally to Gaussign integers.
+              <a href="https://en.wikipedia.org/wiki/Composite_number">Composite</a> number contains two or more prime factors in its factorization.  Although this definition usually is used for positive integers, it extends naturally to Gaussian integers.
             </li>
           </ul>
         </li>
@@ -84,9 +85,14 @@
       </ul>
     </li>
     <li>
-      json output:
+      Output:
       <br/>
+      <li>
         The <tt>factors</tt> property of the json output will be a POJO/dictionary, each key for which is a different prime number, and each value for which is the power to which the particular prime is raised when forming the factorization.  For complex integers, the value of the <tt>exponent</tt> property is the power to which i should be raised when multiplying the prime factors,
+      </li>
+      <li>
+        The GCD is given in factored form.
+      </li>
     </li>
     <li>
       examples:
