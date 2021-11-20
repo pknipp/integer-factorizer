@@ -416,7 +416,7 @@ func main() {
 			// _, results := factorize(result)
 			// factors := [][2]string{}
 			var isPrime bool
-			if len(results) > 0 {
+			if result > 1 {
 				isPrime = false
 				// for prime, exponent := range results {
 					// factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
