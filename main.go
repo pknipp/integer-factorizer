@@ -483,18 +483,13 @@ func main() {
 		}
 		c.String(http.StatusOK, resultStr + "}")
 	})
-
 	router.GET("/complex/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
-		z, message := gaussianParse(inputStr)
-		factors := [][2]string{}
-		var isPrime bool
-		var number int
-		results := map[string]int{}
-		if len(message) == 0 {
-			if inputStr[0:1] == "[" {
-				result, message := gcdComplexParse(inputStr[1:])
-				fmt.Println(inputStr, result, message)
+		fmt.Println("l488", inputStr)
+		if inputStr[0:1] == "[" {
+			result, message := gcdComplexParse(inputStr[1:])
+			if len(message) == 0 {
+				fmt.Println("l492",inputStr, result, message)
 				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 					"numbers": inputStr,
 					"result": result,
@@ -502,7 +497,15 @@ func main() {
 					"type": "GCD",
 					"title": "GCD",
 				})
-			} else {
+			}
+		} else {
+			fmt.Println("l502", )
+			z, message := gaussianParse(inputStr)
+			if len(message) == 0 {\
+				factors := [][2]string{}
+				var isPrime bool
+				var number int
+				results := map[string]int{}
 				isPrime, number, results = gaussian(z)
 				PREFACTOR := [4]string{"", "i", "-", "-i"}
 				// Transform from results (map) to factors (array of 2-ples) to enable me to treat 0-th element differently in results.html.
