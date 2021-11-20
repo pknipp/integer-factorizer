@@ -413,21 +413,21 @@ func main() {
 		inputStr := c.Param("input")
 		if len(strings.Split(inputStr, ",")) > 1  {
 			result, message := gcdParse(inputStr)
-			// _, results := factorize(result)
-			// factors := [][2]string{}
+			_, results := factorize(result)
+			factors := [][2]string{}
 			var isPrime bool
 			if result > 1 {
 				isPrime = false
-				// for prime, exponent := range results {
-					// factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
-				// }
+				for prime, exponent := range results {
+					factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
+				}
 			} else {
 				isPrime = true
-				// factors = append(factors, [2]string{"1", "1"})
+				factors = append(factors, [2]string{"1", "1"})
 			}
 			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				"input": inputStr,
-				"factors": result, //factors,
+				"factors": factors,
 				"message": message,
 				"isPrime": isPrime,
 				"type": "GCD",
