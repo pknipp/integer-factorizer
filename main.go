@@ -435,12 +435,12 @@ func main() {
 			factors := [][2]string{}
 			var isPrime bool
 			if len(results) > 0 {
-				isPrime = true
+				isPrime = false
 				for prime, exponent := range results {
 					factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
 				}
 			} else {
-				isPrime = false
+				isPrime = true
 			}
 			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				"input": inputStr,
