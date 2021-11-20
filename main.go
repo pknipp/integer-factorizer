@@ -422,6 +422,7 @@ func main() {
 				}
 			} else {
 				isPrime = true
+				factors = append(factors, [2]string{"1", "1"})
 			}
 			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 				"input": inputStr,
