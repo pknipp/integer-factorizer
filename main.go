@@ -501,7 +501,7 @@ func main() {
 		} else {
 			fmt.Println("l502", )
 			z, message := gaussianParse(inputStr)
-			if len(message) == 0 {\
+			if len(message) == 0 {
 				factors := [][2]string{}
 				var isPrime bool
 				var number int
