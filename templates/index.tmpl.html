@@ -14,10 +14,10 @@
     <li>This page allows for four different types of calculations, depending upon the following pairs of circumstances:
       <ul>
         <li>
-          <a href="https://en.wikipedia.org/wiki/Integer">real integers</a> vs complex integers (<a href="https://en.wikipedia.org/wiki/Gaussian_integer">"Gaussian integers"</a>)
+          <a href="https://en.wikipedia.org/wiki/Integer">real integers</a> vs <a href="https://en.wikipedia.org/wiki/Gaussian_integer">complex integers"</a> (AKA Gaussian integers)
         </li>
         <li>
-          factorization of single integers vs <a href="https://en.wikipedia.org/wiki/Greatest_common_divisor">greatest common divisor</a> (GCD) of collections thereof
+          single integer (factorization thereof) vs list of integers (<a href="https://en.wikipedia.org/wiki/Greatest_common_divisor">greatest common divisor</a> - GCD - thereof)
         </li>
       </ul>
     <li>
@@ -27,7 +27,7 @@
           After <tt>...herokuapp.com</tt> above you should type either <tt>/complex/</tt> if you want to consider Gaussian integers or nothing if you want to consider real ones.
         </li>
         <li>
-          After this you should subsequently type <tt>json/</tt> if you want the output in json or nothing if you want it in html.
+          After this you should type <tt>json/</tt> if you want the output in json or nothing if you want it in html.
         </li>
         <li>
           After this you should type your input, as described next.
@@ -50,12 +50,12 @@
           <a href="https://en.wikipedia.org/wiki/Complex_number">Complex numbers</a> should be of the form <i>m</i> + <i>n</i>i, where <i>m</i> and <I>n</I> are integers as described in the previous bullet.  Standard shortcuts are allowed, such as shortening <tt>3 + 1i</tt> to <tt>3 + i</tt>, or shortening <tt>0 + 2i</tt> to <tt>2i</tt>.
         </li>
         <li>
-          Use commas to separate numbers in a list (when determining <a href="https://en.wikipedia.org/wiki/Greatest_common_divisor">GCD</a>).
+          Use commas to separate numbers in a list, ie when determining <a href="https://en.wikipedia.org/wiki/Greatest_common_divisor">GCD</a>.
         </li>
       </ul>
     </li>
     <li>
-      factorization theorems:
+      Factorization theorems:
       <ul>
         <li>
           <a href="https://en.wikipedia.org/wiki/Integer_factorization">real factorization</a>:
@@ -65,7 +65,7 @@
         <li>
           <a href="https://en.wikipedia.org/wiki/Table_of_Gaussian_integer_factorizations">complex factorization</a>:
           <br/>
-          Any nonzero Gaussian integer may be expressed as a product of either &plusmn;1 or &plusmn;i and zero or more <a href="https://en.wikipedia.org/wiki/Gaussian_integer#Gaussian_primes">Gaussian primes</a>, each raised to a power of 1 or more.  This expression is unique if the Gaussian primes are restricted to the first quadrant of the <a href="https://en.wikipedia.org/wiki/Complex_plane">complex plane</a>, including the <a href="https://en.wikipedia.org/wiki/Positive_real_numbers">positive real axis</a> but not the positive imaginary axis in the complex plane.
+          Any nonzero Gaussian integer may be expressed as a product of either &plusmn;1 or &plusmn;i, and zero or more <a href="https://en.wikipedia.org/wiki/Gaussian_integer#Gaussian_primes">Gaussian primes</a>, each raised to a power of 1 or more.  This expression is unique if the Gaussian primes are restricted to the first quadrant of the <a href="https://en.wikipedia.org/wiki/Complex_plane">complex plane</a>, including the <a href="https://en.wikipedia.org/wiki/Positive_real_numbers">positive real axis</a> but not including the positive imaginary axis in the complex plane.
         </li>
         <li>
           Whether real or complex, any nonzero integer other than &plusmn;1 or &plusmn;i is categorized as one of the following:
@@ -75,6 +75,8 @@
             </li>
             <li>
               <a href="https://en.wikipedia.org/wiki/Composite_number">Composite</a> number contains two or more prime factors in its factorization.  Although this definition usually is used for positive integers, it extends naturally to Gaussign integers.
+            </li>
+          </ul>
         </li>
         <li>
           Just as individual integers may be classified as either prime or composite, so may lists of integers be classified by their GCD: the list is <a href="https://en.wikipedia.org/wiki/Coprime_integers">relatively prime</a> (or "coprime" or "mutually prime") if their GCD equals 1, or relatively composite (or "mutually composite") if their GCD is larger than 1.
@@ -90,17 +92,16 @@
       examples:
       <br/>
       <table border='1'>
-        <tr><th colspan=2><th rowspan=2>input</th><th rowspan=2>result</th><th rowspan=2>json</th><tr>
-        <tr><th>real or complex</th><th>single or list</th></tr>
+        <tr><th>real or complex</th><th>single or list</th><th>input</th><th>result</th><th>json output</th><tr>
         <tr><td rowspan=2>real</td><td rowspan=5>single</td><td>359</td><td colspan=2>prime</td></tr>
         <tr><td>360</td><td>2<sup>3</sup>&middot;3<sup>2</sup>&middot;5</td><td><tt>{"2": 3, "3": 2, "5": 1}</tt></td></tr>
-        <tr><td rowspan=3>complex</td><td><td><tt>2</tt></td><td><tt>-i(1 + i)<sup>2</sup></tt></td><td><tt>{"exponent": 3, "factors": {"1+i": 2}}</tt></td></td></tr>
+        <tr><td rowspan=3>complex</td><td><tt>2</tt></td><td><tt>-i(1 + i)<sup>2</sup></tt></td><td><tt>{"exponent": 3, "factors": {"1+i": 2}}</tt></td></td></tr>
         <tr><td><tt>3</tt></td><td colspan=2>prime</td></tr>
         <tr><td><tt>1 + 3i</tt></td><td><tt>(1 + i)(2 + i)</tt></td><td><tt>{"exponent": 0, "factors": {"1+i": 1, "2+i": 1}}</tt></td></tr>
         <tr><td rowspan=3>real</td><td rowspan=4>list</td><td><tt>9,12</tt></td><td colspan=2><tt>3</tt></td></tr>
         <tr><td><tt>9,10</tt></td><td colspan=2>relatively prime</td></tr>
         <tr><td><tt>8,10,12</tt></td><td colspan=2><tt>2</tt></td></tr>
-        <tr><td>complex</td><tt>2i, -1 + 3i, 1 + 3i</tt></td><td colspan=2><tt>1 + i</tt></td></tr>
+        <tr><td>complex</td><td><tt>2i, -1 + 3i, 1 + 3i</tt></td><td colspan=2><tt>1 + i</tt></td></tr>
       </table>
     </li>
   </ul>
