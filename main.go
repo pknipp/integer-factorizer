@@ -487,7 +487,7 @@ func main() {
 				if len(results) > 0 {
 					isPrime = false
 					for prime, exponent := range results {
-						factors = append(factors, [2]string{prime, strconv.Itoa(exponent)})
+						factors = append(factors, [2]string{"(" + prime + ")", strconv.Itoa(exponent)})
 					}
 				} else {
 					isPrime = true
