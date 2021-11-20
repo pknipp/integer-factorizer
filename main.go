@@ -28,29 +28,19 @@ func gcd2(n1, n2 int) int {
 func gcdComplexParse(gStr string) (map[string]int, string) {
 	gs := []map[string]int{}
 	result := map[string]int{}
+	gStr = regexp.MustCompile(" ").ReplaceAllString(gStr, "")
 	if len(gStr) == 0 {
-		return result, "Array is missing."
+		return result, "Expression is missing."
 	}
-	if gStr[len(gStr) - 1 :] != "]" {
-		return result, "Array should end with a close bracket."
-	} else {
-		// Remove closing bracket and any spaces.
-		gStr = gStr[0: len(gStr) - 1]
-		gStr = regexp.MustCompile(" ").ReplaceAllString(gStr, "")
-		if len(gStr) == 0 {
-			return result, "Your brackets don't contain any numbers."
+	// Create array of strings, each representing a gaussian integer
+	gsStr := strings.Split(gStr, ",")
+	for _, gStr := range gsStr {
+		gaussianInt, message := gaussianParse(gStr)
+		if len(message) != 0 {
+			return result, message
 		} else {
-			// Create array of strings, each representing a gaussian integer
-			gsStr := strings.Split(gStr, ",")
-			for _, gStr := range gsStr {
-				gaussianInt, message := gaussianParse(gStr)
-				if len(message) != 0 {
-					return result, message
-				} else {
-					_, _, gaussianFactors := gaussian(gaussianInt)
-					gs = append(gs, gaussianFactors)
-				}
-			}
+			_, _, gaussianFactors := gaussian(gaussianInt)
+			gs = append(gs, gaussianFactors)
 		}
 	}
 	return gcdComplex(gs), ""
@@ -73,34 +63,25 @@ func gcd2Complex(gauss1, gauss2 map[string]int) map[string]int {
 func gcdParse(nStr string) (int, string) {
 	var result int
 	var ns []int
+	nStr = regexp.MustCompile(" ").ReplaceAllString(nStr, "")
 	if len(nStr) == 0 {
-		return result, "Array is missing."
+		return result, "Expression is missing."
 	}
-	if nStr[len(nStr) - 1 :] != "]" {
-		return result, "Array should end with a close bracket."
-	} else {
-		nStr = nStr[0: len(nStr) - 1]
-		nStr = regexp.MustCompile(" ").ReplaceAllString(nStr, "")
-		if len(nStr) == 0 {
-			return result, "Your brackets don't contain any numbers."
+	nsStr := strings.Split(nStr, ",")
+	for _, nStr := range nsStr {
+		_, err := strconv.ParseFloat(nStr, 64)
+		if err != nil {
+			return result, "There is a problem with this number: " + nStr
+		}
+		var n int
+		n, err = strconv.Atoi(nStr)
+		if err != nil {
+			return result, "The following number should be an integer, not a decimal: " + nStr
 		} else {
-			nsStr := strings.Split(nStr, ",")
-			for _, nStr := range nsStr {
-				_, err := strconv.ParseFloat(nStr, 64)
-				if err != nil {
-					return result, "There is a problem with this number: " + nStr
-				}
-				var n int
-				n, err = strconv.Atoi(nStr)
-				if err != nil {
-					return result, "The following number should be an integer, not a decimal: " + nStr
-				} else {
-					if n > 0 {
-						ns = append(ns, n)
-					} else {
-						return result, "The following number is not positive: " + nStr
-					}
-				}
+			if n > 0 {
+				ns = append(ns, n)
+			} else {
+				return result, "The following number is not positive: " + nStr
 			}
 		}
 	}
@@ -429,8 +410,8 @@ func main() {
 	})
 	router.GET("/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
-		if inputStr[0:1] == "[" {
-			result, message := gcdParse(inputStr[1:])
+		if len(strings.Split(inputStr, ",")) > 1  {
+			result, message := gcdParse(inputStr)
 			_, results := factorize(result)
 			factors := [][2]string{}
 			var isPrime bool
@@ -471,8 +452,8 @@ func main() {
 	router.GET("/json/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
 		var resultStr string
-		if inputStr[0:1] == "[" {
-			result, message := gcdParse(inputStr[1:])
+		if len(strings.Split(inputStr, ",")) > 1 {
+			result, message := gcdParse(inputStr)
 			resultStr = "{\"numbers\": " + inputStr
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
@@ -497,8 +478,8 @@ func main() {
 	})
 	router.GET("/complex/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
-		if inputStr[0:1] == "[" {
-			results, message := gcdComplexParse(inputStr[1:])
+		if len(strings.Split(inputStr, ",")) > 1 {
+			results, message := gcdComplexParse(inputStr)
 			if len(message) == 0 {
 				factors := [][2]string{}
 				var isPrime bool
@@ -565,8 +546,8 @@ func main() {
 	router.GET("/complex/json/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
 		var resultStr string
-		if inputStr[0:1] == "[" {
-			result, message := gcdComplexParse(inputStr[1:])
+		if len(strings.Split(inputStr, ",")) > 1 {
+			result, message := gcdComplexParse(inputStr)
 			resultStr = "{\"numbers\": " + inputStr
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
