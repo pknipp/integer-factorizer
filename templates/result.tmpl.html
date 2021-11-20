@@ -10,7 +10,7 @@
                     <td>number{{if eq .type "GCD"}}s{{end}}</td>
                     <td>{{.input}}</td>
                 </tr>
-                {{if ne .message ""}}
+                {{if eq .message ""}}
                     {{if ne .type "GCD"}}
                         <tr><td>number type</td>
                             <td>{{if .isPrime }}prime{{else}}composite{{end}}</td>
