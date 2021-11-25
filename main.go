@@ -1,19 +1,19 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"sort"
 	// "encoding/json"
-	// "log"
-	// "net/http"
-	// "os"
+	"log"
+	"net/http"
+	"os"
 	"strconv"
 	"regexp"
 	"strings"
 	"math"
 	// "reflect"
-	// "github.com/gin-gonic/gin"
-	// _ "github.com/heroku/x/hmetrics/onload"
+	"github.com/gin-gonic/gin"
+	_ "github.com/heroku/x/hmetrics/onload"
 )
 
 //Euclid's algorithm, which is extremely efficient.
@@ -406,61 +406,63 @@ func gaussian(z [2]int) (bool, int, map[string]int) {
 }
 
 func main() {
-	// port := os.Getenv("PORT")
-	// if port == "" {
-		// log.Fatal("$PORT must be set")
-	// }
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
 	// I opted not to use this version of router, for technical reasons.
 	// router := gin.New()
-	// router := gin.Default()
-	// router.Use(gin.Logger())
-	// router.LoadHTMLGlob("templates/*.tmpl.html")
-	// router.Static("/static", "static")
-	// router.GET("/", func(c *gin.Context) {
-		// c.HTML(http.StatusOK, "index.tmpl.html", nil)
-	// })
-	// router.GET("/:input", func(c *gin.Context) {
-		// inputStr := c.Param("input")
-		// if len(strings.Split(inputStr, ",")) > 1  {
-			// result, message := gcdParse(inputStr)
-			// _, results := factorize(result)
-			// factors := [][2]string{}
-			// var isPrime bool
-			// if result > 1 {
-				// isPrime = false
-				// for prime, exponent := range results {
-					// factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
-				// }
-			// } else {
-				// isPrime = true
-				// factors = append(factors, [2]string{"1", "1"})
-			// }
-			// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-				// "input": inputStr,
-				// "factors": factors,
-				// "message": message,
-				// "isPrime": isPrime,
-				// "type": "GCD",
-				// "title": "Real GCD",
-			// })
-		// } else {
-			// number, message := factorizeParse(inputStr)
-			// isPrime, results := factorize(number)
+	router := gin.Default()
+	router.Use(gin.Logger())
+	router.LoadHTMLGlob("templates/*.tmpl.html")
+	router.Static("/static", "static")
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.tmpl.html", nil)
+	})
+	router.GET("/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		if len(strings.Split(inputStr, ",")) > 1  {
+			result, message := gcdParse(inputStr)
+			_, results := factorize(result)
+			factors := [][2]string{}
+			var isPrime bool
+			if result > 1 {
+				isPrime = false
+				for _, pair := range results {
+					prime, exponent := pair[0], pair[1]
+					factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
+				}
+			} else {
+				isPrime = true
+				factors = append(factors, [2]string{"1", "1"})
+			}
+			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+				"input": inputStr,
+				"factors": factors,
+				"message": message,
+				"isPrime": isPrime,
+				"type": "GCD",
+				"title": "Real GCD",
+			})
+		} else {
+			number, message := factorizeParse(inputStr)
+			isPrime, results := factorize(number)
 			// Convert from map to array of 2-pls so that 0-th element can be handled separately in results.html.
-			// factors := [][2]string{}
-			// for prime, exponent := range results {
-				// factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
-			// }
-			// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-				// "input": inputStr,
-				// "isPrime": isPrime,
-				// "factors": factors,
-				// "message": message,
-				// "type": "integer",
-				// "title": "Real factorization",
-			// })
-		// }
-	// })
+			factors := [][2]string{}
+			for _, pair := range results {
+				prime, exponent := pair[0], pair[1]
+				factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
+			}
+			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+				"input": inputStr,
+				"isPrime": isPrime,
+				"factors": factors,
+				"message": message,
+				"type": "integer",
+				"title": "Real factorization",
+			})
+		}
+	})
 	// router.GET("/json/:input", func(c *gin.Context) {
 		// inputStr := c.Param("input")
 		// var resultStr string
@@ -585,9 +587,9 @@ func main() {
 //
 	// router.Run(":" + port)
 	// Use the space below when testing app as CLI./
-	input := "2147483646"
-	fmt.Println(factorizeParse(input))
-	number, _ := factorizeParse(input)
-	fmt.Println(number)
-	fmt.Println(factorize(number))
+	// input := "2147483646"
+	// fmt.Println(factorizeParse(input))
+	// number, _ := factorizeParse(input)
+	// fmt.Println(number)
+	// fmt.Println(factorize(number))
 }
