@@ -490,101 +490,101 @@ func main() {
 		}
 		c.String(http.StatusOK, resultStr + "}")
 	})
-	// router.GET("/complex/:input", func(c *gin.Context) {
-		// inputStr := c.Param("input")
-		// if len(strings.Split(inputStr, ",")) > 1 {
-			// results, message := gcdComplexParse(inputStr)
-			// if len(message) == 0 {
-				// factors := [][2]string{}
-				// var isPrime bool
-				// if len(results) > 0 {
-					// isPrime = false
-					// for prime, exponent := range results {
-						// factors = append(factors, [2]string{"(" + prime + ")", strconv.Itoa(exponent)})
-					// }
-				// } else {
-					// isPrime = true
-					// factors = append(factors, [2]string{"1", "1"})
-				// }
-				// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					// "input": inputStr,
-					// "factors": factors,
-					// "message": message,
-					// "isPrime": isPrime,
-					// "type": "GCD",
-					// "title": "Complex GCD",
-				// })
-			// }
-		// } else {
-			// z, message := gaussianParse(inputStr)
-			// if len(message) == 0 {
-				// factors := [][2]string{}
-				// var isPrime bool
-				// var number int
-				// results := map[string]int{}
-				// isPrime, number, results = gaussian(z)
-				// PREFACTOR := [4]string{"", "i", "-", "-i"}
+	router.GET("/complex/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		if len(strings.Split(inputStr, ",")) > 1 {
+			results, message := gcdComplexParse(inputStr)
+			if len(message) == 0 {
+				factors := [][2]string{}
+				var isPrime bool
+				if len(results) > 0 {
+					isPrime = false
+					for prime, exponent := range results {
+						factors = append(factors, [2]string{"(" + prime + ")", strconv.Itoa(exponent)})
+					}
+				} else {
+					isPrime = true
+					factors = append(factors, [2]string{"1", "1"})
+				}
+				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+					"input": inputStr,
+					"factors": factors,
+					"message": message,
+					"isPrime": isPrime,
+					"type": "GCD",
+					"title": "Complex GCD",
+				})
+			}
+		} else {
+			z, message := gaussianParse(inputStr)
+			if len(message) == 0 {
+				factors := [][2]string{}
+				var isPrime bool
+				var number int
+				results := map[string]int{}
+				isPrime, number, results = gaussian(z)
+				PREFACTOR := [4]string{"", "i", "-", "-i"}
 				// Transform from results (map) to factors (array of 2-ples) to enable me to treat 0-th element differently in results.html.
-				// firstFactor := true
-				// for prime, exponent := range results {
-					// factor := ""
-					// if firstFactor {
-						// coef := PREFACTOR[number]
-						// if number % 2 == 0 || strings.Contains(prime, "i") {
+				firstFactor := true
+				for prime, exponent := range results {
+					factor := ""
+					if firstFactor {
+						coef := PREFACTOR[number]
+						if number % 2 == 0 || strings.Contains(prime, "i") {
 							// No multiplication symbol is required, so I just modify the first factor.
-							// factor += coef
-						// } else {
+							factor += coef
+						} else {
 							// Multiplication symbol is required, so I prepend one factor.
-							// factors = append(factors, [2]string{coef, "1"})
-						// }
-					// }
-					// firstFactor = false
-					// if !strings.Contains(prime, "i") {
-						// factor += prime
-					// } else {
-						// factor += "(" + prime + ")"
-					// }
-					// factors = append(factors, [2]string{factor, strconv.Itoa(exponent)})
-				// }
-				// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					// "input": inputStr,
-					// "factors": factors,
-					// "message": message,
-					// "isPrime": isPrime,
-					// "type": "Gaussian",
-					// "title": "Complex factorization",
-				// })
-			// }
-		// }
-	// })
-	// router.GET("/complex/json/:input", func(c *gin.Context) {
-		// inputStr := c.Param("input")
-		// var resultStr string
-		// if len(strings.Split(inputStr, ",")) > 1 {
-			// result, message := gcdComplexParse(inputStr)
-			// resultStr = "{\"input\": " + inputStr
-			// if len(message) > 0 {
-				// resultStr += ", \"message\": " + message
-			// } else {
-				// gcdResult, _ := json.Marshal(result)
-				// resultStr += ", \"gcd\": " + string(gcdResult)
-			// }
-		// } else {
-			// z, message := gaussianParse(inputStr)
-			// resultStr = "{\"input\": " + inputStr
-			// if len(message) > 0 {
-				// resultStr += ", \"message\": " + message
-			// } else {
-				// isPrime, n, result := gaussian(z)
-				// resultStr += ", \"exponent\": " + strconv.Itoa(n)
-				// resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
-				// factorStr, _ := json.Marshal(result)
-				// resultStr += ", \"factors\": " + string(factorStr)
-			// }
-		// }
-		// c.String(http.StatusOK, resultStr + "}")
-	// })
-//
+							factors = append(factors, [2]string{coef, "1"})
+						}
+					}
+					firstFactor = false
+					if !strings.Contains(prime, "i") {
+						factor += prime
+					} else {
+						factor += "(" + prime + ")"
+					}
+					factors = append(factors, [2]string{factor, strconv.Itoa(exponent)})
+				}
+				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+					"input": inputStr,
+					"factors": factors,
+					"message": message,
+					"isPrime": isPrime,
+					"type": "Gaussian",
+					"title": "Complex factorization",
+				})
+			}
+		}
+	})
+	router.GET("/complex/json/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		var resultStr string
+		if len(strings.Split(inputStr, ",")) > 1 {
+			result, message := gcdComplexParse(inputStr)
+			resultStr = "{\"input\": " + inputStr
+			if len(message) > 0 {
+				resultStr += ", \"message\": " + message
+			} else {
+				gcdResult, _ := json.Marshal(result)
+				resultStr += ", \"gcd\": " + string(gcdResult)
+			}
+		} else {
+			z, message := gaussianParse(inputStr)
+			resultStr = "{\"input\": " + inputStr
+			if len(message) > 0 {
+				resultStr += ", \"message\": " + message
+			} else {
+				isPrime, n, result := gaussian(z)
+				resultStr += ", \"exponent\": " + strconv.Itoa(n)
+				resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
+				factorStr, _ := json.Marshal(result)
+				resultStr += ", \"factors\": " + string(factorStr)
+			}
+		}
+		c.String(http.StatusOK, resultStr + "}")
+	})
+
 	router.Run(":" + port)
 	// Use the space below when testing app as CLI./
 	// input := "2147483646"
