@@ -585,7 +585,7 @@ func main() {
 		// c.String(http.StatusOK, resultStr + "}")
 	// })
 //
-	// router.Run(":" + port)
+	router.Run(":" + port)
 	// Use the space below when testing app as CLI./
 	// input := "2147483646"
 	// fmt.Println(factorizeParse(input))
