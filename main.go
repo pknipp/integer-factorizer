@@ -3,7 +3,7 @@ package main
 import (
 	// "fmt"
 	"sort"
-	// "encoding/json"
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -463,33 +463,33 @@ func main() {
 			})
 		}
 	})
-	// router.GET("/json/:input", func(c *gin.Context) {
-		// inputStr := c.Param("input")
-		// var resultStr string
-		// if len(strings.Split(inputStr, ",")) > 1 {
-			// result, message := gcdParse(inputStr)
-			// resultStr = "{\"input\": " + inputStr
-			// if len(message) > 0 {
-				// resultStr += ", \"message\": " + message
-			// } else {
-				// resultStr += ", \"gcd\": " + strconv.Itoa(result)
-			// }
-		// } else {
-			// number, message := factorizeParse(inputStr)
-			// isPrime, result := factorize(number)
-			// resultStr = "{\"input\": " + inputStr
-			// if len(message) > 0 {
-				// resultStr += ", \"message\": " + message
-			// } else {
-				// resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
-				// if !isPrime {
-					// factorStr, _ := json.Marshal(result)
-					// resultStr += ", \"factors\": " + string(factorStr)
-				// }
-			// }
-		// }
-		// c.String(http.StatusOK, resultStr + "}")
-	// })
+	router.GET("/json/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		var resultStr string
+		if len(strings.Split(inputStr, ",")) > 1 {
+			result, message := gcdParse(inputStr)
+			resultStr = "{\"input\": " + inputStr
+			if len(message) > 0 {
+				resultStr += ", \"message\": " + message
+			} else {
+				resultStr += ", \"gcd\": " + strconv.Itoa(result)
+			}
+		} else {
+			number, message := factorizeParse(inputStr)
+			isPrime, result := factorize(number)
+			resultStr = "{\"input\": " + inputStr
+			if len(message) > 0 {
+				resultStr += ", \"message\": " + message
+			} else {
+				resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
+				if !isPrime {
+					factorStr, _ := json.Marshal(result)
+					resultStr += ", \"factors\": " + string(factorStr)
+				}
+			}
+		}
+		c.String(http.StatusOK, resultStr + "}")
+	})
 	// router.GET("/complex/:input", func(c *gin.Context) {
 		// inputStr := c.Param("input")
 		// if len(strings.Split(inputStr, ",")) > 1 {
