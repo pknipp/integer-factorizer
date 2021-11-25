@@ -390,7 +390,9 @@ func gaussian(z [2]int) (bool, int, [][2]string) {
 		gaussianFactorsSorted3 = append(gaussianFactorsSorted3, [3]string{prime, strconv.Itoa(pair[0]), strconv.Itoa(pair[1])})
 	}
 	sort.Slice(gaussianFactorsSorted3, func(i, j int) bool {
-		return gaussianFactorsSorted3[i][1] < gaussianFactorsSorted3[j][1]
+		mod2i, _ := strconv.Atoi(gaussianFactorsSorted3[i][1])
+		mod2j, _ := strconv.Atoi(gaussianFactorsSorted3[j][1])
+		return mod2i < mod2j
 	})
 	gaussianFactorsSorted := [][2]string{}
 	for _, triplet := range gaussianFactorsSorted3 {
