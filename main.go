@@ -27,26 +27,26 @@ func gcd2(n1, n2 int) int {
 	}
 }
 
-func gcdComplexParse(gStr string) (map[string]int, string) {
-	gs := []map[string]int{}
-	result := map[string]int{}
-	gStr = regexp.MustCompile(" ").ReplaceAllString(gStr, "")
-	if len(gStr) == 0 {
-		return result, "Expression is missing."
-	}
+// func gcdComplexParse(gStr string) (map[string]int, string) {
+	// gs := []map[string]int{}
+	// result := map[string]int{}
+	// gStr = regexp.MustCompile(" ").ReplaceAllString(gStr, "")
+	// if len(gStr) == 0 {
+		// return result, "Expression is missing."
+	// }
 	// Create array of strings, each representing a gaussian integer
-	gsStr := strings.Split(gStr, ",")
-	for _, gStr := range gsStr {
-		gaussianInt, message := gaussianParse(gStr)
-		if len(message) != 0 {
-			return result, message
-		} else {
-			_, _, gaussianFactors := gaussian(gaussianInt)
-			gs = append(gs, gaussianFactors)
-		}
-	}
-	return gcdComplex(gs), ""
-}
+	// gsStr := strings.Split(gStr, ",")
+	// for _, gStr := range gsStr {
+		// gaussianInt, message := gaussianParse(gStr)
+		// if len(message) != 0 {
+			// return result, message
+		// } else {
+			// _, _, gaussianFactors := gaussian(gaussianInt)
+			// gs = append(gs, gaussianFactors)
+		// }
+	// }
+	// return gcdComplex(gs), ""
+// }
 
 func gcd2Complex(gauss1, gauss2 map[string]int) map[string]int {
 	gauss := map[string]int{}
@@ -228,7 +228,7 @@ func partParse(str, part string) (int, string) {
 }
 
 func gaussianParse(zStr string) ([2]int, string) {
-	z := [2]int{0., 0.}
+	z := [2]int{1., 0.}
 	noNumber := "You need to input a Gaussian integer."
 	neither := "This number is neither prime nor composite."
 	zStr = regexp.MustCompile(" ").ReplaceAllString(zStr, "")
@@ -308,22 +308,22 @@ func gaussianParse(zStr string) ([2]int, string) {
 	return z, ""
 }
 
-func gaussian(z [2]int) (bool, int, map[string]int) {
-	gaussianFactors := map[string]int{}
+func gaussian(z [2]int) (bool, int, [][2]string) {
+	gaussianFactors := map[string][2]int{}
 	_, factors := factorize(modulus(z))
 	for _, pair := range factors {
 		prime := pair[0]
 		exponent := pair[1]
 		// Here are the factors of 1 + i
 		if prime == 2 {
-			gaussianFactors["1+i"] = exponent
+			gaussianFactors["1+i"] = [2]int{2, exponent}
 			for count := 0; count < exponent; count++ {
 				_, z = modulo(z, [2]int{1, 1})
 			}
 		} else {
 			// Here are the (irreducible) real prime factors, which occur in pairs.
 			if prime % 4 == 3 {
-				gaussianFactors[strconv.Itoa(prime)] = exponent / 2
+				gaussianFactors[strconv.Itoa(prime)] = [2]int{prime, exponent / 2}
 				for count := 0; count < exponent / 2; count++ {
 					for i, _ := range z {
 						z[i] /= prime
@@ -364,7 +364,7 @@ func gaussian(z [2]int) (bool, int, map[string]int) {
 							if even == 1 {
 								im = ""
 							}
-							gaussianFactors[strconv.Itoa(odd) + "+" + im + "i"] = count
+							gaussianFactors[strconv.Itoa(odd) + "+" + im + "i"] = [2]int{prime, count}
 						}
 						break
 					}
@@ -376,7 +376,7 @@ func gaussian(z [2]int) (bool, int, map[string]int) {
 					if odd == 1 {
 						im = ""
 					}
-					gaussianFactors[strconv.Itoa(even) + "+" + im + "i"] = count2
+					gaussianFactors[strconv.Itoa(even) + "+" + im + "i"] = [2]int{prime, count2}
 				}
 				for count = 0; count < count2; count++ {
 					_, z = modulo(z, [2]int{2 * n, 2 * m + 1})
@@ -384,7 +384,19 @@ func gaussian(z [2]int) (bool, int, map[string]int) {
 			}
 		}
 	}
-	// Determine exponent of i.
+	gaussianFactorsSorted3 := [][3]string{}
+	for prime, pair := range gaussianFactors {
+		// mod2, exponent := pair[0], pair[1]
+		gaussianFactorsSorted3 = append(gaussianFactorsSorted3, [3]string{prime, strconv.Itoa(pair[0]), strconv.Itoa(pair[1])})
+	}
+	sort.Slice(gaussianFactorsSorted3, func(i, j int) bool {
+		return gaussianFactorsSorted3[i][1] < gaussianFactorsSorted3[j][1]
+	})
+	gaussianFactorsSorted := [][2]string{}
+	for _, triplet := range gaussianFactorsSorted3 {
+		gaussianFactorsSorted = append(gaussianFactorsSorted, [2]string{triplet[0], triplet[2]})
+	}
+	// Determine exponent of i, based upon what is left after dividing by all Gaussian primes.
 	var n int
 	if math.Abs(float64(z[0])) == 1 {
 		n = 1 - z[0]
@@ -395,14 +407,15 @@ func gaussian(z [2]int) (bool, int, map[string]int) {
 	isPrime := len(gaussianFactors) == 1
 	// The next condition is required to make it "sufficient".
 	if isPrime {
-		for _, exponent := range gaussianFactors {
+		for _, pair := range gaussianFactors {
+			exponent := pair[1]
 			if exponent > 1 {
 				isPrime = false
 				break
 			}
 		}
 	}
-	return isPrime, n, gaussianFactors
+	return isPrime, n, gaussianFactorsSorted
 }
 
 func main() {
@@ -492,41 +505,43 @@ func main() {
 	})
 	router.GET("/complex/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
-		if len(strings.Split(inputStr, ",")) > 1 {
-			results, message := gcdComplexParse(inputStr)
-			if len(message) == 0 {
-				factors := [][2]string{}
-				var isPrime bool
-				if len(results) > 0 {
-					isPrime = false
-					for prime, exponent := range results {
-						factors = append(factors, [2]string{"(" + prime + ")", strconv.Itoa(exponent)})
-					}
-				} else {
-					isPrime = true
-					factors = append(factors, [2]string{"1", "1"})
-				}
-				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					"input": inputStr,
-					"factors": factors,
-					"message": message,
-					"isPrime": isPrime,
-					"type": "GCD",
-					"title": "Complex GCD",
-				})
-			}
-		} else {
+		// if len(strings.Split(inputStr, ",")) > 1 {
+			// results, message := gcdComplexParse(inputStr)
+			// if len(message) == 0 {
+				// factors := [][2]string{}
+				// var isPrime bool
+				// if len(results) > 0 {
+					// isPrime = false
+					// for _, pair := range results {
+						// prime, exponent := pair[0], pair[1]
+						// factors = append(factors, [2]string{"(" + prime + ")", exponent})
+					// }
+				// } else {
+					// isPrime = true
+					// factors = append(factors, [2]string{"1", "1"})
+				// }
+				// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+					// "input": inputStr,
+					// "factors": factors,
+					// "message": message,
+					// "isPrime": isPrime,
+					// "type": "GCD",
+					// "title": "Complex GCD",
+				// })
+			// }
+		// } else {
 			z, message := gaussianParse(inputStr)
 			if len(message) == 0 {
 				factors := [][2]string{}
 				var isPrime bool
 				var number int
-				results := map[string]int{}
+				results := [][2]string{}
 				isPrime, number, results = gaussian(z)
 				PREFACTOR := [4]string{"", "i", "-", "-i"}
 				// Transform from results (map) to factors (array of 2-ples) to enable me to treat 0-th element differently in results.html.
 				firstFactor := true
-				for prime, exponent := range results {
+				for _, pair := range results {
+					prime, exponent := pair[0], pair[1]
 					factor := ""
 					if firstFactor {
 						coef := PREFACTOR[number]
@@ -544,7 +559,7 @@ func main() {
 					} else {
 						factor += "(" + prime + ")"
 					}
-					factors = append(factors, [2]string{factor, strconv.Itoa(exponent)})
+					factors = append(factors, [2]string{factor, exponent})
 				}
 				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 					"input": inputStr,
@@ -555,21 +570,21 @@ func main() {
 					"title": "Complex factorization",
 				})
 			}
-		}
+		// }
 	})
 	router.GET("/complex/json/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
 		var resultStr string
-		if len(strings.Split(inputStr, ",")) > 1 {
-			result, message := gcdComplexParse(inputStr)
-			resultStr = "{\"input\": " + inputStr
-			if len(message) > 0 {
-				resultStr += ", \"message\": " + message
-			} else {
-				gcdResult, _ := json.Marshal(result)
-				resultStr += ", \"gcd\": " + string(gcdResult)
-			}
-		} else {
+		// if len(strings.Split(inputStr, ",")) > 1 {
+			// result, message := gcdComplexParse(inputStr)
+			// resultStr = "{\"input\": " + inputStr
+			// if len(message) > 0 {
+				// resultStr += ", \"message\": " + message
+			// } else {
+				// gcdResult, _ := json.Marshal(result)
+				// resultStr += ", \"gcd\": " + string(gcdResult)
+			// }
+		// } else {
 			z, message := gaussianParse(inputStr)
 			resultStr = "{\"input\": " + inputStr
 			if len(message) > 0 {
@@ -581,7 +596,7 @@ func main() {
 				factorStr, _ := json.Marshal(result)
 				resultStr += ", \"factors\": " + string(factorStr)
 			}
-		}
+		// }
 		c.String(http.StatusOK, resultStr + "}")
 	})
 
