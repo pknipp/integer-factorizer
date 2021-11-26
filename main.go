@@ -308,22 +308,30 @@ func gaussianParse(zStr string) ([2]int, string) {
 	return z, ""
 }
 
-func gaussian(z [2]int) (bool, int, [][2]string) {
-	gaussianFactors := map[string][2]int{}
+type gaussFactor struct {
+	prime string
+	mod2 int
+	exponent int
+}
+
+func gaussian(z [2]int) (bool, int, []gaussFactor) {
+	gaussianFactors := []gaussFactor{}
 	_, factors := factorize(modulus(z))
 	for _, pair := range factors {
 		prime := pair[0]
 		exponent := pair[1]
 		// Here are the factors of 1 + i
 		if prime == 2 {
-			gaussianFactors["1+i"] = [2]int{2, exponent}
+			gaussianFactors = append(gaussianFactors, gaussFactor{"1+i", 2, exponent})
+			// gaussianFactors["1+i"] = [2]int{2, exponent}
 			for count := 0; count < exponent; count++ {
 				_, z = modulo(z, [2]int{1, 1})
 			}
 		} else {
 			// Here are the (irreducible) real prime factors, which occur in pairs.
 			if prime % 4 == 3 {
-				gaussianFactors[strconv.Itoa(prime)] = [2]int{prime, exponent / 2}
+				gaussianFactors = append(gaussianFactors, gaussFactor{strconv.Itoa(prime), prime, exponent / 2})
+				// gaussianFactors[strconv.Itoa(prime)] = [2]int{prime, exponent / 2}
 				for count := 0; count < exponent / 2; count++ {
 					for i, _ := range z {
 						z[i] /= prime
@@ -364,7 +372,8 @@ func gaussian(z [2]int) (bool, int, [][2]string) {
 							if even == 1 {
 								im = ""
 							}
-							gaussianFactors[strconv.Itoa(odd) + "+" + im + "i"] = [2]int{prime, count}
+							gaussianFactors = append(gaussianFactors, gaussFactor{strconv.Itoa(odd) + "+" + im + "i", prime, count})
+							// gaussianFactors[strconv.Itoa(odd) + "+" + im + "i"] = [2]int{prime, count}
 						}
 						break
 					}
@@ -376,7 +385,8 @@ func gaussian(z [2]int) (bool, int, [][2]string) {
 					if odd == 1 {
 						im = ""
 					}
-					gaussianFactors[strconv.Itoa(even) + "+" + im + "i"] = [2]int{prime, count2}
+					gaussianFactors = append(gaussianFactors, gaussFactor{strconv.Itoa(even) + "+" + im + "i", prime, count2})
+					// gaussianFactors[strconv.Itoa(even) + "+" + im + "i"] = [2]int{prime, count2}
 				}
 				for count = 0; count < count2; count++ {
 					_, z = modulo(z, [2]int{2 * n, 2 * m + 1})
@@ -384,20 +394,23 @@ func gaussian(z [2]int) (bool, int, [][2]string) {
 			}
 		}
 	}
-	gaussianFactorsSorted3 := [][3]string{}
-	for prime, pair := range gaussianFactors {
+	// gaussianFactorsSorted3 := [][3]string{}
+	// for prime, pair := range gaussianFactors {
 		// mod2, exponent := pair[0], pair[1]
-		gaussianFactorsSorted3 = append(gaussianFactorsSorted3, [3]string{prime, strconv.Itoa(pair[0]), strconv.Itoa(pair[1])})
-	}
-	sort.Slice(gaussianFactorsSorted3, func(i, j int) bool {
-		mod2i, _ := strconv.Atoi(gaussianFactorsSorted3[i][1])
-		mod2j, _ := strconv.Atoi(gaussianFactorsSorted3[j][1])
-		return mod2i < mod2j
+		// gaussianFactorsSorted3 = append(gaussianFactorsSorted3, [3]string{prime, strconv.Itoa(pair[0]), strconv.Itoa(pair[1])})
+	// }
+	// sort.Slice(gaussianFactorsSorted3, func(i, j int) bool {
+		// mod2i, _ := strconv.Atoi(gaussianFactorsSorted3[i][1])
+		// mod2j, _ := strconv.Atoi(gaussianFactorsSorted3[j][1])
+		// return mod2i < mod2j
+	// })
+	sort.Slice(gaussianFactors, func(i, j int) bool {
+		return gaussianFactors[i].mod2 < gaussianFactors[j].mod2
 	})
-	gaussianFactorsSorted := [][2]string{}
-	for _, triplet := range gaussianFactorsSorted3 {
-		gaussianFactorsSorted = append(gaussianFactorsSorted, [2]string{triplet[0], triplet[2]})
-	}
+	// gaussianFactorsSorted := [][2]string{}
+	// for _, triplet := range gaussianFactorsSorted3 {
+		// gaussianFactorsSorted = append(gaussianFactorsSorted, [2]string{triplet[0], triplet[2]})
+	// }
 	// Determine exponent of i, based upon what is left after dividing by all Gaussian primes.
 	var n int
 	if math.Abs(float64(z[0])) == 1 {
@@ -409,15 +422,14 @@ func gaussian(z [2]int) (bool, int, [][2]string) {
 	isPrime := len(gaussianFactors) == 1
 	// The next condition is required to make it "sufficient".
 	if isPrime {
-		for _, pair := range gaussianFactors {
-			exponent := pair[1]
-			if exponent > 1 {
+		for _, gaussianFactor := range gaussianFactors {
+			if gaussianFactor.exponent > 1 {
 				isPrime = false
 				break
 			}
 		}
 	}
-	return isPrime, n, gaussianFactorsSorted
+	return isPrime, n, gaussianFactors
 }
 
 func main() {
