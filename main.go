@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"sort"
 	// "encoding/json"
 	"log"
@@ -517,7 +517,6 @@ func main() {
 	// })
 	router.GET("/complex/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
-		fmt.Println(inputStr)
 		// if len(strings.Split(inputStr, ",")) > 1 {
 			// results, message := gcdComplexParse(inputStr)
 			// if len(message) == 0 {
@@ -544,14 +543,12 @@ func main() {
 			// }
 		// } else {
 			z, message := gaussianParse(inputStr)
-			fmt.Println(z)
 			if len(message) == 0 {
 				factors := [][2]string{}
 				var isPrime bool
 				var number int
 				var resultsUnsorted map[string][2]int
 				isPrime, number, resultsUnsorted = gaussian(z)
-				fmt.Println(resultsUnsorted)
 				results := []gaussFactor{} //:= [][2]string{}
 				for prime, pair := range resultsUnsorted {
 					results = append(results, gaussFactor{prime, pair[0], pair[1]})
@@ -559,7 +556,6 @@ func main() {
 				sort.Slice(results, func(i, j int) bool {
 					return results[i].mod2 < results[j].mod2
 				})
-				fmt.Println(results)
 				PREFACTOR := [4]string{"", "i", "-", "-i"}
 				// Transform from results (map) to factors (array of 2-ples) to enable me to treat 0-th element differently in results.html.
 				firstFactor := true
@@ -584,7 +580,6 @@ func main() {
 					}
 					factors = append(factors, [2]string{factor, exponent})
 				}
-				fmt.Println(factors)
 				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 					"input": inputStr,
 					"factors": factors,
