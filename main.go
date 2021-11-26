@@ -599,7 +599,7 @@ func main() {
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
-				areRelativelyPrime := len(twoFields) == 1
+				areRelativelyPrime := len(twoFields) == 0
 				resultStr += ", \"areRelativelyPrime\": " + strconv.FormatBool(areRelativelyPrime)
 				if !areRelativelyPrime {
 					gcdResult, _ := json.Marshal(twoFields)

@@ -15,13 +15,16 @@
                     {{if eq .message ""}}
                         <td>
                             {{if eq .type "GCD"}}relatively {{end}}{{if .isPrime }}prime{{else}}composite{{end}}
-                        </td><td>
-                            {{range $i, $pair := .factors}}
-                                {{if ne $i 0}}&middot;{{end}}
-                                {{index $pair 0}}
-                                {{if ne "1" (index $pair 1)}}<sup>{{index $pair 1}}</sup>{{end}}
-                            {{end}}
                         </td>
+                        {{if not .isPrime}}
+                            <td>
+                                {{range $i, $pair := .factors}}
+                                    {{if ne $i 0}}&middot;{{end}}
+                                    {{index $pair 0}}
+                                    {{if ne "1" (index $pair 1)}}<sup>{{index $pair 1}}</sup>{{end}}
+                                {{end}}
+                            </td>
+                        {{end}}
                     {{end}}
                 </tr>
             </table>
