@@ -594,16 +594,16 @@ func main() {
 	router.GET("/complex/json/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
 		var resultStr string
-		// if len(strings.Split(inputStr, ",")) > 1 {
-			// result, message := gcdComplexParse(inputStr)
-			// resultStr = "{\"input\": " + inputStr
-			// if len(message) > 0 {
-				// resultStr += ", \"message\": " + message
-			// } else {
-				// gcdResult, _ := json.Marshal(result)
-				// resultStr += ", \"gcd\": " + string(gcdResult)
-			// }
-		// } else {
+		if len(strings.Split(inputStr, ",")) > 1 {
+			result, message := gcdComplexParse(inputStr)
+			resultStr = "{\"input\": " + inputStr
+			if len(message) > 0 {
+				resultStr += ", \"message\": " + message
+			} else {
+				gcdResult, _ := json.Marshal(result)
+				resultStr += ", \"gcd\": " + string(gcdResult)
+			}
+		} else {
 			z, message := gaussianParse(inputStr)
 			resultStr = "{\"input\": " + inputStr
 			if len(message) > 0 {
@@ -628,7 +628,7 @@ func main() {
 				factorStr, _ := json.Marshal(twoFields)
 				resultStr += ", \"factors\": " + string(factorStr)
 			}
-		// }
+		}
 		c.String(http.StatusOK, resultStr + "}")
 	})
 //
