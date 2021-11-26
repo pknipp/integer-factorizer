@@ -323,7 +323,6 @@ func gaussian(z [2]int) (bool, int, []gaussFactor) {
 		// Here are the factors of 1 + i
 		if prime == 2 {
 			gaussianFactors = append(gaussianFactors, gaussFactor{"1+i", 2, exponent})
-			// gaussianFactors["1+i"] = [2]int{2, exponent}
 			for count := 0; count < exponent; count++ {
 				_, z = modulo(z, [2]int{1, 1})
 			}
@@ -331,7 +330,6 @@ func gaussian(z [2]int) (bool, int, []gaussFactor) {
 			// Here are the (irreducible) real prime factors, which occur in pairs.
 			if prime % 4 == 3 {
 				gaussianFactors = append(gaussianFactors, gaussFactor{strconv.Itoa(prime), prime, exponent / 2})
-				// gaussianFactors[strconv.Itoa(prime)] = [2]int{prime, exponent / 2}
 				for count := 0; count < exponent / 2; count++ {
 					for i, _ := range z {
 						z[i] /= prime
@@ -621,7 +619,7 @@ func main() {
 	// number, _ := factorizeParse(input)
 	// fmt.Println(number)
 	// fmt.Println(factorize(number))
-	input := "2"
+	input := "1+3i"
 	z, message := gaussianParse(input)
 	fmt.Println(z, message)
 	fmt.Println(gaussian(z))
