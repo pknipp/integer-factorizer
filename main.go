@@ -444,77 +444,77 @@ func main() {
 	router.GET("/", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.tmpl.html", nil)
 	})
-	// router.GET("/:input", func(c *gin.Context) {
-		// inputStr := c.Param("input")
-		// if len(strings.Split(inputStr, ",")) > 1  {
-			// result, message := gcdParse(inputStr)
-			// _, results := factorize(result)
-			// factors := [][2]string{}
-			// var isPrime bool
-			// if result > 1 {
-				// isPrime = false
-				// for _, pair := range results {
-					// prime, exponent := pair[0], pair[1]
-					// factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
-				// }
-			// } else {
-				// isPrime = true
-				// factors = append(factors, [2]string{"1", "1"})
-			// }
-			// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-				// "input": inputStr,
-				// "factors": factors,
-				// "message": message,
-				// "isPrime": isPrime,
-				// "type": "GCD",
-				// "title": "Real GCD",
-			// })
-		// } else {
-			// number, message := factorizeParse(inputStr)
-			// isPrime, results := factorize(number)
+	router.GET("/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		if len(strings.Split(inputStr, ",")) > 1  {
+			result, message := gcdParse(inputStr)
+			_, results := factorize(result)
+			factors := [][2]string{}
+			var isPrime bool
+			if result > 1 {
+				isPrime = false
+				for _, pair := range results {
+					prime, exponent := pair[0], pair[1]
+					factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
+				}
+			} else {
+				isPrime = true
+				factors = append(factors, [2]string{"1", "1"})
+			}
+			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+				"input": inputStr,
+				"factors": factors,
+				"message": message,
+				"isPrime": isPrime,
+				"type": "GCD",
+				"title": "Real GCD",
+			})
+		} else {
+			number, message := factorizeParse(inputStr)
+			isPrime, results := factorize(number)
 			// Convert from map to array of 2-pls so that 0-th element can be handled separately in results.html.
-			// factors := [][2]string{}
-			// for _, pair := range results {
-				// prime, exponent := pair[0], pair[1]
-				// factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
-			// }
-			// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-				// "input": inputStr,
-				// "isPrime": isPrime,
-				// "factors": factors,
-				// "message": message,
-				// "type": "integer",
-				// "title": "Real factorization",
-			// })
-		// }
-	// })
-	// router.GET("/json/:input", func(c *gin.Context) {
-		// inputStr := c.Param("input")
-		// var resultStr string
-		// if len(strings.Split(inputStr, ",")) > 1 {
-			// result, message := gcdParse(inputStr)
-			// resultStr = "{\"input\": " + inputStr
-			// if len(message) > 0 {
-				// resultStr += ", \"message\": " + message
-			// } else {
-				// resultStr += ", \"gcd\": " + strconv.Itoa(result)
-			// }
-		// } else {
-			// number, message := factorizeParse(inputStr)
-			// isPrime, result := factorize(number)
-			// resultStr = "{\"input\": " + inputStr
-			// if len(message) > 0 {
-				// resultStr += ", \"message\": " + message
-			// } else {
-				// resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
-				// if !isPrime {
-					// factorStr, _ := json.Marshal(result)
-					// resultStr += ", \"factors\": " + string(factorStr)
-				// }
-			// }
-		// }
-		// c.String(http.StatusOK, resultStr + "}")
-	// })
+			factors := [][2]string{}
+			for _, pair := range results {
+				prime, exponent := pair[0], pair[1]
+				factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
+			}
+			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+				"input": inputStr,
+				"isPrime": isPrime,
+				"factors": factors,
+				"message": message,
+				"type": "integer",
+				"title": "Real factorization",
+			})
+		}
+	})
+	router.GET("/json/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		var resultStr string
+		if len(strings.Split(inputStr, ",")) > 1 {
+			result, message := gcdParse(inputStr)
+			resultStr = "{\"input\": " + inputStr
+			if len(message) > 0 {
+				resultStr += ", \"message\": " + message
+			} else {
+				resultStr += ", \"gcd\": " + strconv.Itoa(result)
+			}
+		} else {
+			number, message := factorizeParse(inputStr)
+			isPrime, result := factorize(number)
+			resultStr = "{\"input\": " + inputStr
+			if len(message) > 0 {
+				resultStr += ", \"message\": " + message
+			} else {
+				resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
+				if !isPrime {
+					factorStr, _ := json.Marshal(result)
+					resultStr += ", \"factors\": " + string(factorStr)
+				}
+			}
+		}
+		c.String(http.StatusOK, resultStr + "}")
+	})
 	router.GET("/complex/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
 		if len(strings.Split(inputStr, ",")) > 1 {
@@ -594,7 +594,6 @@ func main() {
 	})
 	router.GET("/complex/json/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
-		fmt.Println(inputStr)
 		var resultStr string
 		if len(strings.Split(inputStr, ",")) > 1 {
 			results, message := gcdComplexParse(inputStr)
@@ -602,16 +601,14 @@ func main() {
 			for _, result := range results {
 				twoFields = append(twoFields, [2]string{result.prime, strconv.Itoa(result.exponent)})
 			}
-			fmt.Println(results)
 			resultStr = "{\"input\": " + inputStr
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
 				gcdResult, _ := json.Marshal(twoFields)
-				fmt.Println(gcdResult)
+				fmt.Println(string(gcdResult))
 				resultStr += ", \"gcd\": " + string(gcdResult)
 			}
-			fmt.Println(resultStr)
 		} else {
 			z, message := gaussianParse(inputStr)
 			resultStr = "{\"input\": " + inputStr
@@ -644,12 +641,4 @@ func main() {
 	router.Run(":" + port)
 	// Use the space below when testing app as CLI./
 	// input := "2147483646"
-	// fmt.Println(factorizeParse(input))
-	// number, _ := factorizeParse(input)
-	// fmt.Println(number)
-	// fmt.Println(factorize(number))
-	// input := "1+3i"
-	// z, message := gaussianParse(input)
-	// fmt.Println(z, message)
-	// fmt.Println(gaussian(z))
 }
