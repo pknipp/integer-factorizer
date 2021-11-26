@@ -371,7 +371,6 @@ func gaussian(z [2]int) (bool, int, []gaussFactor) {
 								im = ""
 							}
 							gaussianFactors = append(gaussianFactors, gaussFactor{strconv.Itoa(odd) + "+" + im + "i", prime, count})
-							// gaussianFactors[strconv.Itoa(odd) + "+" + im + "i"] = [2]int{prime, count}
 						}
 						break
 					}
@@ -384,7 +383,6 @@ func gaussian(z [2]int) (bool, int, []gaussFactor) {
 						im = ""
 					}
 					gaussianFactors = append(gaussianFactors, gaussFactor{strconv.Itoa(even) + "+" + im + "i", prime, count2})
-					// gaussianFactors[strconv.Itoa(even) + "+" + im + "i"] = [2]int{prime, count2}
 				}
 				for count = 0; count < count2; count++ {
 					_, z = modulo(z, [2]int{2 * n, 2 * m + 1})
@@ -392,23 +390,9 @@ func gaussian(z [2]int) (bool, int, []gaussFactor) {
 			}
 		}
 	}
-	// gaussianFactorsSorted3 := [][3]string{}
-	// for prime, pair := range gaussianFactors {
-		// mod2, exponent := pair[0], pair[1]
-		// gaussianFactorsSorted3 = append(gaussianFactorsSorted3, [3]string{prime, strconv.Itoa(pair[0]), strconv.Itoa(pair[1])})
-	// }
-	// sort.Slice(gaussianFactorsSorted3, func(i, j int) bool {
-		// mod2i, _ := strconv.Atoi(gaussianFactorsSorted3[i][1])
-		// mod2j, _ := strconv.Atoi(gaussianFactorsSorted3[j][1])
-		// return mod2i < mod2j
-	// })
 	sort.Slice(gaussianFactors, func(i, j int) bool {
 		return gaussianFactors[i].mod2 < gaussianFactors[j].mod2
 	})
-	// gaussianFactorsSorted := [][2]string{}
-	// for _, triplet := range gaussianFactorsSorted3 {
-		// gaussianFactorsSorted = append(gaussianFactorsSorted, [2]string{triplet[0], triplet[2]})
-	// }
 	// Determine exponent of i, based upon what is left after dividing by all Gaussian primes.
 	var n int
 	if math.Abs(float64(z[0])) == 1 {
