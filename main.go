@@ -484,7 +484,7 @@ func main() {
 		var resultStr string
 		if len(strings.Split(inputStr, ",")) > 1 {
 			result, message := gcdParse(inputStr)
-			resultStr = "{\"input\": " + "\"" + inputStr + "\""
+			resultStr = "{\"input\": \"" + inputStr + "\""
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
@@ -497,7 +497,7 @@ func main() {
 		} else {
 			number, message := factorizeParse(inputStr)
 			isPrime, result := factorize(number)
-			resultStr = "{\"input\": " + inputStr
+			resultStr = "{\"input\": \"" + inputStr + "\""
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
@@ -595,7 +595,7 @@ func main() {
 			for _, result := range results {
 				twoFields = append(twoFields, [2]string{result.prime, strconv.Itoa(result.exponent)})
 			}
-			resultStr = "{\"input\": " + "\"" + inputStr + "\""
+			resultStr = "{\"input\": \"" + inputStr + "\""
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
@@ -608,7 +608,7 @@ func main() {
 			}
 		} else {
 			z, message := gaussianParse(inputStr)
-			resultStr = "{\"input\": " + inputStr
+			resultStr = "{\"input\": \"" + inputStr + "\""
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
