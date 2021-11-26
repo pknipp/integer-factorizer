@@ -27,6 +27,12 @@ func gcd2(n1, n2 int) int {
 	}
 }
 
+type gaussFactor struct {
+	prime string
+	mod2 int
+	exponent int
+}
+
 // func gcdComplexParse(gStr string) (map[string]int, string) {
 	// gs := []map[string]int{}
 	// result := map[string]int{}
@@ -306,12 +312,6 @@ func gaussianParse(zStr string) ([2]int, string) {
 		}
 	}
 	return z, ""
-}
-
-type gaussFactor struct {
-	prime string
-	mod2 int
-	exponent int
 }
 
 func gaussian(z [2]int) (bool, int, []gaussFactor) {
