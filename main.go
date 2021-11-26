@@ -1,7 +1,7 @@
 package main
 
 import (
-	// "fmt"
+	"fmt"
 	"sort"
 	"encoding/json"
 	"log"
@@ -593,16 +593,20 @@ func main() {
 	})
 	router.GET("/complex/json/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
+		fmt.Println(inputStr)
 		var resultStr string
 		if len(strings.Split(inputStr, ",")) > 1 {
 			result, message := gcdComplexParse(inputStr)
+			fmt.Println(result)
 			resultStr = "{\"input\": " + inputStr
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
 				gcdResult, _ := json.Marshal(result)
+				fmt.Println(gcdResult)
 				resultStr += ", \"gcd\": " + string(gcdResult)
 			}
+			fmt.Println(resultStr)
 		} else {
 			z, message := gaussianParse(inputStr)
 			resultStr = "{\"input\": " + inputStr
