@@ -596,13 +596,17 @@ func main() {
 		fmt.Println(inputStr)
 		var resultStr string
 		if len(strings.Split(inputStr, ",")) > 1 {
-			result, message := gcdComplexParse(inputStr)
-			fmt.Println(result)
+			results, message := gcdComplexParse(inputStr)
+			twoFields := [][2]string{}
+			for _, result := range results {
+				twoFields = append(twoFields, [2]string{result.prime, strconv.Itoa(result.exponent)})
+			}
+			fmt.Println(results)
 			resultStr = "{\"input\": " + inputStr
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
-				gcdResult, _ := json.Marshal(result)
+				gcdResult, _ := json.Marshal(twoFields)
 				fmt.Println(gcdResult)
 				resultStr += ", \"gcd\": " + string(gcdResult)
 			}
