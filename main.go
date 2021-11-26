@@ -1,19 +1,19 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"sort"
-	// "encoding/json"
-	// "log"
-	// "net/http"
-	// "os"
+	"encoding/json"
+	"log"
+	"net/http"
+	"os"
 	"strconv"
 	"regexp"
 	"strings"
 	"math"
 	// "reflect"
-	// "github.com/gin-gonic/gin"
-	// _ "github.com/heroku/x/hmetrics/onload"
+	"github.com/gin-gonic/gin"
+	_ "github.com/heroku/x/hmetrics/onload"
 )
 
 //Euclid's algorithm, which is extremely efficient.
@@ -415,19 +415,19 @@ func gaussian(z [2]int) (bool, int, []gaussFactor) {
 }
 
 func main() {
-	// port := os.Getenv("PORT")
-	// if port == "" {
-		// log.Fatal("$PORT must be set")
-	// }
+	port := os.Getenv("PORT")
+	if port == "" {
+		log.Fatal("$PORT must be set")
+	}
 	// I opted not to use this version of router, for technical reasons.
 	// router := gin.New()
-	// router := gin.Default()
-	// router.Use(gin.Logger())
-	// router.LoadHTMLGlob("templates/*.tmpl.html")
-	// router.Static("/static", "static")
-	// router.GET("/", func(c *gin.Context) {
-		// c.HTML(http.StatusOK, "index.tmpl.html", nil)
-	// })
+	router := gin.Default()
+	router.Use(gin.Logger())
+	router.LoadHTMLGlob("templates/*.tmpl.html")
+	router.Static("/static", "static")
+	router.GET("/", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "index.tmpl.html", nil)
+	})
 	// router.GET("/:input", func(c *gin.Context) {
 		// inputStr := c.Param("input")
 		// if len(strings.Split(inputStr, ",")) > 1  {
@@ -568,9 +568,9 @@ func main() {
 			// }
 		// }
 	// })
-	// router.GET("/complex/json/:input", func(c *gin.Context) {
-		// inputStr := c.Param("input")
-		// var resultStr string
+	router.GET("/complex/json/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		var resultStr string
 		// if len(strings.Split(inputStr, ",")) > 1 {
 			// result, message := gcdComplexParse(inputStr)
 			// resultStr = "{\"input\": " + inputStr
@@ -581,30 +581,30 @@ func main() {
 				// resultStr += ", \"gcd\": " + string(gcdResult)
 			// }
 		// } else {
-			// z, message := gaussianParse(inputStr)
-			// resultStr = "{\"input\": " + inputStr
-			// if len(message) > 0 {
-				// resultStr += ", \"message\": " + message
-			// } else {
-				// isPrime, n, result := gaussian(z)
-				// resultStr += ", \"exponent\": " + strconv.Itoa(n)
-				// resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
-				// factorStr, _ := json.Marshal(result)
-				// resultStr += ", \"factors\": " + string(factorStr)
-			// }
+			z, message := gaussianParse(inputStr)
+			resultStr = "{\"input\": " + inputStr
+			if len(message) > 0 {
+				resultStr += ", \"message\": " + message
+			} else {
+				isPrime, n, result := gaussian(z)
+				resultStr += ", \"exponent\": " + strconv.Itoa(n)
+				resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
+				factorStr, _ := json.Marshal(result)
+				resultStr += ", \"factors\": " + string(factorStr)
+			}
 		// }
-		// c.String(http.StatusOK, resultStr + "}")
-	// })
+		c.String(http.StatusOK, resultStr + "}")
+	})
 //
-	// router.Run(":" + port)
+	router.Run(":" + port)
 	// Use the space below when testing app as CLI./
 	// input := "2147483646"
 	// fmt.Println(factorizeParse(input))
 	// number, _ := factorizeParse(input)
 	// fmt.Println(number)
 	// fmt.Println(factorize(number))
-	input := "1+3i"
-	z, message := gaussianParse(input)
-	fmt.Println(z, message)
-	fmt.Println(gaussian(z))
+	// input := "1+3i"
+	// z, message := gaussianParse(input)
+	// fmt.Println(z, message)
+	// fmt.Println(gaussian(z))
 }
