@@ -7,10 +7,8 @@
         <h4><p align=center>{{ .title }}</p></h4>
         <p align=center>
             <table border='1'>
-                <tr><th>input</th>
-                    {{if and (not .isPrime) (eq .message "")}}
-                        <th>type</th><th>result</th>
-                    {{end}}
+                <tr><th>input</th><th>type</th>
+                    {{if and (not .isPrime) (eq .message "")}}<th>result</th>{{end}}
                 </tr><tr><td>{{ .input }}</td>
                     {{if eq .message ""}}
                         <td>

@@ -595,7 +595,7 @@ func main() {
 			for _, result := range results {
 				twoFields = append(twoFields, [2]string{result.prime, strconv.Itoa(result.exponent)})
 			}
-			resultStr = "{\"input\": " + "\"" + "\"" + inputStr
+			resultStr = "{\"input\": " + "\"" + inputStr + "\""
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
