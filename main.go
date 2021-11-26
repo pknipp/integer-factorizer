@@ -587,9 +587,13 @@ func main() {
 				resultStr += ", \"message\": " + message
 			} else {
 				isPrime, n, result := gaussian(z)
+				twoFields := [][2]string{}
+				for _, gaussFactor := range result {
+					twoFields = append(twoFields, [2]string{gaussFactor.prime, strconv.Itoa(gaussFactor.exponent)})
+				}
 				resultStr += ", \"exponent\": " + strconv.Itoa(n)
 				resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
-				factorStr, _ := json.Marshal(result)
+				factorStr, _ := json.Marshal(twoFields)
 				resultStr += ", \"factors\": " + string(factorStr)
 			}
 		// }
