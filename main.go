@@ -499,8 +499,8 @@ func main() {
 		// }
 		// c.String(http.StatusOK, resultStr + "}")
 	// })
-	// router.GET("/complex/:input", func(c *gin.Context) {
-		// inputStr := c.Param("input")
+	router.GET("/complex/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
 		// if len(strings.Split(inputStr, ",")) > 1 {
 			// results, message := gcdComplexParse(inputStr)
 			// if len(message) == 0 {
@@ -526,48 +526,48 @@ func main() {
 				// })
 			// }
 		// } else {
-			// z, message := gaussianParse(inputStr)
-			// if len(message) == 0 {
-				// factors := [][2]string{}
-				// var isPrime bool
-				// var number int
-				// results := [][2]string{}
-				// isPrime, number, results = gaussian(z)
-				// PREFACTOR := [4]string{"", "i", "-", "-i"}
+			z, message := gaussianParse(inputStr)
+			if len(message) == 0 {
+				factors := [][2]string{}
+				var isPrime bool
+				var number int
+				var results []gaussFactor //:= [][2]string{}
+				isPrime, number, results = gaussian(z)
+				PREFACTOR := [4]string{"", "i", "-", "-i"}
 				// Transform from results (map) to factors (array of 2-ples) to enable me to treat 0-th element differently in results.html.
-				// firstFactor := true
-				// for _, pair := range results {
-					// prime, exponent := pair[0], pair[1]
-					// factor := ""
-					// if firstFactor {
-						// coef := PREFACTOR[number]
-						// if number % 2 == 0 || strings.Contains(prime, "i") {
+				firstFactor := true
+				for _, singleFactor := range results {
+					prime, exponent := singleFactor.prime, strconv.Itoa(singleFactor.exponent)
+					factor := ""
+					if firstFactor {
+						coef := PREFACTOR[number]
+						if number % 2 == 0 || strings.Contains(prime, "i") {
 							// No multiplication symbol is required, so I just modify the first factor.
-							// factor += coef
-						// } else {
+							factor += coef
+						} else {
 							// Multiplication symbol is required, so I prepend one factor.
-							// factors = append(factors, [2]string{coef, "1"})
-						// }
-					// }
-					// firstFactor = false
-					// if !strings.Contains(prime, "i") {
-						// factor += prime
-					// } else {
-						// factor += "(" + prime + ")"
-					// }
-					// factors = append(factors, [2]string{factor, exponent})
-				// }
-				// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					// "input": inputStr,
-					// "factors": factors,
-					// "message": message,
-					// "isPrime": isPrime,
-					// "type": "Gaussian",
-					// "title": "Complex factorization",
-				// })
-			// }
+							factors = append(factors, [2]string{coef, "1"})
+						}
+					}
+					firstFactor = false
+					if !strings.Contains(prime, "i") {
+						factor += prime
+					} else {
+						factor += "(" + prime + ")"
+					}
+					factors = append(factors, [2]string{factor, exponent})
+				}
+				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+					"input": inputStr,
+					"factors": factors,
+					"message": message,
+					"isPrime": isPrime,
+					"type": "Gaussian",
+					"title": "Complex factorization",
+				})
+			}
 		// }
-	// })
+	})
 	router.GET("/complex/json/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
 		var resultStr string
