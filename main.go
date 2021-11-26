@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	// "fmt"
 	"sort"
 	"encoding/json"
 	"log"
@@ -11,7 +11,6 @@ import (
 	"regexp"
 	"strings"
 	"math"
-	// "reflect"
 	"github.com/gin-gonic/gin"
 	_ "github.com/heroku/x/hmetrics/onload"
 )
@@ -35,7 +34,7 @@ type gaussFactor struct {
 
 func gcdComplexParse(gStr string) ([]gaussFactor, string) {
 	gs := []map[string][2]int{}
-	result := []gaussFactor{} //map[string][2]int{}
+	result := []gaussFactor{}
 	gStr = regexp.MustCompile(" ").ReplaceAllString(gStr, "")
 	if len(gStr) == 0 {
 		return result, "Expression is missing."
@@ -334,7 +333,6 @@ func gaussian(z [2]int) (bool, int, map[string][2]int) {
 		// Here are the factors of 1 + i
 		if prime == 2 {
 			gaussianFactors["1+i"] = [2]int{2, exponent}
-			// gaussianFactors = append(gaussianFactors, gaussFactor{"1+i", 2, exponent})
 			for count := 0; count < exponent; count++ {
 				_, z = modulo(z, [2]int{1, 1})
 			}
@@ -342,7 +340,6 @@ func gaussian(z [2]int) (bool, int, map[string][2]int) {
 			// Here are the (irreducible) real prime factors, which occur in pairs.
 			if prime % 4 == 3 {
 				gaussianFactors[strconv.Itoa(prime)] = [2]int{prime, exponent / 2}
-				// gaussianFactors = append(gaussianFactors, gaussFactor{strconv.Itoa(prime), prime, exponent / 2})
 				for count := 0; count < exponent / 2; count++ {
 					for i, _ := range z {
 						z[i] /= prime
@@ -380,11 +377,10 @@ func gaussian(z [2]int) (bool, int, map[string][2]int) {
 					} else {
 						if count > 0 {
 							im := strconv.Itoa(even)
-							if even == 1 {
-								im = ""
-							}
+							// if im == "1" {
+								// im = ""
+							// }
 							gaussianFactors[strconv.Itoa(odd) + "+" + im + "i"] = [2]int{prime, count}
-							// gaussianFactors = append(gaussianFactors, gaussFactor{strconv.Itoa(odd) + "+" + im + "i", prime, count})
 						}
 						break
 					}
@@ -393,11 +389,10 @@ func gaussian(z [2]int) (bool, int, map[string][2]int) {
 				count2 := exponent - count
 				if count2 > 0 {
 					im := strconv.Itoa(odd)
-					if odd == 1 {
+					if im == "1" {
 						im = ""
 					}
 					gaussianFactors[strconv.Itoa(even) + "+" + im + "i"] = [2]int{prime, count2}
-					// gaussianFactors = append(gaussianFactors, gaussFactor{strconv.Itoa(even) + "+" + im + "i", prime, count2})
 				}
 				for count = 0; count < count2; count++ {
 					_, z = modulo(z, [2]int{2 * n, 2 * m + 1})
@@ -405,10 +400,7 @@ func gaussian(z [2]int) (bool, int, map[string][2]int) {
 			}
 		}
 	}
-	// sort.Slice(gaussianFactors, func(i, j int) bool {
-		// return gaussianFactors[i].mod2 < gaussianFactors[j].mod2
-	// })
-	// Determine exponent of i, based upon what is left after dividing by all Gaussian primes.
+	// The following logic is a bit obtuse, but it determines exponent of i, based upon what is left after dividing by all Gaussian primes.
 	var n int
 	if math.Abs(float64(z[0])) == 1 {
 		n = 1 - z[0]
@@ -420,7 +412,6 @@ func gaussian(z [2]int) (bool, int, map[string][2]int) {
 	// The next condition is required to make it "sufficient".
 	if isPrime {
 		for _, pair := range gaussianFactors {
-		// for _, gaussianFactor := range gaussianFactors {
 			if pair[1] > 1 {
 				isPrime = false
 				break
@@ -472,7 +463,7 @@ func main() {
 		} else {
 			number, message := factorizeParse(inputStr)
 			isPrime, results := factorize(number)
-			// Convert from map to array of 2-pls so that 0-th element can be handled separately in results.html.
+			// Convert from map to slice of 2-component arrays so that 0-th element can be handled separately in results.html.
 			factors := [][2]string{}
 			for _, pair := range results {
 				prime, exponent := pair[0], pair[1]
@@ -497,7 +488,11 @@ func main() {
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
-				resultStr += ", \"gcd\": " + strconv.Itoa(result)
+				areRelativelyPrime := result == 1
+				resultStr += ", \"areRelativelyPrime\": " + strconv.FormatBool(areRelativelyPrime)
+				if !areRelativelyPrime {
+					resultStr += ", \"gcd\": " + strconv.Itoa(result)
+				}
 			}
 		} else {
 			number, message := factorizeParse(inputStr)
@@ -519,7 +514,6 @@ func main() {
 		inputStr := c.Param("input")
 		if len(strings.Split(inputStr, ",")) > 1 {
 			results, message := gcdComplexParse(inputStr)
-
 			if len(message) == 0 {
 				factors := [][2]string{}
 				var isPrime bool
@@ -605,9 +599,12 @@ func main() {
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
-				gcdResult, _ := json.Marshal(twoFields)
-				fmt.Println(string(gcdResult))
-				resultStr += ", \"gcd\": " + string(gcdResult)
+				areRelativelyPrime := len(twoFields) == 1
+				resultStr += ", \"areRelativelyPrime\": " + strconv.FormatBool(areRelativelyPrime)
+				if !areRelativelyPrime {
+					gcdResult, _ := json.Marshal(twoFields)
+					resultStr += ", \"gcd\": " + string(gcdResult)
+				}
 			}
 		} else {
 			z, message := gaussianParse(inputStr)
@@ -616,7 +613,6 @@ func main() {
 				resultStr += ", \"message\": " + message
 			} else {
 				isPrime, n, resultsUnsorted := gaussian(z)
-
 				results := []gaussFactor{}
 				for prime, pair := range resultsUnsorted {
 					results = append(results, gaussFactor{prime, pair[0], pair[1]})
@@ -624,7 +620,6 @@ func main() {
 				sort.Slice(results, func(i, j int) bool {
 					return results[i].mod2 < results[j].mod2
 				})
-
 				twoFields := [][2]string{}
 				for _, result := range results {
 					twoFields = append(twoFields, [2]string{result.prime, strconv.Itoa(result.exponent)})
