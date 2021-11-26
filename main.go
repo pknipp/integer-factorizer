@@ -517,31 +517,32 @@ func main() {
 	// })
 	router.GET("/complex/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
-		// if len(strings.Split(inputStr, ",")) > 1 {
-			// results, message := gcdComplexParse(inputStr)
-			// if len(message) == 0 {
-				// factors := [][2]string{}
-				// var isPrime bool
-				// if len(results) > 0 {
-					// isPrime = false
-					// for _, pair := range results {
-						// prime, exponent := pair[0], pair[1]
-						// factors = append(factors, [2]string{"(" + prime + ")", exponent})
-					// }
-				// } else {
-					// isPrime = true
-					// factors = append(factors, [2]string{"1", "1"})
-				// }
-				// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					// "input": inputStr,
-					// "factors": factors,
-					// "message": message,
-					// "isPrime": isPrime,
-					// "type": "GCD",
-					// "title": "Complex GCD",
-				// })
-			// }
-		// } else {
+		if len(strings.Split(inputStr, ",")) > 1 {
+			results, message := gcdComplexParse(inputStr)
+
+			if len(message) == 0 {
+				factors := [][2]string{}
+				var isPrime bool
+				if len(results) > 0 {
+					isPrime = false
+					for _, singleFactor := range results {
+						prime, exponent := singleFactor.prime, strconv.Itoa(singleFactor.exponent)
+						factors = append(factors, [2]string{"(" + prime + ")", exponent})
+					}
+				} else {
+					isPrime = true
+					factors = append(factors, [2]string{"1", "1"})
+				}
+				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+					"input": inputStr,
+					"factors": factors,
+					"message": message,
+					"isPrime": isPrime,
+					"type": "GCD",
+					"title": "Complex GCD",
+				})
+			}
+		} else {
 			z, message := gaussianParse(inputStr)
 			if len(message) == 0 {
 				factors := [][2]string{}
@@ -589,7 +590,7 @@ func main() {
 					"title": "Complex factorization",
 				})
 			}
-		// }
+		}
 	})
 	router.GET("/complex/json/:input", func(c *gin.Context) {
 		inputStr := c.Param("input")
