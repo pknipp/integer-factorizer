@@ -3,7 +3,7 @@ package main
 import (
 	// "fmt"
 	"sort"
-	// "encoding/json"
+	"encoding/json"
 	"log"
 	"net/http"
 	"os"
@@ -591,9 +591,9 @@ func main() {
 			}
 		// }
 	})
-	// router.GET("/complex/json/:input", func(c *gin.Context) {
-		// inputStr := c.Param("input")
-		// var resultStr string
+	router.GET("/complex/json/:input", func(c *gin.Context) {
+		inputStr := c.Param("input")
+		var resultStr string
 		// if len(strings.Split(inputStr, ",")) > 1 {
 			// result, message := gcdComplexParse(inputStr)
 			// resultStr = "{\"input\": " + inputStr
@@ -604,24 +604,33 @@ func main() {
 				// resultStr += ", \"gcd\": " + string(gcdResult)
 			// }
 		// } else {
-			// z, message := gaussianParse(inputStr)
-			// resultStr = "{\"input\": " + inputStr
-			// if len(message) > 0 {
-				// resultStr += ", \"message\": " + message
-			// } else {
-				// isPrime, n, result := gaussian(z)
-				// twoFields := [][2]string{}
-				// for _, gaussFactor := range result {
-					// twoFields = append(twoFields, [2]string{gaussFactor.prime, strconv.Itoa(gaussFactor.exponent)})
-				// }
-				// resultStr += ", \"exponent\": " + strconv.Itoa(n)
-				// resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
-				// factorStr, _ := json.Marshal(twoFields)
-				// resultStr += ", \"factors\": " + string(factorStr)
-			// }
+			z, message := gaussianParse(inputStr)
+			resultStr = "{\"input\": " + inputStr
+			if len(message) > 0 {
+				resultStr += ", \"message\": " + message
+			} else {
+				isPrime, n, resultsUnsorted := gaussian(z)
+
+				results := []gaussFactor{}
+				for prime, pair := range resultsUnsorted {
+					results = append(results, gaussFactor{prime, pair[0], pair[1]})
+				}
+				sort.Slice(results, func(i, j int) bool {
+					return results[i].mod2 < results[j].mod2
+				})
+
+				twoFields := [][2]string{}
+				for _, result := range results {
+					twoFields = append(twoFields, [2]string{result.prime, strconv.Itoa(result.exponent)})
+				}
+				resultStr += ", \"exponent\": " + strconv.Itoa(n)
+				resultStr += ", \"isPrime\": " + strconv.FormatBool(isPrime)
+				factorStr, _ := json.Marshal(twoFields)
+				resultStr += ", \"factors\": " + string(factorStr)
+			}
 		// }
-		// c.String(http.StatusOK, resultStr + "}")
-	// })
+		c.String(http.StatusOK, resultStr + "}")
+	})
 //
 	router.Run(":" + port)
 	// Use the space below when testing app as CLI./
