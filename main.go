@@ -19,8 +19,7 @@ import (
 func gcd2(n1, n2 int) int {
 	for {
 	  t := n2;
-	  n1, n2 = t, n1 % n2
-	  if n2 == 0 {
+	  if n1, n2 = t, n1 % n2; n2 == 0 {
 		return n1
 	  }
 	}
@@ -35,31 +34,32 @@ type gaussFactor struct {
 func gcdComplexParse(gStr string) ([]gaussFactor, string) {
 	gs := []map[string][2]int{}
 	result := []gaussFactor{}
-	gStr = regexp.MustCompile(" ").ReplaceAllString(gStr, "")
-	if len(gStr) == 0 {
-		return result, "Expression is missing."
-	}
-	// Create array of strings, each representing a gaussian integer
-	gsStr := strings.Split(gStr, ",")
-	for _, gStr := range gsStr {
-		gaussianInt, message := gaussianParse(gStr)
-		if len(message) != 0 {
-			return result, message
-		} else {
-			_, _, gaussianFactors := gaussian(gaussianInt)
-			gs = append(gs, gaussianFactors)
+	var message string
+	if gStr = regexp.MustCompile(" ").ReplaceAllString(gStr, ""); len(gStr) == 0 {
+		message = "Expression is missing."
+	} else {
+		// Create array of strings, each representing a gaussian integer
+		gsStr := strings.Split(gStr, ",")
+		for _, gStr := range gsStr {
+			gaussianInt, message := gaussianParse(gStr)
+			if len(message) != 0 {
+				return result, message
+			} else {
+				_, _, gaussianFactors := gaussian(gaussianInt)
+				gs = append(gs, gaussianFactors)
+			}
 		}
+		mapResult := gcdComplex(gs)
+		// Convert result from map to slice of structs, to enable sorting by squared modulus
+		for prime, pair := range mapResult {
+			mod2, exponent := pair[0], pair[1]
+			result = append(result, gaussFactor{prime, mod2, exponent})
+		}
+		sort.Slice(result, func(i, j int) bool {
+			return result[i].mod2 < result[j].mod2
+		})
 	}
-	mapResult := gcdComplex(gs)
-	// Convert result from map to slice of structs, to enable sorting by squared modulus
-	for prime, pair := range mapResult {
-		mod2, exponent := pair[0], pair[1]
-		result = append(result, gaussFactor{prime, mod2, exponent})
-	}
-	sort.Slice(result, func(i, j int) bool {
-		return result[i].mod2 < result[j].mod2
-	})
-	return result, ""
+	return result, message
 }
 
 func gcd2Complex(gaussa, gaussb map[string][2]int) map[string][2]int {
@@ -637,9 +637,12 @@ func main() {
 //
 	// router.Run(":" + port)
 	// Use the space below when testing app as CLI./
-	input := "2147483646"
-	result, message := gcdParse(input)
-	fmt.Println(result, message)
-	_, results := factorize(result)
-	fmt.Println(results)
+	// input := "2147483646,36642"
+	// result, message := gcdParse(input)
+	// fmt.Println(result, message)
+	// _, results := factorize(result)
+	// fmt.Println(results)
+	inputStr := "2"
+	results, message := gcdComplexParse(inputStr)
+	fmt.Println(results, message)
 }
