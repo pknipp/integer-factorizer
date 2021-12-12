@@ -441,7 +441,7 @@ func main() {
 				factors = append(factors, [2]string{"1", "1"})
 			}
 			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-				"input": inputStr,
+				"input": strings.Join(strings.Split(inputStr, ","), ", "),
 				"factors": factors,
 				"message": message,
 				"isPrime": isPrime,
@@ -514,7 +514,7 @@ func main() {
 					factors = append(factors, [2]string{"1", "1"})
 				}
 				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					"input": inputStr,
+					"input": strings.Join(strings.Split(inputStr, ","), ", "),
 					"factors": factors,
 					"message": message,
 					"isPrime": isPrime,
