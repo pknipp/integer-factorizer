@@ -68,8 +68,7 @@ func gcd2Complex(gaussa, gaussb map[string][2]int) map[string][2]int {
 	}
 	for prime, paira := range gaussa {
 		mod2, exponenta := paira[0], paira[1]
-		pairb, found := gaussb[prime]
-		if found {
+		if pairb, found := gaussb[prime]; found {
 			exponentb := pairb[1]
 			gauss[prime] = [2]int{mod2, int(math.Min(float64(exponenta), float64(exponentb)))}
 		}
@@ -86,13 +85,10 @@ func gcdParse(nStr string) (int, string) {
 	}
 	nsStr := strings.Split(nStr, ",")
 	for _, nStr := range nsStr {
-		_, err := strconv.ParseFloat(nStr, 64)
-		if err != nil {
+		if _, err := strconv.ParseFloat(nStr, 64); err != nil {
 			return result, "There is a problem with this number: " + nStr
 		}
-		var n int
-		n, err = strconv.Atoi(nStr)
-		if err != nil {
+		if n, err := strconv.Atoi(nStr); err != nil {
 			return result, "The following number should be an integer, not a decimal: " + nStr
 		} else {
 			if n > 0 {
@@ -145,15 +141,14 @@ func factorizeParse(numberStr string) (int, string) {
 			}
 		}
 	}
-	_, err := strconv.ParseFloat(numberStr, 64)
-	if err != nil {
+	if _, err := strconv.ParseFloat(numberStr, 64); err != nil {
 		return number, badNumber
 	}
-	number, err = strconv.Atoi(numberStr)
-	if err != nil {
+	if number, err := strconv.Atoi(numberStr); err != nil {
 		return number, "Note that the number may not be a decimal."
+	} else {
+		return number, ""
 	}
-	return number, ""
 }
 
 func factorize(number int) (bool, [][2]int) {
@@ -229,10 +224,8 @@ func partParse(str, part string) (int, string) {
 	if str == "" && part == "imaginary" {
 		return 1, ""
 	}
-	_, err := strconv.ParseFloat(str, 64)
-	if err == nil {
-		integer, err := strconv.Atoi(str)
-		if err == nil {
+	if _, err := strconv.ParseFloat(str, 64); err == nil {
+		if integer, err := strconv.Atoi(str); err == nil {
 			return integer, ""
 		} else {
 			return 0, "Your " + part + " part (" + str + ") does not seem to be an integer"
@@ -376,9 +369,6 @@ func gaussian(z [2]int) (bool, int, map[string][2]int) {
 					} else {
 						if count > 0 {
 							im := strconv.Itoa(even)
-							// if im == "1" {
-								// im = ""
-							// }
 							gaussianFactors[strconv.Itoa(odd) + "+" + im + "i"] = [2]int{prime, count}
 						}
 						break
@@ -636,12 +626,12 @@ func main() {
 //
 	// router.Run(":" + port)
 	// Use the space below when testing app as CLI./
-	// input := "2147483646,36642"
-	// result, message := gcdParse(input)
-	// fmt.Println(result, message)
-	// _, results := factorize(result)
-	// fmt.Println(results)
-	inputStr := "2,1+3i"
-	results, message := gcdComplexParse(inputStr)
-	fmt.Println(results, message)
+	input := "2147483646"
+	result, message := gcdParse(input)
+	fmt.Println(result, message)
+	_, results := factorize(result)
+	fmt.Println(results)
+	// inputStr := "2"
+	// results, message := gcdComplexParse(inputStr)
+	// fmt.Println(results, message)
 }
