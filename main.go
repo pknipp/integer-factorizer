@@ -41,8 +41,7 @@ func gcdComplexParse(gStr string) ([]gaussFactor, string) {
 		// Create array of strings, each representing a gaussian integer
 		gsStr := strings.Split(gStr, ",")
 		for _, gStr := range gsStr {
-			gaussianInt, message := gaussianParse(gStr)
-			if len(message) != 0 {
+			if gaussianInt, message := gaussianParse(gStr); len(message) != 0 {
 				return result, message
 			} else {
 				_, _, gaussianFactors := gaussian(gaussianInt)
@@ -642,7 +641,7 @@ func main() {
 	// fmt.Println(result, message)
 	// _, results := factorize(result)
 	// fmt.Println(results)
-	inputStr := "2"
+	inputStr := "2,1+3i"
 	results, message := gcdComplexParse(inputStr)
 	fmt.Println(results, message)
 }
