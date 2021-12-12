@@ -425,8 +425,7 @@ func main() {
 		c.HTML(http.StatusOK, "index.tmpl.html", nil)
 	})
 	router.GET("/:input", func(c *gin.Context) {
-		inputStr := c.Param("input")
-		if len(strings.Split(inputStr, ",")) > 1  {
+		if inputStr := c.Param("input"); len(strings.Split(inputStr, ",")) > 1  {
 			result, message := gcdParse(inputStr)
 			_, results := factorize(result)
 			factors := [][2]string{}
@@ -500,10 +499,8 @@ func main() {
 		c.String(http.StatusOK, resultStr + "}")
 	})
 	router.GET("/complex/:input", func(c *gin.Context) {
-		inputStr := c.Param("input")
-		if len(strings.Split(inputStr, ",")) > 1 {
-			results, message := gcdComplexParse(inputStr)
-			if len(message) == 0 {
+		if inputStr := c.Param("input"); len(strings.Split(inputStr, ",")) > 1 {
+			if results, message := gcdComplexParse(inputStr); len(message) == 0 {
 				factors := [][2]string{}
 				var isPrime bool
 				if len(results) > 0 {
@@ -526,8 +523,7 @@ func main() {
 				})
 			}
 		} else {
-			z, message := gaussianParse(inputStr)
-			if len(message) == 0 {
+			if z, message := gaussianParse(inputStr); len(message) == 0 {
 				factors := [][2]string{}
 				var isPrime bool
 				var number int
@@ -596,9 +592,8 @@ func main() {
 				}
 			}
 		} else {
-			z, message := gaussianParse(inputStr)
 			resultStr = "{\"input\": \"" + inputStr + "\""
-			if len(message) > 0 {
+			if z, message := gaussianParse(inputStr); len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
 				isPrime, n, resultsUnsorted := gaussian(z)
