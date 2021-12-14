@@ -128,7 +128,7 @@ func factorizeParse(numberStr string) (int, string) {
 	badNumber := "There is something wrong with your number."
 	if len(numberStr) > 18 {
 		tooLarge := "Your number is too large."
-		if len(numberStr) > 20 {
+		if len(numberStr) > 19 {
 			return number, tooLarge
 		}
 		if len(numberStr) == 19 {
