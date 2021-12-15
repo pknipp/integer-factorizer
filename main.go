@@ -629,12 +629,7 @@ func main() {
 
 	router.Run(":" + port)
 	// Use the space below when testing app as CLI./
-	// input := "2147483646"
-	// result, message := gcdParse(input)
-	// fmt.Println(result, message)
-	// _, results := factorize(result)
-	// fmt.Println(results)
-	// inputStr := "2"
+	// inputStr := "2000000000+2290000000i"
 	// results, message := gcdComplexParse(inputStr)
 	// fmt.Println(results, message)
 }
