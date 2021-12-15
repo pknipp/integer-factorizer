@@ -15,6 +15,10 @@ import (
 	_ "github.com/heroku/x/hmetrics/onload"
 )
 
+var ZERO [2]int = [2]int{0, 0}
+var MAXINT float64 = 0.999999 * math.Pow(2., 63.)
+var TOOLARGE string = "Your number is too large."
+
 //Euclid's algorithm, which is extremely efficient.
 func gcd2(n1, n2 int) int {
 	for {
@@ -127,9 +131,8 @@ func factorizeParse(numberStr string) (int, string) {
 	}
 	badNumber := "There is something wrong with your number."
 	if len(numberStr) > 18 {
-		tooLarge := "Your number is too large."
 		if len(numberStr) > 19 {
-			return number, tooLarge
+			return number, TOOLARGE
 		}
 		if len(numberStr) == 19 {
 			numTrunc, err := strconv.Atoi(numberStr[0:6])
@@ -137,7 +140,7 @@ func factorizeParse(numberStr string) (int, string) {
 				return number, badNumber
 			}
 			if numTrunc > 922336 {
-				return number, tooLarge
+				return number, TOOLARGE
 			}
 		}
 	}
@@ -247,6 +250,7 @@ func gaussianParse(zStr string) ([2]int, string) {
 	if len(zStr) == 0 {
 		return z, noNumber
 	}
+
 	if zStr[len(zStr) - 1:] == "i" {
 		// Number has an imaginary part
 		zStr = zStr[0: len(zStr) - 1]
@@ -312,6 +316,10 @@ func gaussianParse(zStr string) ([2]int, string) {
 			}
 			z[0] = int
 		}
+	}
+	x := float64(z[0])
+	if x > math.Sqrt(MAXINT) || float64(z[1]) > math.Sqrt(MAXINT - x * x) {
+		return ZERO, TOOLARGE
 	}
 	return z, ""
 }
