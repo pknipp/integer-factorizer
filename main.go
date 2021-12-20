@@ -535,9 +535,10 @@ func main() {
 				"title": "Complex GCD",
 			})
 		} else {
-			if z, message := gaussianParse(inputStr); len(message) == 0 {
-				factors := [][2]string{}
-				var isPrime bool
+			z, message := gaussianParse(inputStr)
+			factors := [][2]string{}
+			var isPrime bool
+			if len(message) == 0 {
 				var number int
 				var resultsUnsorted map[string][2]int
 				isPrime, number, resultsUnsorted = gaussian(z)
@@ -572,15 +573,15 @@ func main() {
 					}
 					factors = append(factors, [2]string{factor, exponent})
 				}
-				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					"input": inputStr,
-					"factors": factors,
-					"message": message,
-					"isPrime": isPrime,
-					"type": "Gaussian",
-					"title": "Complex factorization",
-				})
 			}
+			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+				"input": inputStr,
+				"factors": factors,
+				"message": message,
+				"isPrime": isPrime,
+				"type": "Gaussian",
+				"title": "Complex factorization",
+			})
 		}
 	})
 	router.GET("/complex/json/:input", func(c *gin.Context) {
