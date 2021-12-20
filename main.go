@@ -123,10 +123,10 @@ func gcdParse(nStr string) (int, string) {
 	var n int
 	nsStr := strings.Split(nStr, ",")
 	for _, nStr := range nsStr {
-		if n, message = checkIntStr(nStr); len(message) > 0 {
-			return 0, message
-		} else {
+		if n, message = checkIntStr(nStr); len(message) == 0 || n == 1 {
 			ns = append(ns, n)
+		} else {
+			return 0, message
 		}
 	}
 	return gcd(ns), ""
