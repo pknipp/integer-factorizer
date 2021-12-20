@@ -83,11 +83,16 @@ func gcd2Complex(gaussa, gaussb map[string][2]int) map[string][2]int {
 func checkIntStr(nStr string) (int, string) {
 	nStr = regexp.MustCompile(" ").ReplaceAllString(nStr, "")
 	var number int
-	if nStr[0:1] == "-" {
-		nStr = nStr[1:]
+	missingNumber := "Number is missing."
+	if nStr == "" {
+		return number, missingNumber
+	} else {
+		if nStr[0:1] == "-" {
+			nStr = nStr[1:]
+		}
 	}
 	if nStr == "" {
-		return number, "Number is missing."
+		return number, missingNumber
 	}
 	badNumber := "There is something wrong with your number."
 	if len(nStr) > 18 {
@@ -431,6 +436,8 @@ func main() {
 	})
 	router.GET("/:input", func(c *gin.Context) {
 		if inputStr := c.Param("input"); len(strings.Split(inputStr, ",")) > 1  {
+			inputStr = regexp.MustCompile(" ").ReplaceAllString(inputStr, "")
+			inputStr = strings.Join(strings.Split(inputStr, ","), ", ")
 			result, message := gcdParse(inputStr)
 			_, results := factorize(result)
 			factors := [][2]string{}
@@ -446,7 +453,7 @@ func main() {
 				factors = append(factors, [2]string{"1", "1"})
 			}
 			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-				"input": strings.Join(strings.Split(inputStr, ","), ", "),
+				"input": inputStr,
 				"factors": factors,
 				"message": message,
 				"isPrime": isPrime,
@@ -477,7 +484,7 @@ func main() {
 		var resultStr string
 		if len(strings.Split(inputStr, ",")) > 1 {
 			result, message := gcdParse(inputStr)
-			resultStr = "{\"input\": \"" + inputStr + "\""
+			resultStr = "{\"input\": \"" + strings.Join(strings.Split(inputStr, ","), ", ") + "\""
 			if len(message) > 0 {
 				resultStr += ", \"message\": " + message
 			} else {
