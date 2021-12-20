@@ -512,11 +512,11 @@ func main() {
 	})
 	router.GET("/complex/:input", func(c *gin.Context) {
 		if inputStr := c.Param("input"); len(strings.Split(inputStr, ",")) > 1 {
-			if results, message := gcdComplexParse(inputStr); len(message) == 0 {
-				factors := [][2]string{}
-				var isPrime bool
+			results, message := gcdComplexParse(inputStr);
+			factors := [][2]string{}
+			var isPrime bool
+			if len(message) == 0 {
 				if len(results) > 0 {
-					isPrime = false
 					for _, singleFactor := range results {
 						prime, exponent := singleFactor.prime, strconv.Itoa(singleFactor.exponent)
 						factors = append(factors, [2]string{"(" + prime + ")", exponent})
@@ -525,15 +525,15 @@ func main() {
 					isPrime = true
 					factors = append(factors, [2]string{"1", "1"})
 				}
-				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					"input": strings.Join(strings.Split(inputStr, ","), ", "),
-					"factors": factors,
-					"message": message,
-					"isPrime": isPrime,
-					"type": "GCD",
-					"title": "Complex GCD",
-				})
 			}
+			c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+				"input": strings.Join(strings.Split(inputStr, ","), ", "),
+				"factors": factors,
+				"message": message,
+				"isPrime": isPrime,
+				"type": "GCD",
+				"title": "Complex GCD",
+			})
 		} else {
 			if z, message := gaussianParse(inputStr); len(message) == 0 {
 				factors := [][2]string{}
