@@ -80,6 +80,34 @@ func gcd2Complex(gaussa, gaussb map[string][2]int) map[string][2]int {
 	return gauss
 }
 
+func checkIntStr(nStr string) (int, string) {
+	var number int
+	if nStr[0:1] == "-" {
+		nStr = nStr[1:]
+	}
+	badNumber := "There is something wrong with your number."
+	if len(nStr) > 18 {
+		if len(nStr) > 19 {
+			return number, TOOLARGE
+		}
+		if len(nStr) == 19 {
+			if numTrunc, err := strconv.Atoi(nStr[0:6]); err != nil {
+				return number, badNumber
+			} else if numTrunc > 922336 {
+				return number, TOOLARGE
+			}
+		}
+	}
+	if _, err := strconv.ParseFloat(nStr, 64); err != nil {
+		return number, badNumber
+	}
+	if number, err := strconv.Atoi(nStr); err != nil {
+		return number, "Note that the number may not be a decimal."
+	} else {
+		return number, ""
+	}
+}
+
 func gcdParse(nStr string) (int, string) {
 	var result int
 	var ns []int
@@ -121,37 +149,12 @@ func gcdComplex(gausss []map[string][2]int) map[string][2]int {
 	}
 }
 
-func factorizeParse(numberStr string) (int, string) {
-	var number int
-	if numberStr[0:1] == "-" {
-		numberStr = numberStr[1:]
+func factorizeParse(nStr string) (int, string) {
+	number, message := checkIntStr(nStr)
+	if number == 1 {
+		message = "This number is neither prime nor composite."
 	}
-	if numberStr == "1" {
-		return number, "This number is neither prime nor composite."
-	}
-	badNumber := "There is something wrong with your number."
-	if len(numberStr) > 18 {
-		if len(numberStr) > 19 {
-			return number, TOOLARGE
-		}
-		if len(numberStr) == 19 {
-			numTrunc, err := strconv.Atoi(numberStr[0:6])
-			if err != nil {
-				return number, badNumber
-			}
-			if numTrunc > 922336 {
-				return number, TOOLARGE
-			}
-		}
-	}
-	if _, err := strconv.ParseFloat(numberStr, 64); err != nil {
-		return number, badNumber
-	}
-	if number, err := strconv.Atoi(numberStr); err != nil {
-		return number, "Note that the number may not be a decimal."
-	} else {
-		return number, ""
-	}
+	return number, message
 }
 
 func factorize(number int) (bool, [][2]int) {
