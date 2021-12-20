@@ -81,9 +81,13 @@ func gcd2Complex(gaussa, gaussb map[string][2]int) map[string][2]int {
 }
 
 func checkIntStr(nStr string) (int, string) {
+	nStr = regexp.MustCompile(" ").ReplaceAllString(nStr, "")
 	var number int
 	if nStr[0:1] == "-" {
 		nStr = nStr[1:]
+	}
+	if nStr == "" {
+		return number, "Number is missing."
 	}
 	badNumber := "There is something wrong with your number."
 	if len(nStr) > 18 {
@@ -109,25 +113,15 @@ func checkIntStr(nStr string) (int, string) {
 }
 
 func gcdParse(nStr string) (int, string) {
-	var result int
+	var message string
 	var ns []int
-	nStr = regexp.MustCompile(" ").ReplaceAllString(nStr, "")
-	if len(nStr) == 0 {
-		return result, "Expression is missing."
-	}
+	var n int
 	nsStr := strings.Split(nStr, ",")
 	for _, nStr := range nsStr {
-		if _, err := strconv.ParseFloat(nStr, 64); err != nil {
-			return result, "There is a problem with this number: " + nStr
-		}
-		if n, err := strconv.Atoi(nStr); err != nil {
-			return result, "The following number should be an integer, not a decimal: " + nStr
+		if n, message = checkIntStr(nStr); len(message) > 0 {
+			return 0, message
 		} else {
-			if n > 0 {
-				ns = append(ns, n)
-			} else {
-				return result, "The following number is not positive: " + nStr
-			}
+			ns = append(ns, n)
 		}
 	}
 	return gcd(ns), ""
