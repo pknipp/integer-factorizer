@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var isWebVersion bool = false
+var isWebVersion bool = true
 
 func main() {
 	if isWebVersion {
@@ -229,8 +229,8 @@ func main() {
 		})
 		router.Run(":" + port)
 	} else {
-		// Use the space below when testing app as CLI./
-		inputStr := "2000000000+2280000000i"
+		// Use this block when testing app as CLI./
+		inputStr := "2,1+3i"
 		results, message := gcdComplexParse(inputStr)
 		fmt.Println(results, message)
 	}
