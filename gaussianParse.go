@@ -6,6 +6,8 @@ import (
 	"math"
 )
 
+var MAXINT float64 = 0.999999 * math.Pow(2., 63.)
+
 func gaussianParse(zStr string) ([2]int, string) {
 	z := [2]int{1., 0.}
 	noNumber := "You need to input a Gaussian integer."
@@ -87,7 +89,7 @@ func gaussianParse(zStr string) ([2]int, string) {
 	}
 	x := float64(z[0])
 	if x > math.Sqrt(MAXINT) || float64(z[1]) > math.Sqrt(MAXINT - x * x) {
-		return ZERO, TOOLARGE
+		return [2]int{0, 0}, TOOLARGE
 	}
 	return z, ""
 }

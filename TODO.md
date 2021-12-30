@@ -1,2 +1,1 @@
-figure out how to separate functions into separate files
-use all caps for some constants, such as ...
+

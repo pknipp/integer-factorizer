@@ -5,9 +5,6 @@ import (
 	"math"
 )
 
-var ZERO [2]int = [2]int{0, 0}
-var MAXINT float64 = 0.999999 * math.Pow(2., 63.)
-
 func gaussian(z [2]int) (bool, int, map[string][2]int) {
 	gaussianFactors := map[string][2]int{}
 	_, factors := factorize(modulus(z))
