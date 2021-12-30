@@ -12,6 +12,7 @@ func gaussianParse(zStr string) ([2]int, string) {
 	z := [2]int{1., 0.}
 	noNumber := "You need to input a Gaussian integer."
 	neither := "This number is neither prime nor composite."
+	// Remove spaces, and replace j by i, to simplify parsing.
 	zStr = regexp.MustCompile(" ").ReplaceAllString(zStr, "")
 	zStr = regexp.MustCompile("j").ReplaceAllString(zStr, "i")
 	if zStr[0:1] == "+" {
@@ -24,14 +25,12 @@ func gaussianParse(zStr string) ([2]int, string) {
 	if zStr[len(zStr) - 1:] == "i" {
 		// Number has an imaginary part
 		zStr = zStr[0: len(zStr) - 1]
-		if len(zStr) == 0 {
-			return z, neither
-		} else if zStr == "-" {
+		if zStr == "" || zStr == "-" {
 			return z, neither
 		}
 		zSlice := strings.Split(zStr, "+")
 		if len(zSlice) == 2 {
-			// Number's real part is nonzero and imaginary part is positive.
+			// Number's imaginary part is positive.
 			int, message := partParse(zSlice[0], "real")
 			if len(message) > 0 {
 				return z, message
@@ -45,6 +44,7 @@ func gaussianParse(zStr string) ([2]int, string) {
 				z[1] = int
 			}
 		} else {
+			// Number's imaginary part is negative
 			zSlice = strings.Split(zStr, "-")
 			if zStr[0:1] != "-" && len(zSlice) == 2 {
 				// Numbers real part is nonzero and imaginary part is negative.

@@ -12,18 +12,19 @@ func modulus(z [2]int) int {
 
 // determines whether 2nd gaussian integer is a factor of the 1st
 func modulo(z0, z1 [2]int) (bool, [2]int) {
-	var returnIsFactor bool
-	returnQuotient := [2]int{0, 0}
+	var isFactor bool
+	quotient := [2]int{0, 0}
 	den := z1[0] * z1[0] + z1[1] * z1[1]
 	numR:= z0[0] * z1[0] + z0[1] * z1[1]
 	numI:= z0[1] * z1[0] - z0[0] * z1[1]
 	if numR % den == 0 && numI % den == 0 {
-		returnQuotient = [2]int{numR / den, numI / den}
-		returnIsFactor = true
+		quotient = [2]int{numR / den, numI / den}
+		isFactor = true
 	}
-	return returnIsFactor, returnQuotient
+	return isFactor, quotient
 }
 
+// ensure that string may be converted to integer, for complex case
 func partParse(str, part string) (int, string) {
 	if str == "" && part == "imaginary" {
 		return 1, ""
@@ -68,11 +69,12 @@ func gcd(ns []int) int {
 
 func gcdParse(nStr string) (int, string) {
 	var message string
+	// slice'll hold all integers whose gcd is needed
 	var ns []int
 	var n int
 	nsStr := strings.Split(nStr, ",")
 	for _, nStr := range nsStr {
-		if n, message = checkIntStr(nStr); len(message) == 0 || n == 1 {
+		if n, message = checkIntStr(nStr); len(message) == 0 {
 			ns = append(ns, n)
 		} else {
 			return 0, message

@@ -6,17 +6,19 @@ import (
 
 func factorize(number int) (bool, [][2]int) {
 	j := 1
+	// Use a map for storing factors, to facilitate the algo.
+	// key = prime, value = exponent
 	factors := map[int]int{}
 	// One only needs to search up until the square root of number.
 	for j * j < number {
-		// After 3, only odd numbers can be prime.
+		// After 3, only odd numbers can be prime (so step-size = 2, then)
 		if j < 3 {
 			j++
 		} else {
 			j += 2
 		}
 		for {
-			// Continue dividing out (and counting) j until j is no longer a factor of number.
+			// Continue dividing out (and tabulating) j until j is no longer a factor of number.
 			if number % j == 0 {
 				_, facFound := factors[j]
 				if facFound {
@@ -35,17 +37,17 @@ func factorize(number int) (bool, [][2]int) {
 	if number != 1 {
 		factors[number] = 1
 	}
-	// Below is a necessary - but not sufficient - condition.
+	// Below is a necessary - but not sufficient - condition of primacy.
 	isPrime := len(factors) == 1
 	// The condition below is required to make it "sufficient".
 	if isPrime {
 		for _, exponent := range factors {
 			if exponent > 1 {
 				isPrime = false
-				break
 			}
 		}
 	}
+	// Change data structure from map to slice (of 2-component arrays), to facilitate sorting.
 	factorsSorted := [][2]int{}
 	for prime, exponent := range factors {
 		factorsSorted = append(factorsSorted, [2]int{prime, exponent})

@@ -7,10 +7,10 @@ import (
 
 func gaussian(z [2]int) (bool, int, map[string][2]int) {
 	gaussianFactors := map[string][2]int{}
+	// Factoring a gaussian is facilitated by finding the (real) factors of its (squared) modulus.
 	_, factors := factorize(modulus(z))
 	for _, pair := range factors {
-		prime := pair[0]
-		exponent := pair[1]
+		prime, exponent := pair[0], pair[1]
 		// Here are the factors of 1 + i
 		if prime == 2 {
 			gaussianFactors["1+i"] = [2]int{2, exponent}
@@ -28,9 +28,9 @@ func gaussian(z [2]int) (bool, int, map[string][2]int) {
 				}
 			} else {
 				// Here are Gaussian integers for which one component is odd and the other is even.
-				// Find ints m, n such that (2m+1)^2 + (2n)^2 = mod4
+				// Find ints m, n such that (2m+1)^2 + (2n)^2 = prime
 				mod4 := (prime - 1) / 4
-				// Now this becomes m*(m+1) + n^2 = mod4
+				// Now this becomes m*(m+1) + n^2 = mod4, which is solved via a while loop.
 				m := 0
 				var n int
 				for {

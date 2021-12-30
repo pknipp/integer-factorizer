@@ -13,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// This allows for easy toggling between cli and web versions of this app.
 var isWebVersion bool = true
 
 func main() {
@@ -30,10 +31,15 @@ func main() {
 		router.GET("/", func(c *gin.Context) {
 			c.HTML(http.StatusOK, "index.tmpl.html", nil)
 		})
+		// gcd and factorization of real integers
 		router.GET("/:input", func(c *gin.Context) {
+			// real gcd
 			if inputStr := c.Param("input"); len(strings.Split(inputStr, ",")) > 1  {
+				// Reduce white-space, to facilitate parsing.
 				inputStr = regexp.MustCompile(" ").ReplaceAllString(inputStr, "")
+				// Reinsert a space, so that rendered input is easy to read.
 				inputStr = strings.Join(strings.Split(inputStr, ","), ", ")
+				// parse input to ensure that it is well-formed
 				result, message := gcdParse(inputStr)
 				_, results := factorize(result)
 				factors := [][2]string{}
@@ -42,6 +48,7 @@ func main() {
 					isPrime = false
 					for _, pair := range results {
 						prime, exponent := pair[0], pair[1]
+						// Create slice of 2-component arrays of strings, for use in template.
 						factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
 					}
 				} else {
@@ -63,6 +70,7 @@ func main() {
 				factors := [][2]string{}
 				for _, pair := range results {
 					prime, exponent := pair[0], pair[1]
+					// Create slice of 2-component arrays of strings, for use in template.
 					factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
 				}
 				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
@@ -230,8 +238,11 @@ func main() {
 		router.Run(":" + port)
 	} else {
 		// Use this block when testing app as CLI./
-		inputStr := "2,1+3i"
-		results, message := gcdComplexParse(inputStr)
+		inputStr := "6,8,12"
+		// results, message := gcdComplexParse(inputStr)
+		results, message := gcdParse(inputStr)
+		// fmt.Println(results, message)
+		// _, result := factorize(results)
 		fmt.Println(results, message)
 	}
 }
