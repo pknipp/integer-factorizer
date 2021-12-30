@@ -4,6 +4,7 @@ import (
 	"regexp"
 	"strings"
 	"math"
+	"strconv"
 )
 
 var MAXINT float64 = 0.999999 * math.Pow(2., 63.)
@@ -11,7 +12,6 @@ var MAXINT float64 = 0.999999 * math.Pow(2., 63.)
 func gaussianParse(zStr string) ([2]int, string) {
 	z := [2]int{1., 0.}
 	noNumber := "You need to input a Gaussian integer."
-	neither := "This number is neither prime nor composite."
 	// Remove spaces, and replace j by i, to simplify parsing.
 	zStr = regexp.MustCompile(" ").ReplaceAllString(zStr, "")
 	zStr = regexp.MustCompile("j").ReplaceAllString(zStr, "i")
@@ -26,7 +26,7 @@ func gaussianParse(zStr string) ([2]int, string) {
 		// Number has an imaginary part
 		zStr = zStr[0: len(zStr) - 1]
 		if zStr == "" || zStr == "-" {
-			return z, neither
+			return z, zStr + "i" + UNITY
 		}
 		zSlice := strings.Split(zStr, "+")
 		if len(zSlice) == 2 {
@@ -68,7 +68,7 @@ func gaussianParse(zStr string) ([2]int, string) {
 					return z, message
 				} else {
 					if math.Abs(float64(int)) == 1. {
-						return z, neither
+						return z, strconv.Itoa(int) + UNITY
 					}
 					z[1] = int
 				}
@@ -82,7 +82,7 @@ func gaussianParse(zStr string) ([2]int, string) {
 			return z, message
 		} else {
 			if math.Abs(float64(int)) == 1. {
-				return z, neither
+				return z, strconv.Itoa(int) + UNITY
 			}
 			z[0] = int
 		}

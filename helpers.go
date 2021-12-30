@@ -43,7 +43,7 @@ func partParse(str, part string) (int, string) {
 func factorizeParse(nStr string) (int, string) {
 	number, message := checkIntStr(nStr)
 	if number == 1 {
-		message = "This number is neither prime nor composite."
+		message = "1" + UNITY
 	}
 	return number, message
 }

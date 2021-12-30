@@ -13,6 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+const UNITY string = " is neither prime nor composite."
 // This allows for easy toggling between cli and web versions of this app.
 var isWebVersion bool = true
 
