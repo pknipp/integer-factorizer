@@ -13,7 +13,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var isWebVersion bool = false
+var isWebVersion bool = true
 
 func main() {
 	if isWebVersion {
