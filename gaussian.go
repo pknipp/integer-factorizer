@@ -5,6 +5,7 @@ import (
 	"math"
 )
 
+// returns: isPrime, squared modulus, factor map (each w/value equalling squared modulus and power)
 func gaussian(z [2]int) (bool, int, map[string][2]int) {
 	gaussianFactors := map[string][2]int{}
 	// Factoring a gaussian is facilitated by finding the (real) factors of its (squared) modulus.
