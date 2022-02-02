@@ -23,7 +23,7 @@ func gaussian(z [2]int) (bool, int, map[string][2]int) {
 			if prime % 4 == 3 {
 				gaussianFactors[strconv.Itoa(prime)] = [2]int{prime, exponent / 2}
 				for count := 0; count < exponent / 2; count++ {
-					for i, _ := range z {
+					for i := range z {
 						z[i] /= prime
 					}
 				}

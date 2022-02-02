@@ -34,8 +34,15 @@ func main() {
 		})
 		// gcd and factorization of real integers
 		router.GET("/:input", func(c *gin.Context) {
+			inputStr := c.Param("input")
+			if len(strings.Split(inputStr, ".")) > 1 {
+				inputStr = regexp.MustCompile("repeat").ReplaceAllString(inputStr, "r")
+				inputStr = regexp.MustCompile("R").Copy().ReplaceAllString(inputStr, "r")
+			// twoParts := strings.split(input, )
+			}
+
 			// real gcd
-			if inputStr := c.Param("input"); len(strings.Split(inputStr, ",")) > 1  {
+			if len(strings.Split(inputStr, ",")) > 1  {
 				// Reduce white-space, to facilitate parsing.
 				inputStr = regexp.MustCompile(" ").ReplaceAllString(inputStr, "")
 				// Reinsert a space, so that rendered input is easy to read.
@@ -239,7 +246,7 @@ func main() {
 		router.Run(":" + port)
 	} else {
 		// Use this block when testing app as CLI./
-		inputStr := "6,8,12"
+		inputStr := "1.2r3" //"6,8,12"
 		// results, message := gcdComplexParse(inputStr)
 		results, message := gcdParse(inputStr)
 		// fmt.Println(results, message)

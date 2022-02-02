@@ -3,7 +3,7 @@ If the number contains a "repeat", "r", comma (recommended) or space (discourage
 
 intPart = part to left of decimal = n0
 
-parse decimal places to left of comma:
+parse decimal places to right of comma:
     convert string to integer (= n1)
     construct appropriate power of 10: n2 = 10^p0
     simplify(n1, n2), so fraction = n1 / n2
