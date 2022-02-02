@@ -1,5 +1,5 @@
 If the number contains a decimal point, return its fraction equivalent (in both mixed and improper forms).
-If the number contains a comma (recommended) or space (discouraged) after the decimal point, assume the subsequent digits to repeat.
+If the number contains a "repeat", "r", comma (recommended) or space (discouraged) after the decimal point, assume the subsequent digits to repeat.
 
 intPart = part to left of decimal = n0
 
