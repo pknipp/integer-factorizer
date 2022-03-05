@@ -47,16 +47,18 @@ func main() {
 				if inputStr[len(inputStr) - 1:] == "." {
 					inputStr = inputStr[: len(inputStr) - 1]
 				}
-			// if len(strings.Split(inputStr, ".")) > 1 {
-				// inputStr = regexp.MustCompile("repeat").ReplaceAllString(inputStr, "r")
-				// inputStr = regexp.MustCompile("R").Copy().ReplaceAllString(inputStr, "r")
-			// twoParts := strings.split(input, )
-				// fmt.Println(inputStr)
-			// }
-
-			// real gcd
-
-				if len(strings.Split(inputStr, ",")) > 1  {
+				if strings.Count(inputStr, "r") == 1 {
+					result, message := decimal(inputStr)
+					c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+						"input": inputStr,
+						"message": message,
+						"type": "decimal",
+						"title": "Decimal to fraction conversion",
+						"whole": result.whole,
+						"num": result.num,
+						"den": result.den,
+					})
+				} else if len(strings.Split(inputStr, ",")) > 1  {
 					// Reduce white-space, to facilitate parsing.
 					inputStr = regexp.MustCompile(" ").ReplaceAllString(inputStr, "")
 					// Reinsert a space, so that rendered input is easy to read.
@@ -261,13 +263,7 @@ func main() {
 		router.Run(":" + port)
 	} else {
 		// Use this block when testing app as CLI./
-		inputStr := "1234"
-		number, message := factorizeParse(inputStr)
-		isPrime, results := factorize(number)
-		// results, message := gcdComplexParse(inputStr)
-		// results, message := gcdParse(inputStr)
-		// fmt.Println(results, message)
-		// _, result := factorize(results)
-		fmt.Println(number, message, isPrime, results)
+		inputStr := "1234.2r142857"
+		fmt.Println(decimal(inputStr))
 	}
 }

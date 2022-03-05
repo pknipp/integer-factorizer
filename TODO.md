@@ -4,12 +4,6 @@
     n1 /= g
 }
 
-while input ends with a zero
-    remove it
-If input ends with decimal point
-    remove it
-while input ends with a zero
-    remove it
 split input on decimal point
 if len(slice) = 2
     n0 := parse(0th element)

@@ -32,14 +32,20 @@
                                 {{end}}
                             </td>
                         {{end}}
-                        {{if not .isPrime}}
+                        {{if eq .type "decimal"}}
                             <td>
-                                {{range $i, $pair := .factors}}
-                                    {{if ne $i 0}}&middot;{{end}}
-                                    {{index $pair 0}}
-                                    {{if ne "1" (index $pair 1)}}<sup>{{index $pair 1}}</sup>{{end}}
-                                {{end}}
+                                {{ .whole}} {{ .num}}/{{ .den}}
                             </td>
+                        {{else}}
+                            {{if not .isPrime}}
+                                <td>
+                                    {{range $i, $pair := .factors}}
+                                        {{if ne $i 0}}&middot;{{end}}
+                                        {{index $pair 0}}
+                                        {{if ne "1" (index $pair 1)}}<sup>{{index $pair 1}}</sup>{{end}}
+                                    {{end}}
+                                </td>
+                            {{end}}
                         {{end}}
                     </tr>
                 </table>

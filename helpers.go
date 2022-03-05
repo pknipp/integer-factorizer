@@ -4,7 +4,67 @@ import (
 	"strconv"
 	"strings"
 	"math"
+	"regexp"
 )
+
+func simplify(num int, den int) (int, int){
+    fac := gcd2(num, den)
+	return num / fac, den / fac
+}
+
+func pow10(n int) int {
+	if n == 0 { return 1 }
+	if n == 1 { return 10 }
+	y := pow10(n/2)
+	if n % 2 == 0 { return y*y }
+	return 10 * y * y
+ }
+
+type fraction struct {
+	whole int
+	num int
+	den int
+}
+
+func decimal(inputStr string) (fraction, string) {
+	parts := strings.Split(inputStr, ".")
+	var result fraction
+	whole, err := strconv.Atoi(parts[0])
+	if err != nil {
+		return result, "Part (" + parts[0] + ") which is left of decimal cannot be parsed as an integer."
+	}
+	var num, den int
+    decimalPart := regexp.MustCompile("repeat").ReplaceAllString(parts[1], "r")
+	decimalPart = regexp.MustCompile("R").ReplaceAllString(decimalPart, "r")
+	decimalPart = regexp.MustCompile(",").ReplaceAllString(decimalPart, "r")
+	n_rs := strings.Count(decimalPart, "r")
+	if n_rs > 1 {
+		return result, "Part (" + decimalPart + ") which is right of the decimal has more than one character which signals the start of the repeating part of the decimal."
+	} else {
+		parts := strings.Split(decimalPart, "r")
+		if parts[0] == "" {
+			num = 0
+			den = 1
+		} else {
+			num, err = strconv.Atoi(parts[0])
+			if err != nil {
+				return result, "Terminating part of decimal (" + parts[0] + ") cannot be parsed as an integer."
+			}
+			den = pow10(len(parts[0]))
+		}
+		if len(parts) > 1 {
+			num2, err := strconv.Atoi(parts[1])
+			if err != nil {
+				return result, "Repeating part of decimal (" + parts[1] + ") cannot be parsed as an integer."
+			}
+			den2 := den * (pow10(len(parts[1])) - 1)
+			num = num * den2 + den * num2
+			den *= den2
+		}
+		num, den = simplify(num, den)
+		return fraction{whole, num, den}, ""
+	}
+}
 
 func modulus(z [2]int) int {
 	return z[0] * z[0] + z[1] * z[1]
