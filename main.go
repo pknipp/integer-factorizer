@@ -50,7 +50,8 @@ func main() {
 				if strings.Count(inputStr, ".") == 1 {
 					result, message := decimal(inputStr)
 					c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-						"input": inputStr,
+						"inputNonrepeating": result.nonrepeating,
+						"inputRepeating": result.repeating,
 						"message": message,
 						"type": "decimal",
 						"title": "Decimal to fraction conversion",

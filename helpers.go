@@ -24,6 +24,8 @@ type fraction struct {
 	whole int
 	num int
 	den int
+	nonrepeating string
+	repeating string
 }
 
 func decimal(inputStr string) (fraction, string) {
@@ -41,28 +43,32 @@ func decimal(inputStr string) (fraction, string) {
 	if n_rs > 1 {
 		return result, "Part (" + decimalPart + ") which is right of the decimal has more than one character which signals the start of the repeating part of the decimal."
 	} else {
-		parts := strings.Split(decimalPart, "r")
-		if parts[0] == "" {
+		decimalParts := strings.Split(decimalPart, "r")
+		if decimalParts[0] == "" {
 			num = 0
 			den = 1
 		} else {
-			num, err = strconv.Atoi(parts[0])
+			num, err = strconv.Atoi(decimalParts[0])
 			if err != nil {
-				return result, "Terminating part of decimal (" + parts[0] + ") cannot be parsed as an integer."
+				return result, "Terminating part of decimal (" + decimalParts[0] + ") cannot be parsed as an integer."
 			}
-			den = pow10(len(parts[0]))
+			den = pow10(len(decimalParts[0]))
 		}
-		if len(parts) > 1 {
-			num2, err := strconv.Atoi(parts[1])
+		if len(decimalParts) > 1 {
+			num2, err := strconv.Atoi(decimalParts[1])
 			if err != nil {
-				return result, "Repeating part of decimal (" + parts[1] + ") cannot be parsed as an integer."
+				return result, "Repeating part of decimal (" + decimalParts[1] + ") cannot be parsed as an integer."
 			}
-			den2 := den * (pow10(len(parts[1])) - 1)
+			den2 := den * (pow10(len(decimalParts[1])) - 1)
 			num = num * den2 + den * num2
 			den *= den2
 		}
 		num, den = simplify(num, den)
-		return fraction{whole, num, den}, ""
+		repeating := ""
+		if len(decimalParts) > 1 {
+			repeating = decimalParts[1]
+		}
+		return fraction{whole, num, den, parts[0] + "." + decimalParts[0], repeating}, ""
 	}
 }
 
