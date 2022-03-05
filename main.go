@@ -44,9 +44,9 @@ func main() {
 						inputStr = inputStr[: len(inputStr) - 1]
 					}
 				}
-				// if inputStr[len(inputStr) - 1: 0] == "." {
-					// inputStr = inputStr[: len(inputStr) - 1]
-				// }
+				if inputStr[len(inputStr) - 1:] == "." {
+					inputStr = inputStr[: len(inputStr) - 1]
+				}
 			// if len(strings.Split(inputStr, ".")) > 1 {
 				// inputStr = regexp.MustCompile("repeat").ReplaceAllString(inputStr, "r")
 				// inputStr = regexp.MustCompile("R").Copy().ReplaceAllString(inputStr, "r")
