@@ -40,7 +40,7 @@ func main() {
 					// "isPrime": isPrime,
 					// "factors": factors,
 					// "message": message,
-					// "type": "integer",
+					// "type": "decimal",
 					// "title": "Real factorization",
 				// })
 //
@@ -81,7 +81,6 @@ func main() {
 					"isPrime": isPrime,
 					"type": "GCD",
 					"title": "Real GCD",
-					"isDecimal": false,
 				})
 			} else {
 				number, message := factorizeParse(inputStr)
@@ -98,7 +97,7 @@ func main() {
 					"isPrime": isPrime,
 					"factors": factors,
 					"message": message,
-					"type": "decimal",
+					"type": "integer",
 					"title": "Real factorization",
 				})
 			}
