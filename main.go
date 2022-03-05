@@ -36,12 +36,8 @@ func main() {
 			inputStr := c.Param("input")
 			if strings.Count(inputStr, ".") > 1 {
 				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					"input": inputStr,
-					// "isPrime": isPrime,
-					// "factors": factors,
-					"message": "Error: input has too many decimal points.",
-					// "type": "decimal",
-					// "title": "Real factorization",
+					// "input": inputStr,
+					"message": "input (" + inputStr + ") has too many decimal points.",
 				})
 			// if len(strings.Split(inputStr, ".")) > 1 {
 				// inputStr = regexp.MustCompile("repeat").ReplaceAllString(inputStr, "r")
