@@ -98,9 +98,8 @@ func main() {
 					"isPrime": isPrime,
 					"factors": factors,
 					"message": message,
-					"type": "integer",
+					"type": "decimal",
 					"title": "Real factorization",
-					"decimal": false,
 				})
 			}
 		})

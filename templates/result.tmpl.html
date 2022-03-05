@@ -5,15 +5,33 @@
     </head>
     <body>
         <h4><p align=center>{{ .title }}</p></h4>
-        <p align=center>
-            <table border='1'>
-                <tr><th>input</th><th>type</th>
-                    {{if or (.isDecimal) (and (not .isPrime) (eq .message ""))}}<th>result</th>{{end}}
-                </tr><tr><td>{{ .input }}</td>
-                    {{if eq .message ""}}
-                        <td>
-                            {{if eq .type "GCD"}}relatively {{end}}{{if .isPrime }}prime{{else}}composite{{end}}
-                        </td>
+
+        {{if eq .message ""}}
+            <p align=center>
+                <table border='1'>
+                    <tr>
+                        <th>input</th>
+                        {{if not (eq .type "decimal")}}
+                            <th>type</th>
+                        {{end}}
+                        {{if not .isPrime}}
+                            <th>result</th>
+                        {{end}}
+                    </tr>
+                    <tr>
+                        <td>{{ .input }}</td>
+                        {{if not (eq .type "decimal")}}
+                            <td>
+                                {{if eq .type "GCD"}}
+                                    relatively
+                                {{end}}
+                                {{if .isPrime }}
+                                    prime
+                                {{else}}
+                                    composite
+                                {{end}}
+                            </td>
+                        {{end}}
                         {{if not .isPrime}}
                             <td>
                                 {{range $i, $pair := .factors}}
@@ -23,11 +41,12 @@
                                 {{end}}
                             </td>
                         {{end}}
-                    {{end}}
-                </tr>
-            </table>
-        </p>
-        <p align="center">{{if ne .message ""}}Error: {{ .message}}{{end}}</p>
+                    </tr>
+                </table>
+            </p>
+        {{else}}
+            <p align="center">Error: {{ .message}}</p>
+        {{end}}
         <p align="center">
             creator:&nbsp;
             <a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>
