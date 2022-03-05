@@ -1,27 +1,34 @@
-If the number contains a decimal point, return its fraction equivalent (in both mixed and improper forms).
-If the number contains a "repeat", "r", comma (recommended) or space (discouraged) after the decimal point, assume the subsequent digits to repeat.
-
-intPart = part to left of decimal = n0
-
-parse decimal places to right of comma:
-    convert string to integer (= n1)
-    construct appropriate power of 10: n2 = 10^p0
-    simplify(n1, n2), so fraction = n1 / n2
-
-parse decimal places to right of comma
-    parse string to integer (= n3)
-    construct appropriate denominator: n4 = 10^p1 - 1
-    simplify(n3, n4), so fraction = n3 / n4
-
-combine fractions:
-    num = n1 * n4 + n2 * n3, den = n2 * n4
-    simplify(num, den), so fraction = num / den
-    mixed number: n0 + num / den
-    improper fraction: (n0 * den + num) / den
-
-helper:
-simplify(*n0, *n1) (no return) {
-    let g = gcd(n0, n1)
+(helper) simplify ((*num, *den) (no return) {
+    fac = gcd(n0, n1)
     n0 /= g
     n1 /= g
 }
+
+if input contains more than one decimal point
+    return error message
+If input ends with decimal point
+    remove it
+while input ends with a zero
+    remove it
+split input on decimal point
+if len(slice) = 2
+    n0 := parse(0th element)
+    d := len(1st element)
+    declare num, den
+    if 1st element doesn't contain an r:
+        num = parse(1st element)
+        den = 10 ** d
+    else:
+        arr := 1st element split on r
+        num0 := parse(arr[0])
+        den0 := 10 ** len(arr[0])
+        num1 := parse(arr[1])
+        den1 := (10 ** len(arr[1]) - 1) * den0
+        num = num0 * den1 + num1 * den0
+        den = den0 * den1
+    simplify(&num, &den)
+    return n0, num, den, properly formatted
+
+
+If the number contains a decimal point, return its fraction equivalent (in both mixed and improper forms).
+If the number contains a "repeat", "R". "r", comma (recommended) or space (discouraged) after the decimal point, assume the subsequent digits to repeat.

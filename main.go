@@ -35,10 +35,22 @@ func main() {
 		// gcd and factorization of real integers
 		router.GET("/:input", func(c *gin.Context) {
 			inputStr := c.Param("input")
+			// if strings.Count(inputStr, ".") > 1 {
+				// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+					// "input": inputStr,
+					// "isPrime": isPrime,
+					// "factors": factors,
+					// "message": message,
+					// "type": "integer",
+					// "title": "Real factorization",
+				// })
+//
+			// }
 			if len(strings.Split(inputStr, ".")) > 1 {
 				inputStr = regexp.MustCompile("repeat").ReplaceAllString(inputStr, "r")
 				inputStr = regexp.MustCompile("R").Copy().ReplaceAllString(inputStr, "r")
 			// twoParts := strings.split(input, )
+				fmt.Println(inputStr)
 			}
 
 			// real gcd
@@ -70,6 +82,7 @@ func main() {
 					"isPrime": isPrime,
 					"type": "GCD",
 					"title": "Real GCD",
+					"decimal": false,
 				})
 			} else {
 				number, message := factorizeParse(inputStr)
@@ -88,6 +101,7 @@ func main() {
 					"message": message,
 					"type": "integer",
 					"title": "Real factorization",
+					"decimal": false,
 				})
 			}
 		})
@@ -246,11 +260,13 @@ func main() {
 		router.Run(":" + port)
 	} else {
 		// Use this block when testing app as CLI./
-		inputStr := "1.2r3" //"6,8,12"
+		inputStr := "1234"
+		number, message := factorizeParse(inputStr)
+		isPrime, results := factorize(number)
 		// results, message := gcdComplexParse(inputStr)
-		results, message := gcdParse(inputStr)
+		// results, message := gcdParse(inputStr)
 		// fmt.Println(results, message)
 		// _, result := factorize(results)
-		fmt.Println(results, message)
+		fmt.Println(number, message, isPrime, results)
 	}
 }
