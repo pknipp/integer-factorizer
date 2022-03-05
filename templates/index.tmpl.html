@@ -12,7 +12,7 @@
   </p>
 
   <ul>
-    <li>This page allows for four different types of calculations, depending upon the following pairs of circumstances:
+    <li>This page allows for five different types of calculations, each related to the factorization of integers.  The first four depend upon the following pairs of circumstances:
       <ul>
         <li>
           <a href="https://en.wikipedia.org/wiki/Integer">real integers</a> vs <a href="https://en.wikipedia.org/wiki/Gaussian_integer">complex integers"</a> (aka Gaussian integers)
@@ -21,11 +21,12 @@
           single integer (factorization thereof) vs list of integers (<a href="https://en.wikipedia.org/wiki/Greatest_common_divisor">greatest common divisor</a> - GCD - thereof)
         </li>
       </ul>
+      The fifth type is the conversion of a decimal (either finite or repeating) to a fraction.
     <li>
       URL:
       <ul>
         <li>
-          After <tt>...herokuapp.com</tt> above you should type either <tt>/complex/</tt> if you want to consider Gaussian integers or a single slash if you want to consider real ones.
+          After <tt>...herokuapp.com</tt> above you should type either <tt>/complex/</tt> if you want to consider Gaussian integers or a single slash if you want to consider real numbers.
         </li>
         <li>
           After this you should type <tt>json/</tt> if you want the output in json or nothing if you want the output in html.
@@ -45,13 +46,16 @@
           Do not use <a href="https://en.wikipedia.org/wiki/Scientific_notation#E_notation">E-notation</a>.
         </li>
         <li>
-          All <a href="https://en.wikipedia.org/wiki/Real_number">real numbers</a> must be integers less than 2<sup>63</sup> in magnitude (approximately "9" followed by 18 zeros).  Exception: the limit on the number of digits in your Gaussian integer equals half of this.
+          All <a href="https://en.wikipedia.org/wiki/Real_number">real numbers</a> must be less than 2<sup>63</sup> in magnitude (approximately "9" followed by 18 zeros).  Exception: the limit on the number of digits in your Gaussian integer equals half of this.
         </li>
         <li>
           <a href="https://en.wikipedia.org/wiki/Complex_number">Complex numbers</a> should be of the form <i>m</i> + <i>n</i>i, where <i>m</i> and <I>n</I> represent integers as described in the previous bullet.  You may use standard shortcuts such as <tt>3 + i</tt> instead of <tt>3 + 1i</tt>, or <tt>2i</tt> instead of <tt>0 + 2i</tt>.
         </li>
         <li>
           Use commas to separate numbers in a list, ie when determining <a href="https://en.wikipedia.org/wiki/Greatest_common_divisor">GCD</a>.
+        </li>
+        <li>
+          In order to represent a decimal that has both a finite part and a repeating part, separate the two parts by either <tt>repeat</tt>, <tt>r</tt>, <tt>R</tt>, or <tt>,</tt> (ie a comma).
         </li>
       </ul>
     </li>
@@ -101,29 +105,33 @@
       <br/>
       <table border='1'>
         <tr>
-          <th>real or<br/>complex</th>
-          <th>single<br/>or list</th>
+          <th>type</th>
           <th>input</th>
           <th>result</th>
           <th>json output</th>
         <tr>
         <tr>
-          <td rowspan=2>real</td>
-          <td rowspan=5>single</td>
+          <td rowspan=2>real, single</td>
           <td><tt>9134567890123456789</tt></td>
           <td colspan=2>prime</td>
         </tr>
         <tr>
           <td><tt>999999</tt></td>
           <td>3<sup>3</sup>&middot;7&middot;11&middot;13&middot;37</td>
-          <td><tt>{"3": 3, "7": 1, "11": 1, "13": 1, "37": 1}</tt></td></tr>
-        <tr><td rowspan=3>complex</td><td><tt>2</tt></td><td>-i(1 + i)<sup>2</sup></td><td><tt>{"exponent": 3, "factors": {"1+i": 2}}</tt></td></td></tr>
+          <td><tt>[[3, 3], [7, 1], [11, 1], [13, 1], [37, 1]]</tt></td></tr>
+        <tr><td rowspan=3>complex, single</td><td><tt>2</tt></td><td>-i(1 + i)<sup>2</sup></td><td><tt>{"exponent": 3, "factors": [["1+i", 2]]}</tt></td></td></tr>
         <tr><td><tt>3</tt></td><td colspan=2>prime</td></tr>
-        <tr><td><tt>1 + 3i</tt></td><td>(1 + i)(2 + i)</td><td><tt>{"exponent": 0, "factors": {"1+i": 1, "2+i": 1}}</tt></td></tr>
-        <tr><td rowspan=3>real</td><td rowspan=4>list</td><td><tt>9,12</tt></td><td colspan=2><tt>3</tt></td></tr>
+        <tr><td><tt>1 + 3i</tt></td><td>(1 + i)(2 + i)</td><td><tt>{"exponent": 0, "factors": [["1+i": "1"], ["2+i": "1"]]}</tt></td></tr>
+        <tr><td rowspan=3>real, list</td><td><tt>9,12</tt></td><td colspan=2><tt>3</tt></td></tr>
         <tr><td><tt>9,10</tt></td><td colspan=2>relatively prime</td></tr>
         <tr><td><tt>8,10,12</tt></td><td colspan=2><tt>2</tt></td></tr>
-        <tr><td>complex</td><td><tt>2i, -1 + 3i, 1 + 3i</tt></td><td colspan=2>1 + i</td></tr>
+        <tr><td>complex, list</td><td><tt>2i, -1 + 3i, 1 + 3i</tt></td><td colspan=2>1 + i</td></tr>
+        <tr>
+          <td rowspan=2>decimal-to-fraction</td><td><tt>3.5</tt></td><td><tt>3 <sup>1</sup>&frasl;<sub>2</sub></tt></td>
+        </tr>
+        <tr>
+          <td><tt>3.5r6</tt></td><tt>3 <sup>17</sup>&frasl;<sub>30</sub></tt></td>
+        </tr>
       </table>
     </li>
   </ul>
