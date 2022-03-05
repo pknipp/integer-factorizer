@@ -43,7 +43,6 @@ func main() {
 					// "type": "decimal",
 					// "title": "Real factorization",
 				})
-			}
 			// if len(strings.Split(inputStr, ".")) > 1 {
 				// inputStr = regexp.MustCompile("repeat").ReplaceAllString(inputStr, "r")
 				// inputStr = regexp.MustCompile("R").Copy().ReplaceAllString(inputStr, "r")
@@ -52,7 +51,7 @@ func main() {
 			// }
 
 			// real gcd
-			if len(strings.Split(inputStr, ",")) > 1  {
+			} else if len(strings.Split(inputStr, ",")) > 1  {
 				// Reduce white-space, to facilitate parsing.
 				inputStr = regexp.MustCompile(" ").ReplaceAllString(inputStr, "")
 				// Reinsert a space, so that rendered input is easy to read.
