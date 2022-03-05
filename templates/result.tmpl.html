@@ -34,7 +34,7 @@
                         {{end}}
                         {{if eq .type "decimal"}}
                             <td>
-                                {{ .whole}} {{ .num}}/{{ .den}}
+                                {{ .whole}} <sup>{{ .num}}</sup>sup>&frasl;<sub>{{ .den}}</sub>
                             </td>
                         {{else}}
                             {{if not .isPrime}}
