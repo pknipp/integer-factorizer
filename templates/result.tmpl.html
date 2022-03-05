@@ -19,7 +19,7 @@
                         {{end}}
                     </tr>
                     <tr>
-                        <td>{{ .input }}<span STYLE="text-decoration:overline">{{ .input}}</span></td>
+                        <td>{{ .nonrepeating }}<span STYLE="text-decoration:overline">{{ .repeating}}</span></td>
                         {{if (not (eq .type "decimal"))}}
                             <td>
                                 {{if eq .type "GCD"}}
