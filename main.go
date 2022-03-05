@@ -54,7 +54,7 @@ func main() {
 						"repeating": result.repeating,
 						"message": message,
 						"type": "decimal",
-						"title": "Decimal to fraction conversion",
+						"title": "Conversion from decimal to fraction",
 						"whole": result.whole,
 						"num": result.num,
 						"den": result.den,
@@ -112,7 +112,25 @@ func main() {
 		router.GET("/json/:input", func(c *gin.Context) {
 			inputStr := c.Param("input")
 			var resultStr string
-			if len(strings.Split(inputStr, ",")) > 1 {
+			if strings.Count(inputStr, ".") == 1 {
+				for inputStr[len(inputStr) - 1:] == "0" {
+					inputStr = inputStr[: len(inputStr) - 1]
+				}
+			}
+			if inputStr[len(inputStr) - 1:] == "." {
+				inputStr = inputStr[: len(inputStr) - 1]
+			}
+			if strings.Count(inputStr, ".") == 1 {
+				result, message := decimal(inputStr)
+				resultStr = "{\"input\": \"" + inputStr + "\""
+				if len(message) > 0 {
+					resultStr += ", \"message\": " + message
+				} else {
+					resultStr += ", \"integer_part\": " + strconv.Itoa(result.whole) + "\""
+					resultStr += ", \"numerator\": " + strconv.Itoa(result.num) + "\""
+					resultStr += ", \"denominator\": " + strconv.Itoa(result.den) + "\""
+				}
+			} else if len(strings.Split(inputStr, ",")) > 1 {
 				result, message := gcdParse(inputStr)
 				resultStr = "{\"input\": \"" + strings.Join(strings.Split(inputStr, ","), ", ") + "\""
 				if len(message) > 0 {
