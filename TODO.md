@@ -4,8 +4,8 @@
     n1 /= g
 }
 
-if input contains more than one decimal point
-    return error message
+while input ends with a zero
+    remove it
 If input ends with decimal point
     remove it
 while input ends with a zero

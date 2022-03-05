@@ -36,9 +36,17 @@ func main() {
 			inputStr := c.Param("input")
 			if strings.Count(inputStr, ".") > 1 {
 				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					// "input": inputStr,
 					"message": "input (" + inputStr + ") has too many decimal points.",
 				})
+			} else {
+				if strings.Count(inputStr, ".") == 1 {
+					for inputStr[len(inputStr) - 1:] == "0" {
+						inputStr = inputStr[: len(inputStr) - 1]
+					}
+				}
+				if inputStr[len(inputStr) - 1: 0] == "." {
+					inputStr = inputStr[: len(inputStr) - 1]
+				}
 			// if len(strings.Split(inputStr, ".")) > 1 {
 				// inputStr = regexp.MustCompile("repeat").ReplaceAllString(inputStr, "r")
 				// inputStr = regexp.MustCompile("R").Copy().ReplaceAllString(inputStr, "r")
@@ -47,53 +55,55 @@ func main() {
 			// }
 
 			// real gcd
-			} else if len(strings.Split(inputStr, ",")) > 1  {
-				// Reduce white-space, to facilitate parsing.
-				inputStr = regexp.MustCompile(" ").ReplaceAllString(inputStr, "")
-				// Reinsert a space, so that rendered input is easy to read.
-				inputStr = strings.Join(strings.Split(inputStr, ","), ", ")
-				// parse input to ensure that it is well-formed
-				result, message := gcdParse(inputStr)
-				_, results := factorize(result)
-				factors := [][2]string{}
-				var isPrime bool
-				if result > 1 {
-					isPrime = false
+
+				if len(strings.Split(inputStr, ",")) > 1  {
+					// Reduce white-space, to facilitate parsing.
+					inputStr = regexp.MustCompile(" ").ReplaceAllString(inputStr, "")
+					// Reinsert a space, so that rendered input is easy to read.
+					inputStr = strings.Join(strings.Split(inputStr, ","), ", ")
+					// parse input to ensure that it is well-formed
+					result, message := gcdParse(inputStr)
+					_, results := factorize(result)
+					factors := [][2]string{}
+					var isPrime bool
+					if result > 1 {
+						isPrime = false
+						for _, pair := range results {
+							prime, exponent := pair[0], pair[1]
+							// Create slice of 2-component arrays of strings, for use in template.
+							factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
+						}
+					} else {
+						isPrime = true
+						factors = append(factors, [2]string{"1", "1"})
+					}
+					c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+						"input": inputStr,
+						"factors": factors,
+						"message": message,
+						"isPrime": isPrime,
+						"type": "GCD",
+						"title": "Real GCD",
+					})
+				} else {
+					number, message := factorizeParse(inputStr)
+					isPrime, results := factorize(number)
+					// Convert from map to slice of 2-component arrays so that 0-th element can be handled separately in results.html.
+					factors := [][2]string{}
 					for _, pair := range results {
 						prime, exponent := pair[0], pair[1]
 						// Create slice of 2-component arrays of strings, for use in template.
 						factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
 					}
-				} else {
-					isPrime = true
-					factors = append(factors, [2]string{"1", "1"})
+					c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+						"input": inputStr,
+						"isPrime": isPrime,
+						"factors": factors,
+						"message": message,
+						"type": "integer",
+						"title": "Real factorization",
+					})
 				}
-				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					"input": inputStr,
-					"factors": factors,
-					"message": message,
-					"isPrime": isPrime,
-					"type": "GCD",
-					"title": "Real GCD",
-				})
-			} else {
-				number, message := factorizeParse(inputStr)
-				isPrime, results := factorize(number)
-				// Convert from map to slice of 2-component arrays so that 0-th element can be handled separately in results.html.
-				factors := [][2]string{}
-				for _, pair := range results {
-					prime, exponent := pair[0], pair[1]
-					// Create slice of 2-component arrays of strings, for use in template.
-					factors = append(factors, [2]string{strconv.Itoa(prime), strconv.Itoa(exponent)})
-				}
-				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					"input": inputStr,
-					"isPrime": isPrime,
-					"factors": factors,
-					"message": message,
-					"type": "integer",
-					"title": "Real factorization",
-				})
 			}
 		})
 		router.GET("/json/:input", func(c *gin.Context) {
