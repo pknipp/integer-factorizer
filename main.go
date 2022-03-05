@@ -82,7 +82,7 @@ func main() {
 					"isPrime": isPrime,
 					"type": "GCD",
 					"title": "Real GCD",
-					"decimal": false,
+					"isDecimal": false,
 				})
 			} else {
 				number, message := factorizeParse(inputStr)
