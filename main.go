@@ -34,23 +34,22 @@ func main() {
 		// gcd and factorization of real integers
 		router.GET("/:input", func(c *gin.Context) {
 			inputStr := c.Param("input")
-			// if strings.Count(inputStr, ".") > 1 {
-				// c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
-					// "input": inputStr,
+			if strings.Count(inputStr, ".") > 1 {
+				c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
+					"input": inputStr,
 					// "isPrime": isPrime,
 					// "factors": factors,
-					// "message": message,
+					"message": "Error: input has too many decimal points.",
 					// "type": "decimal",
 					// "title": "Real factorization",
-				// })
-//
-			// }
-			if len(strings.Split(inputStr, ".")) > 1 {
-				inputStr = regexp.MustCompile("repeat").ReplaceAllString(inputStr, "r")
-				inputStr = regexp.MustCompile("R").Copy().ReplaceAllString(inputStr, "r")
-			// twoParts := strings.split(input, )
-				fmt.Println(inputStr)
+				})
 			}
+			// if len(strings.Split(inputStr, ".")) > 1 {
+				// inputStr = regexp.MustCompile("repeat").ReplaceAllString(inputStr, "r")
+				// inputStr = regexp.MustCompile("R").Copy().ReplaceAllString(inputStr, "r")
+			// twoParts := strings.split(input, )
+				// fmt.Println(inputStr)
+			// }
 
 			// real gcd
 			if len(strings.Split(inputStr, ",")) > 1  {
