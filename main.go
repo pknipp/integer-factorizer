@@ -39,14 +39,14 @@ func main() {
 					"message": "input (" + inputStr + ") has too many decimal points.",
 				})
 			} else {
-				if strings.Count(inputStr, ".") == 1 {
-					for inputStr[len(inputStr) - 1:] == "0" {
-						inputStr = inputStr[: len(inputStr) - 1]
-					}
-				}
-				if inputStr[len(inputStr) - 1: 0] == "." {
-					inputStr = inputStr[: len(inputStr) - 1]
-				}
+				// if strings.Count(inputStr, ".") == 1 {
+					// for inputStr[len(inputStr) - 1:] == "0" {
+						// inputStr = inputStr[: len(inputStr) - 1]
+					// }
+				// }
+				// if inputStr[len(inputStr) - 1: 0] == "." {
+					// inputStr = inputStr[: len(inputStr) - 1]
+				// }
 			// if len(strings.Split(inputStr, ".")) > 1 {
 				// inputStr = regexp.MustCompile("repeat").ReplaceAllString(inputStr, "r")
 				// inputStr = regexp.MustCompile("R").Copy().ReplaceAllString(inputStr, "r")
