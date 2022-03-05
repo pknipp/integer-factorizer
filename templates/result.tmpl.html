@@ -11,7 +11,7 @@
                 <table border='1'>
                     <tr>
                         <th>input</th>
-                        {{if not (eq .type "decimal")}}
+                        {{if (not (eq .type "decimal"))}}
                             <th>type</th>
                         {{end}}
                         {{if not .isPrime}}
@@ -20,7 +20,7 @@
                     </tr>
                     <tr>
                         <td>{{ .input }}</td>
-                        {{if not (eq .type "decimal")}}
+                        {{if (not (eq .type "decimal"))}}
                             <td>
                                 {{if eq .type "GCD"}}
                                     relatively
