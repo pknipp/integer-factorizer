@@ -39,11 +39,11 @@ func main() {
 					"message": "input (" + inputStr + ") has too many decimal points.",
 				})
 			} else {
-				// if strings.Count(inputStr, ".") == 1 {
-					// for inputStr[len(inputStr) - 1:] == "0" {
-						// inputStr = inputStr[: len(inputStr) - 1]
-					// }
-				// }
+				if strings.Count(inputStr, ".") == 1 {
+					for inputStr[len(inputStr) - 1:] == "0" {
+						inputStr = inputStr[: len(inputStr) - 1]
+					}
+				}
 				// if inputStr[len(inputStr) - 1: 0] == "." {
 					// inputStr = inputStr[: len(inputStr) - 1]
 				// }
