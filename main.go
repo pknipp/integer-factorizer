@@ -47,7 +47,7 @@ func main() {
 				if inputStr[len(inputStr) - 1:] == "." {
 					inputStr = inputStr[: len(inputStr) - 1]
 				}
-				if strings.Count(inputStr, "r") == 1 {
+				if strings.Count(inputStr, ".") == 1 {
 					result, message := decimal(inputStr)
 					c.HTML(http.StatusOK, "result.tmpl.html", gin.H{
 						"input": inputStr,
