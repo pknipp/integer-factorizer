@@ -8,7 +8,7 @@
         <p align=center>
             <table border='1'>
                 <tr><th>input</th><th>type</th>
-                    {{if and (not .isPrime) (eq .message "")}}<th>result</th>{{end}}
+                    {{if or (.isDecimal) (and (not .isPrime) (eq .message ""))}}<th>result</th>{{end}}
                 </tr><tr><td>{{ .input }}</td>
                     {{if eq .message ""}}
                         <td>
