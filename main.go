@@ -126,9 +126,9 @@ func main() {
 				if len(message) > 0 {
 					resultStr += ", \"message\": " + message
 				} else {
-					resultStr += ", \"integer_part\": " + strconv.Itoa(result.whole) + "\""
-					resultStr += ", \"numerator\": " + strconv.Itoa(result.num) + "\""
-					resultStr += ", \"denominator\": " + strconv.Itoa(result.den) + "\""
+					resultStr += ", \"integer_part\": " + strconv.Itoa(result.whole)
+					resultStr += ", \"numerator\": " + strconv.Itoa(result.num)
+					resultStr += ", \"denominator\": " + strconv.Itoa(result.den)
 				}
 			} else if len(strings.Split(inputStr, ",")) > 1 {
 				result, message := gcdParse(inputStr)

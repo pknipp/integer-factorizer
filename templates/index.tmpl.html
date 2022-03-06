@@ -55,7 +55,7 @@
           Use commas to separate numbers in a list, ie when determining <a href="https://en.wikipedia.org/wiki/Greatest_common_divisor">GCD</a>.
         </li>
         <li>
-          In order to represent a decimal that has both a finite part and a repeating part, separate the two parts by either <tt>repeat</tt>, <tt>r</tt>, <tt>R</tt>, or <tt>,</tt> (ie a comma).
+          In order to represent a decimal that has both a terminating part and a repeating part, separate the two parts by either <tt>repeat</tt>, <tt>r</tt>, <tt>R</tt>, or <tt>,</tt> (ie a comma).
         </li>
       </ul>
     </li>
@@ -97,6 +97,9 @@
         </li>
         <li>
           The GCD is given in factored form, for the html output.
+        </li>
+        <li>
+          The json return for a conversion from decimal to fraction will have three properties, the value for each of which will be an integer, and the names for which are <tt>integer_part</tt>, <tt>numerator</tt>, and <tt>denominator</tt>.
         </li>
       </ul>
     </li>
