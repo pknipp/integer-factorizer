@@ -7,9 +7,10 @@ import (
 	"regexp"
 )
 
-func simplify(num int, den int) (int, int){
-    fac := gcd2(num, den)
-	return num / fac, den / fac
+func simplify(num *int, den *int) {
+    fac := gcd2(*num, *den)
+	*num /= fac
+	*den /= fac
 }
 
 func pow10(n int) int {
@@ -63,7 +64,7 @@ func decimal(inputStr string) (fraction, string) {
 			num = num * den2 + den * num2
 			den *= den2
 		}
-		num, den = simplify(num, den)
+		simplify(&num, &den)
 		repeating := ""
 		if len(decimalParts) > 1 {
 			repeating = decimalParts[1]
