@@ -8,10 +8,10 @@ import (
 	"math/big"
 )
 
-func simplify(num *int, den *int) {
-    fac := gcd2(*num, *den)
-	*num /= fac
-	*den /= fac
+func simplify(num *big.Int, den *big.Int) {
+    fac := gcd2(num, den)
+	num.Div(num, fac)
+	den.Div(den, fac)
 }
 
 func pow10(n int) int {
