@@ -117,10 +117,10 @@ func factorizeParse(nStr string) (*big.Int, string) {
 }
 
 //Euclid's algorithm, which is extremely efficient.
-func gcd2(n1, n2 int) int {
+func gcd2(n1, n2 *big.Int) *big.Int {
 	for {
 	  t := n2;
-	  if n1, n2 = t, n1 % n2; n2 == 0 {
+	  if n1, n2 = t, n1.Mod(n1, n2); n2 == big.NewInt(0) {
 		return n1
 	  }
 	}
