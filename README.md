@@ -1,3 +1,4 @@
+How to run app locally: go run *.go
 
 # go-getting-started
 
