@@ -15,7 +15,7 @@ import (
 
 const UNITY string = " is neither prime nor composite."
 // This allows for easy toggling between cli and web versions of this app.
-var isWebVersion bool = true
+var isWebVersion bool = false
 
 func main() {
 	if isWebVersion {
@@ -282,7 +282,7 @@ func main() {
 		router.Run(":" + port)
 	} else {
 		// Use this block when testing app as CLI./
-		inputStr := "1234.2r142857"
-		fmt.Println(decimal(inputStr))
+		inputStr := "12" //r142857"
+		fmt.Println(factorizeParse(inputStr))
 	}
 }

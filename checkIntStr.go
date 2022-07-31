@@ -41,9 +41,10 @@ func checkIntStr(nStr string) (int, string) {
 	if _, err := strconv.ParseFloat(nStr, 64); err != nil {
 		return number, badNumber + " (" + nStr + ")."
 	}
-	if number, err := strconv.Atoi(nStr); err == nil {
-		return number, ""
-	} else {
-		return number, "Note that the number may not be a decimal."
+	message := ""
+	number, err := strconv.Atoi(nStr)
+	if err != nil {
+		message = "There was an unspecified error."
 	}
+	return number, message
 }
