@@ -5,6 +5,7 @@ import (
 	"strings"
 	"math"
 	"regexp"
+	"math/big"
 )
 
 func simplify(num *int, den *int) {
@@ -107,10 +108,10 @@ func partParse(str, part string) (int, string) {
 	}
 }
 
-func factorizeParse(nStr string) (int, string) {
+func factorizeParse(nStr string) (*big.Int, string) {
 	number, message := checkIntStr(nStr)
-	if number == 1 {
-		message = "1" + UNITY
+	if number.Uint64() == 1 {
+		message =   "1" + UNITY
 	}
 	return number, message
 }
@@ -134,17 +135,19 @@ func gcd(ns []int) int {
 	return gcd(append(ns[2:], gcd2(ns[0], ns[1])))
 }
 
-func gcdParse(nStr string) (int, string) {
+func gcdParse(nStr string) (*big.Int, string) {
 	var message string
 	// slice'll hold all integers whose gcd is needed
-	var ns []int
-	var n int
+	var ns []*big.Int
+	var n *big.Int
 	nsStr := strings.Split(nStr, ",")
 	for _, nStr := range nsStr {
 		if n, message = checkIntStr(nStr); len(message) == 0 {
 			ns = append(ns, n)
 		} else {
-			return 0, message
+			message = ""
+			n, _ = new(big.Int).SetString("0", 10)
+			return n, ""
 		}
 	}
 	return gcd(ns), ""
