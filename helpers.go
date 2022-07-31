@@ -126,7 +126,7 @@ func gcd2(n1, n2 int) int {
 	}
 }
 
-func gcd(ns []int) int {
+func gcd(ns []*big.Int) *big.Int {
 	// base case
 	if len(ns) == 1 {
 		return ns[0]
