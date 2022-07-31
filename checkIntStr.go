@@ -3,14 +3,15 @@ package main
 import (
 	"strconv"
 	"regexp"
+	"math/big"
 )
 
 var TOOLARGE string = "Your number is too large."
 
-func checkIntStr(nStr string) (int, string) {
+func checkIntStr(nStr string) (*big.Int, string) {
 	// Remove whitespace to facilitate parsing.
 	nStr = regexp.MustCompile(" ").ReplaceAllString(nStr, "")
-	var number int
+	var number *big.Int
 	missingNumber := "Number is missing."
 	if nStr == "" {
 		return number, missingNumber
@@ -42,8 +43,8 @@ func checkIntStr(nStr string) (int, string) {
 		return number, badNumber + " (" + nStr + ")."
 	}
 	message := ""
-	number, err := strconv.Atoi(nStr)
-	if err != nil {
+	number, ok := new(big.Int).SetString(nStr, 0)
+	if !ok {
 		message = "There was an unspecified error."
 	}
 	return number, message
