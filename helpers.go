@@ -37,24 +37,25 @@ func decimal(inputStr string) (fraction, string) {
 	if err != nil {
 		return result, "Part (" + parts[0] + ") which is left of decimal cannot be parsed as an integer."
 	}
-	var num, den int
+	var num, den *big.Int
     decimalPart := regexp.MustCompile("repeat").ReplaceAllString(parts[1], "r")
 	decimalPart = regexp.MustCompile("R").ReplaceAllString(decimalPart, "r")
 	decimalPart = regexp.MustCompile(",").ReplaceAllString(decimalPart, "r")
 	n_rs := strings.Count(decimalPart, "r")
+	var ok bool
 	if n_rs > 1 {
 		return result, "Part (" + decimalPart + ") which is right of the decimal has more than one character which signals the start of the repeating part of the decimal."
 	} else {
 		decimalParts := strings.Split(decimalPart, "r")
 		if decimalParts[0] == "" {
-			num = 0
-			den = 1
+			num = big.NewInt(0)
+			den = big.NewInt(1)
 		} else {
-			num, err = strconv.Atoi(decimalParts[0])
-			if err != nil {
+			num, ok = new(big.Int).SetString(decimalParts[0], 10)
+			if !ok {
 				return result, "Terminating part of decimal (" + decimalParts[0] + ") cannot be parsed as an integer."
 			}
-			den = pow10(len(decimalParts[0]))
+			den.Exp(big.NewInt(10), big.NewInt(int64(len(decimalParts[0]))), nil)
 		}
 		if len(decimalParts) > 1 {
 			num2, err := strconv.Atoi(decimalParts[1])
