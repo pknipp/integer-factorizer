@@ -28,7 +28,7 @@ func gaussian(z [2]*big.Int) (bool, int, modExp) {
 		if prime.Cmp(big.NewInt(2)) == 0 {
 			gaussianFactors["1+i"] = [2]int{2, exponent}
 			for count := 0; count < exponent; count++ {
-				_, z = modulo(z, [2]int{1, 1})
+				_, z = modulo(z, [2]*big.Int{big.NewInt(1), big.NewInt(1)})
 			}
 		} else {
 			// Here are the (irreducible) real prime factors, which occur in pairs.
