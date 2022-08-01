@@ -58,13 +58,15 @@ func decimal(inputStr string) (fraction, string) {
 			den.Exp(big.NewInt(10), big.NewInt(int64(len(decimalParts[0]))), nil)
 		}
 		if len(decimalParts) > 1 {
-			num2, err := strconv.Atoi(decimalParts[1])
-			if err != nil {
+			num2, ok := new(big.Int).SetString(decimalParts[1], 10)
+			if !ok {
 				return result, "Repeating part of decimal (" + decimalParts[1] + ") cannot be parsed as an integer."
 			}
-			den2 := den * (pow10(len(decimalParts[1])) - 1)
-			num = num * den2 + den * num2
-			den *= den2
+			big10 := big.NewInt(10)
+			big10.Exp(big10, big.NewInt(int64(len(decimalParts[1]) - 1)), nil)
+			den2 := big.NewInt(0).Mul(den, big10)
+			num.Add(num.Mul(num, den2), den.Mul(den, num2))
+			den.Mul(den, den2)
 		}
 		simplify(&num, &den)
 		repeating := ""
