@@ -77,19 +77,28 @@ func decimal(inputStr string) (fraction, string) {
 	}
 }
 
-func modulus(z [2]int) int {
-	return z[0] * z[0] + z[1] * z[1]
+func modulus(z [2]*big.Int) *big.Int {
+	real := big.NewInt(0).Mul(z[0], z[0])
+	imag := big.NewInt(0).Mul(z[1], z[1])
+	return real.Add(real, imag)
 }
 
 // determines whether 2nd gaussian integer is a factor of the 1st
-func modulo(z0, z1 [2]int) (bool, [2]int) {
+func modulo(z0, z1 [2]*big.Int) (bool, [2]*big.Int) {
 	var isFactor bool
-	quotient := [2]int{0, 0}
-	den := z1[0] * z1[0] + z1[1] * z1[1]
-	numR:= z0[0] * z1[0] + z0[1] * z1[1]
-	numI:= z0[1] * z1[0] - z0[0] * z1[1]
-	if numR % den == 0 && numI % den == 0 {
-		quotient = [2]int{numR / den, numI / den}
+	quotient := [2]*big.Int{big.NewInt(0), big.NewInt(0)}
+
+	den := big.NewInt(0).Mul(z1[0], z1[0])
+	den.Add(den, big.NewInt(0).Mul(z1[1], z1[1]))
+
+	numR := big.NewInt(0).Mul(z0[0], z1[0])
+	numR.Add(numR, big.NewInt(0).Mul(z0[1], z1[1]))
+
+	numI := big.NewInt(0).Mul(z0[1], z1[0])
+	numI.Add(numI, big.NewInt(0).Neg(big.NewInt(0).Mul(z0[0], z1[1])))
+
+	if numR.Cmp(den) == 0 && numI.Cmp(den) == 0 {
+		quotient = [2]*big.Int{numR.Div(numR, den), numI.Div(numI, den)}
 		isFactor = true
 	}
 	return isFactor, quotient

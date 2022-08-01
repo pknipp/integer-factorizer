@@ -1,19 +1,31 @@
 package main
 
 import (
-	"strconv"
 	"math"
+	"math/big"
+	"strconv"
 )
 
+// type factor struct {
+	// prime *big.Int
+	// exponent int
+// }
+
+type modExp struct {
+	modulus *big.Int
+	exponent int
+}
+
 // returns: isPrime, squared modulus, factor map (each w/value equalling squared modulus and power)
-func gaussian(z [2]int) (bool, int, map[string][2]int) {
+func gaussian(z [2]*big.Int) (bool, int, modExp) {
 	gaussianFactors := map[string][2]int{}
 	// Factoring a gaussian is facilitated by finding the (real) factors of its (squared) modulus.
 	_, factors := factorize(modulus(z))
 	for _, pair := range factors {
-		prime, exponent := pair[0], pair[1]
+		prime := pair.prime
+		exponent := pair.exponent
 		// Here are the factors of 1 + i
-		if prime == 2 {
+		if prime.Cmp(big.NewInt(2)) == 0 {
 			gaussianFactors["1+i"] = [2]int{2, exponent}
 			for count := 0; count < exponent; count++ {
 				_, z = modulo(z, [2]int{1, 1})
