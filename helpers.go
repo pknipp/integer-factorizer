@@ -24,8 +24,8 @@ func pow10(n int) int {
 
 type fraction struct {
 	whole int
-	num int
-	den int
+	num *big.Int
+	den *big.Int
 	nonrepeating string
 	repeating string
 }
@@ -68,7 +68,7 @@ func decimal(inputStr string) (fraction, string) {
 			num.Add(num.Mul(num, den2), den.Mul(den, num2))
 			den.Mul(den, den2)
 		}
-		simplify(&num, &den)
+		simplify(num, den)
 		repeating := ""
 		if len(decimalParts) > 1 {
 			repeating = decimalParts[1]
