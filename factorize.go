@@ -5,7 +5,12 @@ import (
 	"math/big"
 )
 
-func factorize(number *big.Int) (bool, [][2]*big.Int) {
+type factor struct {
+	prime *big.Int
+	exponent int
+}
+
+func factorize(number *big.Int) (bool, []factor) {
 	j := big.NewInt(int64(1))
 	// Use a map for storing factors, to facilitate the algo.
 	// key = prime, value = exponent
@@ -50,12 +55,13 @@ func factorize(number *big.Int) (bool, [][2]*big.Int) {
 		}
 	}
 	// Change data structure from map to slice (of 2-component arrays), to facilitate sorting.
-	factorsSorted := [][2]*big.Int{}
+
+	factorsSorted := []factor{}
 	for prime, exponent := range factors {
-		factorsSorted = append(factorsSorted, [2]*big.Int{prime, exponent})
+		factorsSorted = append(factorsSorted, factor{prime, exponent})
 	}
 	sort.Slice(factorsSorted, func(i, j int) bool {
-		return factorsSorted[i][0] < factorsSorted[j][0]
+		return factorsSorted[i].prime.Cmp(factorsSorted[j].prime) == -1
 	})
 	return isPrime, factorsSorted
 }
