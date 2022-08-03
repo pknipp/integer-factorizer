@@ -108,5 +108,5 @@ func gaussian(z [2]*big.Int) (bool, int, map[string]modExp) {
 			}
 		}
 	}
-	return isPrime, n, gaussianFactors
+	return isPrime, int(n.Int64()), gaussianFactors
 }
