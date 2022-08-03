@@ -1,7 +1,6 @@
 package main
 
 import (
-	"math"
 	"math/big"
 )
 
@@ -91,18 +90,19 @@ func gaussian(z [2]*big.Int) (bool, int, map[string]modExp) {
 		}
 	}
 	// The following logic is a bit obtuse, but it determines exponent of i, based upon what is left after dividing by all Gaussian primes.
-	var n int
-	if math.Abs(float64(z[0])) == 1 {
-		n = 1 - z[0]
+	var n *big.Int
+	if BIG.Abs(z[0]) == big.NewInt(1) {
+		n = BIG.Add(big.NewInt(1), BIG.Neg(z[0]))
 	} else {
-		n = 2 - z[1]
+		n = BIG.Add(big.NewInt(2), BIG.Neg(z[1]))
 	}
 	// Below is a necessary - but not sufficient - condition.
 	isPrime := len(gaussianFactors) == 1
-	// The next condition is required to make it "sufficient".
+	// The next condition is required to make it "sufficient"
+	// An example of this would be 9 (= 3^2).
 	if isPrime {
 		for _, pair := range gaussianFactors {
-			if pair[1] > 1 {
+			if pair.exponent > 1 {
 				isPrime = false
 				break
 			}
