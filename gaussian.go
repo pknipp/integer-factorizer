@@ -3,7 +3,6 @@ package main
 import (
 	"math"
 	"math/big"
-	"strconv"
 )
 
 // type factor struct {
@@ -17,8 +16,9 @@ type modExp struct {
 }
 
 // returns: isPrime, squared modulus, factor map (each w/value equalling squared modulus and power)
-func gaussian(z [2]*big.Int) (bool, int, modExp) {
-	gaussianFactors := map[string][2]int{}
+func gaussian(z [2]*big.Int) (bool, int, map[string]modExp) {
+	BIG := big.NewInt(0)
+	gaussianFactors := map[string]modExp{}
 	// Factoring a gaussian is facilitated by finding the (real) factors of its (squared) modulus.
 	_, factors := factorize(modulus(z))
 	for _, pair := range factors {
@@ -26,52 +26,51 @@ func gaussian(z [2]*big.Int) (bool, int, modExp) {
 		exponent := pair.exponent
 		// Here are the factors of 1 + i
 		if prime.Cmp(big.NewInt(2)) == 0 {
-			gaussianFactors["1+i"] = [2]int{2, exponent}
+			gaussianFactors["1+i"] = modExp{big.NewInt(2), exponent}
 			for count := 0; count < exponent; count++ {
 				_, z = modulo(z, [2]*big.Int{big.NewInt(1), big.NewInt(1)})
 			}
 		} else {
 			// Here are the (irreducible) real prime factors, which occur in pairs.
-			if prime % 4 == 3 {
-				gaussianFactors[strconv.Itoa(prime)] = [2]int{prime, exponent / 2}
+			if BIG.Mod(prime, big.NewInt(4)).Cmp(big.NewInt(3)) == 0 {
+				gaussianFactors[prime.Text(10)] = modExp{prime, exponent / 2}
 				for count := 0; count < exponent / 2; count++ {
 					for i := range z {
-						z[i] /= prime
+						z[i].Div(z[i], prime)
 					}
 				}
 			} else {
 				// Here are Gaussian integers for which one component is odd and the other is even.
 				// Find ints m, n such that (2m+1)^2 + (2n)^2 = prime
-				mod4 := (prime - 1) / 4
+				mod4 := BIG.Div(BIG.Add(prime, BIG.Neg(big.NewInt(1))), big.NewInt(4))
 				// Now this becomes m*(m+1) + n^2 = mod4, which is solved via a while loop.
-				m := 0
-				var n int
+				m := big.NewInt(0)
+				var n *big.Int
 				for {
-					n64 := math.Sqrt(float64(mod4 - m * (m + 1)))
-					nm := int(math.Floor(n64))
-					np := int(math.Ceil(n64))
-					if m * (m + 1) + nm * nm == mod4 {
+					nm := BIG.Sqrt(BIG.Add(mod4, BIG.Neg(BIG.Mul(m, (BIG.Add(m, big.NewInt(1)))))))
+					np := BIG.Add(nm, big.NewInt(1))
+					if BIG.Add(BIG.Mul(m, BIG.Add(m, big.NewInt(1))), BIG.Mul(nm, nm)) == mod4 {
 						n = nm
 						break
-					} else if m * (m + 1) + np * np == mod4 {
+					} else if BIG.Add(BIG.Mul(m, BIG.Add(m, big.NewInt(1))), BIG.Mul(np, np)) == mod4 {
 						n = np
 						break
 					}
-					m++
+					m.Add(m, big.NewInt(1))
 				}
-				odd := 2 * m + 1
-				even := 2 * n
+				odd := BIG.Add(BIG.Mul(big.NewInt(2), m), big.NewInt(1))
+				even := BIG.Mul(big.NewInt(2), n)
 				// First, let's consider possibility that the real component is the odd one.
 				count := 0
 				for {
-					isFactor, quotient := modulo(z, [2]int{odd, even})
+					isFactor, quotient := modulo(z, [2]*big.Int{odd, even})
 					if isFactor {
 						z = quotient
 						count++
 					} else {
 						if count > 0 {
-							im := strconv.Itoa(even)
-							gaussianFactors[strconv.Itoa(odd) + "+" + im + "i"] = [2]int{prime, count}
+							im := even.Text(10)
+							gaussianFactors[odd.Text(10) + "+" + im + "i"] = modExp{prime, count}
 						}
 						break
 					}
@@ -79,14 +78,14 @@ func gaussian(z [2]*big.Int) (bool, int, modExp) {
 				// For the remaining factors, the real component must be the even one.
 				count2 := exponent - count
 				if count2 > 0 {
-					im := strconv.Itoa(odd)
+					im := odd.Text(10)
 					if im == "1" {
 						im = ""
 					}
-					gaussianFactors[strconv.Itoa(even) + "+" + im + "i"] = [2]int{prime, count2}
+					gaussianFactors[even.Text(10) + "+" + im + "i"] = modExp{prime, count2}
 				}
 				for count = 0; count < count2; count++ {
-					_, z = modulo(z, [2]int{2 * n, 2 * m + 1})
+					_, z = modulo(z, [2]*big.Int{BIG.Mul(big.NewInt(2), n), BIG.Add(BIG.Mul(big.NewInt(2), m), big.NewInt(1))})
 				}
 			}
 		}
