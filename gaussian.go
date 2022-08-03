@@ -89,7 +89,9 @@ func gaussian(z [2]*big.Int) (bool, int, map[string]modExp) {
 			}
 		}
 	}
-	// The following logic is a bit obtuse, but it determines exponent of i, based upon what is left after dividing by all Gaussian primes.
+	// The following logic is a bit obtuse, but it determines exponent of i, based upon what is left after dividing by all Gaussian primes at which time z equals either
+	// [1, 0], [0, 1], [-1, 0], or [0, -1]
+	// Do this instead w/a switch statement, or a long ternary
 	var n *big.Int
 	if BIG.Abs(z[0]) == big.NewInt(1) {
 		n = BIG.Add(big.NewInt(1), BIG.Neg(z[0]))
