@@ -4,11 +4,12 @@ import (
 	"sort"
 	"regexp"
 	"strings"
+	"math/big"
 )
 
 type gaussFactor struct {
 	prime string
-	mod2 int
+	mod2 *big.Int
 	exponent int
 }
 

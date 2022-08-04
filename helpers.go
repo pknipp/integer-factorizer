@@ -105,18 +105,15 @@ func modulo(z0, z1 [2]*big.Int) (bool, [2]*big.Int) {
 }
 
 // ensure that string may be converted to integer, for complex case
-func partParse(str, part string) (int, string) {
+func partParse(str, part string) (*big.Int, string) {
 	if str == "" && part == "imaginary" {
-		return 1, ""
+		return big.NewInt(1), ""
 	}
-	if _, err := strconv.ParseFloat(str, 64); err == nil {
-		if integer, err := strconv.Atoi(str); err == nil {
-			return integer, ""
-		} else {
-			return 0, "Your " + part + " part (" + str + ") does not seem to be an integer"
-		}
+	integer, ok := new(big.Int).SetString(str, 0)
+	if ok {
+		return integer, ""
 	} else {
-		return 0, "Your " + part + " part (" + str + ") does not seem to be a number."
+		return big.NewInt(0), "Your " + part + " part (" + str + ") does not seem to be an integer."
 	}
 }
 

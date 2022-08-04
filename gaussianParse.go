@@ -5,12 +5,14 @@ import (
 	"strings"
 	"math"
 	"strconv"
+	"math/big"
 )
 
 var MAXINT float64 = 0.999999 * math.Pow(2., 63.)
+// var BIG big.NewInt(0)
 
-func gaussianParse(zStr string) ([2]int, string) {
-	z := [2]int{1., 0.}
+func gaussianParse(zStr string) ([2]*big.Int, string) {
+	z := [2]*big.Int{big.NewInt(1), big.NewInt(0)}
 	noNumber := "You need to input a Gaussian integer."
 	// Remove spaces, and replace j by i, to simplify parsing.
 	zStr = regexp.MustCompile(" ").ReplaceAllString(zStr, "")
