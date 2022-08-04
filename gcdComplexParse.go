@@ -14,7 +14,7 @@ type gaussFactor struct {
 }
 
 func gcdComplexParse(gStr string) ([]gaussFactor, string) {
-	gs := []map[string][2]int{}
+	gs := []map[string]modExp{}
 	result := []gaussFactor{}
 	var message string
 	if gStr = regexp.MustCompile(" ").ReplaceAllString(gStr, ""); len(gStr) == 0 {

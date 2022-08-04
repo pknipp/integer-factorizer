@@ -162,7 +162,7 @@ func gcdParse(nStr string) (*big.Int, string) {
 	return gcd(ns), ""
 }
 
-func gcdComplex(gausss []map[string][2]int) map[string][2]int {
+func gcdComplex(gausss []map[string]modExp) map[string]modExp {
 	// base case
 	if len(gausss) == 1 {
 		return gausss[0]
@@ -171,16 +171,17 @@ func gcdComplex(gausss []map[string][2]int) map[string][2]int {
 	return gcdComplex(append(gausss[2:], gcd2Complex(gausss[0], gausss[1])))
 }
 
-func gcd2Complex(gaussa, gaussb map[string][2]int) map[string][2]int {
+func gcd2Complex(gaussa, gaussb map[string]modExp) map[string]modExp {
 	// In 2-component array, zeroth element is squared modulus of factor, and last element is power.
-	gauss := map[string][2]int{}
+	gauss := map[string]modExp{}
 	if len(gaussa) > len(gaussb) {
 		gaussa, gaussb = gaussb, gaussa // better to iterate over a shorter map
 	}
 	for prime, paira := range gaussa {
-		mod2, exponenta := paira[0], paira[1]
+		mod2, exponenta := paira.modulus, paira.exponent
+
 		if pairb, found := gaussb[prime]; found {
-			gauss[prime] = [2]int{mod2, int(math.Min(float64(exponenta), float64(pairb[1])))}
+			gauss[prime] = modExp{mod2, int(math.Min(float64(exponenta), float64(pairb[1])))}
 		}
 	}
 	return gauss
