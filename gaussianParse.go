@@ -4,12 +4,11 @@ import (
 	"regexp"
 	"strings"
 	"math"
-	"strconv"
 	"math/big"
 )
 
 var MAXINT float64 = 0.999999 * math.Pow(2., 63.)
-// var BIG big.NewInt(0)
+var BIG *big.Int = big.NewInt(0)
 
 func gaussianParse(zStr string) ([2]*big.Int, string) {
 	z := [2]*big.Int{big.NewInt(1), big.NewInt(0)}
@@ -60,17 +59,17 @@ func gaussianParse(zStr string) ([2]*big.Int, string) {
 				if len(message) > 0 {
 					return z, message
 				} else {
-					z[1] = -int
+					z[1] = BIG.Neg(int)
 				}
 			} else {
 				// Number's real part is zero.
-				z[0] = 0
+				z[0] = big.NewInt(0)
 				int, message := partParse(zStr, "imaginary")
 				if len(message) > 0 {
 					return z, message
 				} else {
-					if math.Abs(float64(int)) == 1. {
-						return z, strconv.Itoa(int) + UNITY
+					if BIG.Abs(int) == big.NewInt(1) {
+						return z, int.Text(10) + UNITY
 					}
 					z[1] = int
 				}
@@ -78,20 +77,20 @@ func gaussianParse(zStr string) ([2]*big.Int, string) {
 		}
 	} else {
 		// Number is purely real.
-		z[1] = 0
+		z[1] = big.NewInt(0)
 		int, message := partParse(zStr, "real")
 		if len(message) > 0 {
 			return z, message
 		} else {
-			if math.Abs(float64(int)) == 1. {
-				return z, strconv.Itoa(int) + UNITY
+			if BIG.Abs(int) == big.NewInt(1) {
+				return z, int.Text(10) + UNITY
 			}
 			z[0] = int
 		}
 	}
-	x := float64(z[0])
-	if x > math.Sqrt(MAXINT) || float64(z[1]) > math.Sqrt(MAXINT - x * x) {
-		return [2]int{0, 0}, TOOLARGE
-	}
+	// x := float64(z[0])
+	// if x > math.Sqrt(MAXINT) || float64(z[1]) > math.Sqrt(MAXINT - x * x) {
+		// return [2]int{0, 0}, TOOLARGE
+	// }
 	return z, ""
 }
