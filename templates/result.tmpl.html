@@ -5,6 +5,15 @@
     </head>
     <body>
         <h4><p align=center>{{ .title }}</p></h4>
+        <p align=center>
+            <a
+                href='https://integer-factorizer.herokuapp.com/'
+            >
+                Return
+            </a>
+            &nbsp;
+            to the instructions page.
+        </p>
 
         {{if eq .message ""}}
             <p align=center>
@@ -59,7 +68,7 @@
         {{else}}
             <p align="center">Error: {{ .message}}</p>
         {{end}}
-        <p align=center>
+        <!-- <p align=center>
             creator:&nbsp;
             <a
                 href='https://pknipp.github.io/'
@@ -77,6 +86,6 @@
             >
                 https://github.com/pknipp/integer-factorizer
             </a>
-        </p>
+        </p> -->
     </body>
 </html>
