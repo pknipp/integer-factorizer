@@ -4,6 +4,7 @@
         <link rel="stylesheet" type="text/css" href="/static/main.css" />
     </head>
     <body>
+        <div style="padding-top: 5px; padding-left: 10px; padding-right: 30px;">
         <h4><p align=center>{{ .title }}</p></h4>
         <p align=center>
             <a
@@ -68,24 +69,6 @@
         {{else}}
             <p align="center">Error: {{ .message}}</p>
         {{end}}
-        <!-- <p align=center>
-            creator:&nbsp;
-            <a
-                href='https://pknipp.github.io/'
-                target='_blank'
-                rel='noopener noreferrer'
-            >
-                Peter Knipp
-            </a>
-            <br/>
-            repo:&nbsp;
-            <a
-                href='https://github.com/pknipp/integer-factorizer'
-                target='_blank'
-                rel='noopener noreferrer'
-            >
-                https://github.com/pknipp/integer-factorizer
-            </a>
-        </p> -->
+        </div>
     </body>
 </html>
